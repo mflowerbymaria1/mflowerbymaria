@@ -11,20 +11,7 @@ export default function MantenimientoPage() {
           textAlign: 'center',
           fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif'
       }}>
-        <div style={{
-            background: '#D47792',
-            color: 'white',
-            width: '80px',
-            height: '80px',
-            borderRadius: '24px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontSize: '2rem',
-            fontWeight: '900',
-            marginBottom: '2rem',
-            boxShadow: '0 10px 25px rgba(212, 119, 146, 0.4)'
-        }}>M</div>
+
         <h1 style={{ fontSize: '2.5rem', fontWeight: '800', color: '#333', marginBottom: '1rem' }}>
             Estamos trabajando 🛠️
         </h1>
