@@ -15,6 +15,7 @@ export default function Header() {
   const { favorites } = useFavorites();
   const [isAccountOpen, setIsAccountOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const cartRef = useRef(null);
   const searchRef = useRef(null);
@@ -99,17 +100,36 @@ export default function Header() {
           <span className="country-flag" title="Argentina">🇦🇷</span>
           <nav className="main-nav">
             <Link href="/">Inicio</Link>
-            <div className="nav-item-dropdown">
-              <Link href="/productos" className="nav-link-dropdown">Productos</Link>
-              <div className="dropdown-menu">
+            <div 
+              className="nav-item-dropdown"
+              onMouseEnter={() => setIsDropdownOpen(true)}
+              onMouseLeave={() => setIsDropdownOpen(false)}
+            >
+              <button 
+                className="nav-link-dropdown" 
+                onClick={(e) => {
+                  e.preventDefault();
+                  setIsDropdownOpen(!isDropdownOpen);
+                }}
+              >
+                Productos
+              </button>
+              <div className={`dropdown-menu ${isDropdownOpen ? 'open' : ''}`}>
+                <Link href="/productos" className="dropdown-item font-bold" onClick={() => setIsDropdownOpen(false)}>
+                  Todos los productos
+                </Link>
                 {categories.map(cat => (
                   <Link
                     key={cat.id}
                     href={`/productos?categoria=${cat.slug}`}
-                    className="dropdown-item"
+                    className="dropdown-item flex items-center"
                     title={cat.name}
+                    onClick={() => setIsDropdownOpen(false)}
                   >
                     {cat.name}
+                    {cat.slug === 'capsula-argentina' && (
+                      <img src="https://flagcdn.com/w20/ar.png" alt="Bandera Argentina" style={{ display: 'inline', width: '16px', marginLeft: '8px', verticalAlign: 'middle', borderRadius: '2px' }} />
+                    )}
                   </Link>
                 ))}
               </div>
@@ -240,6 +260,10 @@ export default function Header() {
         .nav-link-dropdown {
           display: inline-block;
           padding-bottom: 5px; /* Adds space for hover tracking */
+          background: none;
+          border: none;
+          font-family: inherit;
+          cursor: pointer;
         }
         .dropdown-menu {
           visibility: hidden;
@@ -279,6 +303,7 @@ export default function Header() {
           right: 0;
           height: 15px; /* Bridge gap between link and dropdown */
         }
+        .dropdown-menu.open,
         .nav-item-dropdown:hover .dropdown-menu {
           visibility: visible;
           opacity: 1;
