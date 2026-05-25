@@ -809,19 +809,56 @@ export default function ProductDetailPage({ params }) {
                 @media (max-width: 900px) {
                     .product-detail-layout {
                         grid-template-columns: 1fr;
-                        padding: 2rem;
+                        padding: 1.5rem;
                         gap: 2rem;
                     }
                     .product-title {
+                        font-size: 1.8rem;
+                        margin-bottom: 1rem;
+                    }
+                    .main-price {
                         font-size: 2rem;
+                    }
+                    .price-box {
+                        padding: 1.2rem;
+                        margin-bottom: 1.5rem;
+                    }
+                    .add-to-cart-btn-large {
+                        font-size: 1.1rem;
+                        padding: 15px;
+                    }
+                    .desc-text {
+                        font-size: 0.95rem;
+                    }
+                    .sheet-btn {
+                        padding: 6px 12px;
+                        font-size: 0.85rem;
                     }
                 }
                 @media (max-width: 600px) {
                     .product-detail-layout {
-                        padding: 1.5rem;
+                        padding: 1rem;
+                        border-radius: 12px;
+                        margin: 0 -10px; /* Expands to edges on small screens */
+                    }
+                    .product-title {
+                        font-size: 1.5rem;
                     }
                     .main-price {
-                        font-size: 2rem;
+                        font-size: 1.8rem;
+                    }
+                    .installments, .transfer-discount {
+                        font-size: 0.9rem;
+                    }
+                    .badge-20 {
+                        font-size: 0.75rem;
+                    }
+                    .actions-box {
+                        gap: 1rem;
+                    }
+                    .py-16 {
+                        padding-top: 2rem;
+                        padding-bottom: 2rem;
                     }
                 }
                 
