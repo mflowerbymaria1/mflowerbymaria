@@ -38,7 +38,7 @@ export default function WelcomePopup() {
                 <button className="popup-close" onClick={handleClose}>&times;</button>
                 <div className="popup-header" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' }}>
                     <Logo size="large" color="#D47792" />
-                    <p className="popup-subtitle">Suscribite y llevate un <strong>10% OFF</strong> en tu primera compra.</p>
+                    <p className="popup-subtitle">Suscribite a nuestro newsletter y enterate de todas las novedades y nuevos ingresos antes que nadie ✨</p>
                 </div>
 
                 {!showCode ? (
@@ -51,13 +51,12 @@ export default function WelcomePopup() {
                             required
                             className="popup-input"
                         />
-                        <button type="submit" className="popup-btn">¡Lo quiero!</button>
+                        <button type="submit" className="popup-btn">¡Quiero enterarme!</button>
                     </form>
                 ) : (
                     <div className="popup-success">
-                        <p>¡Gracias por sumarte!</p>
-                        <p>Tu código de descuento es:</p>
-                        <div className="discount-code">Bienvenida26</div>
+                        <p style={{ fontSize: '1.2rem', fontWeight: 'bold', color: '#D47792', marginBottom: '10px' }}>¡Gracias por sumarte! 🌸</p>
+                        <p>Ya estás en nuestra lista. Te vamos a avisar cuando haya novedades lindas.</p>
                         <button className="popup-btn mt-3" onClick={handleClose}>Ir a la tienda</button>
                     </div>
                 )}
@@ -150,19 +149,6 @@ export default function WelcomePopup() {
                 }
                 .popup-success {
                     color: #333;
-                }
-                .discount-code {
-                    font-family: var(--font-quicksand), sans-serif;
-                    font-size: 1.8rem;
-                    font-weight: bold;
-                    color: #D47792;
-                    background: #fff;
-                    padding: 10px;
-                    border-radius: 10px;
-                    border: 2px dashed var(--pastel-pink);
-                    display: inline-block;
-                    margin: 10px 0;
-                    letter-spacing: 2px;
                 }
                 .mt-3 { margin-top: 15px; }
                 
