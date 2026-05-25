@@ -140,6 +140,18 @@ export default function Footer() {
           color: #999;
           background-color: #fafafa;
         }
+
+        @media (max-width: 768px) {
+          .main-footer {
+            grid-template-columns: 1fr;
+            text-align: center;
+            gap: 3rem;
+            padding: 3rem 1rem;
+          }
+          .shipping-methods {
+            align-items: center;
+          }
+        }
       `}</style>
     </footer>
   );

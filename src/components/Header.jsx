@@ -398,6 +398,44 @@ export default function Header() {
         .bump {
           animation: bump 0.3s ease-out;
         }
+
+        @media (max-width: 768px) {
+          .announcement-bar {
+            font-size: 0.75rem;
+          }
+          .main-header {
+            flex-direction: column;
+            gap: 15px;
+            padding: 15px 1rem;
+          }
+          .header-left, .header-center, .header-right {
+            width: 100%;
+            justify-content: center;
+            flex: none;
+          }
+          .header-left {
+            order: 2;
+          }
+          .header-center {
+            order: 1;
+          }
+          .header-right {
+            order: 3;
+            gap: 20px;
+          }
+          .main-nav {
+            margin-left: 0;
+            gap: 15px;
+            width: 100%;
+            justify-content: space-evenly;
+          }
+          .main-nav a, .dropdown-item {
+            font-size: 0.85rem;
+          }
+          .country-flag {
+            display: none;
+          }
+        }
       `}</style>
     </header>
   );

@@ -68,6 +68,21 @@ export default function Hero() {
           transform: translateY(-2px);
           color: white;
         }
+
+        @media (max-width: 768px) {
+          .hero-static {
+            min-height: 400px;
+            height: 60vh;
+          }
+          .hero-subtitle {
+            font-size: 1.6rem;
+            padding: 0 15px;
+          }
+          .cta-button {
+            padding: 12px 30px;
+            font-size: 0.9rem;
+          }
+        }
       `}</style>
     </section>
   );

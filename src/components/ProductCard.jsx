@@ -141,8 +141,6 @@ export default function ProductCard({ product }) {
         </div>
       </div>
       
-      {/* Hidden link for SEO and accessibility */}
-      <Link href={`/productos/${product.id}`} className="sr-only">Ver {product.name}</Link>
 
       {/* Options Modal */}
       {showOptionsModal && (

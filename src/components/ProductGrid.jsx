@@ -97,6 +97,15 @@ export default function ProductGrid() {
           .grid-container {
             grid-template-columns: 1fr;
           }
+          .creative-title {
+            font-size: 2.2rem;
+          }
+          .creative-subtitle {
+            font-size: 1rem;
+          }
+          .creative-space-header {
+            margin-bottom: 2rem;
+          }
         }
       `}</style>
     </section>
