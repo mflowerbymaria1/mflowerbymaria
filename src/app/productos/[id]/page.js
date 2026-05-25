@@ -537,6 +537,8 @@ export default function ProductDetailPage({ params }) {
                     font-weight: 700;
                     margin-bottom: 1.5rem;
                     line-height: 1.2;
+                    word-wrap: break-word;
+                    overflow-wrap: break-word;
                 }
                 .price-box {
                     background-color: #fafafa;
@@ -808,9 +810,12 @@ export default function ProductDetailPage({ params }) {
 
                 @media (max-width: 900px) {
                     .product-detail-layout {
-                        grid-template-columns: 1fr;
+                        display: flex;
+                        flex-direction: column;
                         padding: 1.5rem;
                         gap: 2rem;
+                        width: 100%;
+                        overflow: hidden;
                     }
                     .product-title {
                         font-size: 1.8rem;
