@@ -73,13 +73,14 @@ function ProductosContent() {
     const getCategoryTitle = (catSlug) => {
         if (!catSlug) return "Todos Nuestros Productos";
         switch (catSlug.toLowerCase()) {
-            case 'cuadernos-a4': return "Cuadernos A4";
-            case 'cuadernos-a5': return "Cuadernos A5";
+            case 'cuadernos-a4': return "Cuadernos A4 Sistema de discos 📓";
+            case 'cuadernos-a5': return "Cuadernos A5 Sistema de discos 📓";
             case 'libretas-a5': return "Libretas A5";
             case 'planners': return "Planners";
             case 'ficheros-n-3': return "Ficheros N° 3";
             case 'block-de-papeles-a5': return "Block de papeles A5";
             case 'block-de-hojas': return "Block de hojas";
+            case 'set-separadores': return "Set de separadores";
             case 'set-de-separadores-de-materias': return "Set de separadores de materias";
             case 'stickers-varios': return "Stickers & Varios";
             case 'capsula-argentina': return "Cápsula Argentina";
@@ -103,6 +104,7 @@ function ProductosContent() {
             case 'ficheros-n-3': return "Organizá tus fichas de estudio o notas rápidas con nuestro sistema inteligente.";
             case 'block-de-papeles-a5': return "Papeles A5 coleccionables para tus creaciones y anotaciones.";
             case 'block-de-hojas': return "Blocks de notas y listas de tareas para organizar tu día con estilo.";
+            case 'set-separadores': return "Organizá y dale vida a tus materias con nuestros separadores resistentes.";
             case 'set-de-separadores-de-materias': return "Organizá y dale vida a tus materias con nuestros separadores resistentes.";
             case 'stickers-varios': return "Separadores, stickers troquelados y complementos para personalizar tus cuadernos.";
             case 'capsula-argentina': return "Edición especial y limitada inspirada en nuestra cultura nacional.";
