@@ -376,9 +376,11 @@ export default function ProductDetailPage({ params }) {
                     justify-content: center;
                     transition: transform 0.4s ease;
                 }
-                .zoom-image-wrapper:hover {
-                    transform: scale(1.4);
-                    cursor: zoom-in;
+                @media (hover: hover) {
+                    .zoom-image-wrapper:hover {
+                        transform: scale(1.4);
+                        cursor: zoom-in;
+                    }
                 }
                 .gallery-arrow {
                     position: absolute;
