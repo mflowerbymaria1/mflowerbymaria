@@ -6,42 +6,86 @@ export async function POST(request) {
 
         // Origin is always General Rodriguez (CP: 1748)
         const originZip = '1748';
-        const apiKey = '59019134c5fa1d9f344810d5c611c3e1ab354177d375ad4a18925f7e1fce5902';
+        const apiKey = process.env.ENVIA_API_TOKEN;
 
-        // NOTE: In a real production app, you would construct the full payload
-        // with package dimensions, weight, currency, etc. required by envia.com's /ship/generate/ endpoint.
-        // For this frontend implementation, we simulate the API call delay and
-        // return mock varying prices based on the CP to demonstrate the UI behavior.
+        const enviaPayload = {
+            "origin": {
+                "name": "M•flower by Maria",
+                "company": "M•flower by Maria",
+                "email": "contacto@mflowerbymaria.com",
+                "phone": "1100000000",
+                "street": "Centro",
+                "number": "123",
+                "district": "Centro",
+                "city": "General Rodriguez",
+                "state": "BA",
+                "country": "AR",
+                "postalCode": originZip,
+                "category": 1
+            },
+            "destination": {
+                "name": "Cliente",
+                "company": "",
+                "email": "cliente@email.com",
+                "phone": "1100000000",
+                "street": "Calle",
+                "number": "123",
+                "district": "",
+                "city": "Ciudad",
+                "state": "BA",
+                "country": "AR",
+                "postalCode": targetZip,
+                "category": 1
+            },
+            "packages": [
+                {
+                    "content": "Productos",
+                    "amount": 1,
+                    "type": "box",
+                    "dimensions": { "length": 25, "width": 20, "height": 10 },
+                    "weight": 1,
+                    "insurance": 0,
+                    "declaredValue": 0,
+                    "weightUnit": "KG",
+                    "lengthUnit": "CM"
+                }
+            ],
+            "shipment": {
+                "carrier": "correoargentino",
+                "type": 1
+            },
+            "settings": {
+                "currency": "ARS"
+            }
+        };
 
-        // Simulating API network delay
-        await new Promise(resolve => setTimeout(resolve, 800));
+        const enviaRes = await fetch("https://api.envia.com/ship/rate/", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${apiKey}`
+            },
+            body: JSON.stringify(enviaPayload)
+        });
 
-        let cost = 8500;
-        let method = "Correo Argentino a Domicilio";
+        const data = await enviaRes.json();
 
-        if (targetZip === originZip) {
-            cost = 2500;
-            method = "Moto Mensajería (Local)";
-        } else if (targetZip.startsWith('1')) {
-            // CABA y GBA
-            cost = 4500;
-            method = "Correo Argentino a Domicilio";
-        } else if (targetZip.startsWith('9')) {
-            // Sur
-            cost = 11500;
-            method = "Andreani a Domicilio";
+        // Check if Envia returned valid rates
+        if (data.meta !== 'rate' || !data.data || data.data.length === 0) {
+            return NextResponse.json({ success: false, error: 'No se encontraron tarifas.' });
         }
+
+        // Map Envia's response to our frontend's expected format
+        const quotes = data.data.map(rate => ({
+            provider: `${rate.carrierDescription} ${rate.serviceDescription}`,
+            price: rate.totalPrice,
+            currency: rate.currency,
+            days: rate.deliveryEstimate || "3-5 días hábiles"
+        }));
 
         return NextResponse.json({
             success: true,
-            quotes: [
-                {
-                    provider: method,
-                    price: cost,
-                    currency: "ARS",
-                    days: targetZip === originZip ? "1 día hábil" : "3-5 días hábiles"
-                }
-            ]
+            quotes: quotes
         });
 
     } catch (error) {

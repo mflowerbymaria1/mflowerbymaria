@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="500" height="500" viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="2" dy="5" stdDeviation="8" flood-opacity="0.1"/>
+    </filter>
+    <mask id="paper-mask">
+      <rect x="100" y="38" width="300" height="424" fill="white" rx="3" ry="3" />
+      
+            <circle cx="110" cy="70.22399999999999" r="7" fill="black" />
+            <rect x="95" y="66.22399999999999" width="15" height="8" fill="black" />
+        
+            <circle cx="110" cy="121.58857142857141" r="7" fill="black" />
+            <rect x="95" y="117.58857142857141" width="15" height="8" fill="black" />
+        
+            <circle cx="110" cy="172.95314285714284" r="7" fill="black" />
+            <rect x="95" y="168.95314285714284" width="15" height="8" fill="black" />
+        
+            <circle cx="110" cy="224.3177142857143" r="7" fill="black" />
+            <rect x="95" y="220.3177142857143" width="15" height="8" fill="black" />
+        
+            <circle cx="110" cy="275.68228571428574" r="7" fill="black" />
+            <rect x="95" y="271.68228571428574" width="15" height="8" fill="black" />
+        
+            <circle cx="110" cy="327.04685714285716" r="7" fill="black" />
+            <rect x="95" y="323.04685714285716" width="15" height="8" fill="black" />
+        
+            <circle cx="110" cy="378.4114285714286" r="7" fill="black" />
+            <rect x="95" y="374.4114285714286" width="15" height="8" fill="black" />
+        
+            <circle cx="110" cy="429.776" r="7" fill="black" />
+            <rect x="95" y="425.776" width="15" height="8" fill="black" />
+        
+    </mask>
+  </defs>
+
+  <rect width="500" height="500" fill="#fce8ec" />
+  
+  <g filter="url(#shadow)">
+      <rect x="104" y="42" width="300" height="424" fill="#ffffff" mask="url(#paper-mask)" opacity="0.4" />
+      <rect x="102" y="40" width="300" height="424" fill="#ffffff" mask="url(#paper-mask)" opacity="0.7" />
+      <rect x="100" y="38" width="300" height="424" fill="#ffffff" mask="url(#paper-mask)" />
+  </g>
+  
+  <g mask="url(#paper-mask)">
+      <line x1="135" y1="79.22399999999999" x2="374.776" y2="79.22399999999999" stroke="#d0d0d0" stroke-width="1.5" />
+<line x1="135" y1="95.22399999999999" x2="374.776" y2="95.22399999999999" stroke="#d0d0d0" stroke-width="1.5" />
+<line x1="135" y1="111.22399999999999" x2="374.776" y2="111.22399999999999" stroke="#d0d0d0" stroke-width="1.5" />
+<line x1="135" y1="127.22399999999999" x2="374.776" y2="127.22399999999999" stroke="#d0d0d0" stroke-width="1.5" />
+<line x1="135" y1="143.224" x2="374.776" y2="143.224" stroke="#d0d0d0" stroke-width="1.5" />
+<line x1="135" y1="159.224" x2="374.776" y2="159.224" stroke="#d0d0d0" stroke-width="1.5" />
+<line x1="135" y1="175.224" x2="374.776" y2="175.224" stroke="#d0d0d0" stroke-width="1.5" />
+<line x1="135" y1="191.224" x2="374.776" y2="191.224" stroke="#d0d0d0" stroke-width="1.5" />
+<line x1="135" y1="207.224" x2="374.776" y2="207.224" stroke="#d0d0d0" stroke-width="1.5" />
+<line x1="135" y1="223.224" x2="374.776" y2="223.224" stroke="#d0d0d0" stroke-width="1.5" />
+<line x1="135" y1="239.224" x2="374.776" y2="239.224" stroke="#d0d0d0" stroke-width="1.5" />
+<line x1="135" y1="255.224" x2="374.776" y2="255.224" stroke="#d0d0d0" stroke-width="1.5" />
+<line x1="135" y1="271.224" x2="374.776" y2="271.224" stroke="#d0d0d0" stroke-width="1.5" />
+<line x1="135" y1="287.224" x2="374.776" y2="287.224" stroke="#d0d0d0" stroke-width="1.5" />
+<line x1="135" y1="303.224" x2="374.776" y2="303.224" stroke="#d0d0d0" stroke-width="1.5" />
+<line x1="135" y1="319.224" x2="374.776" y2="319.224" stroke="#d0d0d0" stroke-width="1.5" />
+<line x1="135" y1="335.224" x2="374.776" y2="335.224" stroke="#d0d0d0" stroke-width="1.5" />
+<line x1="135" y1="351.224" x2="374.776" y2="351.224" stroke="#d0d0d0" stroke-width="1.5" />
+<line x1="135" y1="367.224" x2="374.776" y2="367.224" stroke="#d0d0d0" stroke-width="1.5" />
+<line x1="135" y1="383.224" x2="374.776" y2="383.224" stroke="#d0d0d0" stroke-width="1.5" />
+<line x1="135" y1="399.224" x2="374.776" y2="399.224" stroke="#d0d0d0" stroke-width="1.5" />
+<line x1="135" y1="415.224" x2="374.776" y2="415.224" stroke="#d0d0d0" stroke-width="1.5" />
+<line x1="135" y1="431.224" x2="374.776" y2="431.224" stroke="#d0d0d0" stroke-width="1.5" />
+
+  </g>
+</svg>

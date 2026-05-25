@@ -1,16 +1,45 @@
+import Link from "next/link";
+import Logo from "./Logo";
+
 export default function Footer() {
   return (
     <footer className="footer-wrapper">
       <div className="main-footer container">
         <div className="footer-col">
-          <p className="footer-origin"><strong>Envíos a todo el país</strong><br />Desde General Rodríguez,<br />Buenos Aires 🇦🇷</p>
+          <h5>Medios de Envío</h5>
+          <div className="shipping-methods">
+            <div className="shipping-icon-wrapper" title="Correo Argentino">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                <line x1="8" y1="21" x2="16" y2="21"></line>
+                <line x1="12" y1="17" x2="12" y2="21"></line>
+              </svg>
+              <span>Correo Arg.</span>
+            </div>
+            <div className="shipping-icon-wrapper" title="Andreani">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="1" y="3" width="15" height="13"></rect>
+                <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
+                <circle cx="5.5" cy="18.5" r="2.5"></circle>
+                <circle cx="18.5" cy="18.5" r="2.5"></circle>
+              </svg>
+              <span>Andreani</span>
+            </div>
+            <div className="shipping-icon-wrapper" title="Moto Mensajería">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <polyline points="12 6 12 12 16 14"></polyline>
+              </svg>
+              <span>Mensajería Exprés</span>
+            </div>
+          </div>
         </div>
         <div className="footer-col">
           <h5>Sobre Nosotros</h5>
           <ul>
             <li><a href="#">Historia</a></li>
-            <li><a href="#">Políticas de Envío</a></li>
-            <li><a href="#">FAQ</a></li>
+            <li><Link href="/politicas-envio">Políticas de Envío</Link></li>
+            <li><Link href="/faq">Preguntas Frecuentes (FAQ)</Link></li>
           </ul>
         </div>
         <div className="footer-col">
@@ -23,8 +52,9 @@ export default function Footer() {
         </div>
       </div>
 
-      <div className="footer-bottom">
-        <p>&copy; {new Date().getFullYear()} M•flowerBymaria. Todos los derechos reservados.</p>
+      <div className="footer-bottom" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '15px' }}>
+        <Logo size="small" color="#999" />
+        <p>&copy; {new Date().getFullYear()} M•flower. Todos los derechos reservados.</p>
       </div>
 
       <style>{`
@@ -64,10 +94,23 @@ export default function Footer() {
           gap: 2rem;
           padding: 4rem 1rem;
         }
-        .footer-origin {
+        .shipping-methods {
+          display: flex;
+          flex-direction: column;
+          gap: 15px;
+        }
+        .shipping-icon-wrapper {
+          display: flex;
+          align-items: center;
+          gap: 10px;
           color: #666;
-          font-size: 0.95rem;
-          line-height: 1.6;
+          font-size: 0.9rem;
+          font-weight: 500;
+        }
+        .shipping-icon-wrapper svg {
+          width: 24px;
+          height: 24px;
+          color: var(--pastel-pink);
         }
         .footer-col h5 {
           font-size: 1.1rem;

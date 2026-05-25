@@ -1,66 +1,57 @@
+"use client";
+import { useState, useEffect } from "react";
 import ProductCard from "./ProductCard";
-
-const mockProducts = [
-  {
-    id: 1,
-    name: "Cuaderno Sistema de Discos",
-    description: "Tapa plastificada. Hojas reposicionables 100gr.",
-    price: "18.500",
-    image: "/images/mflower_prod_cuaderno_1772749182939.png"
-  },
-  {
-    id: 2,
-    name: "Planner Anual",
-    description: "Formato horizontal. Anillado y con stickers.",
-    price: "22.000",
-    image: "/images/mflower_prod_planner_1772749261418.png"
-  },
-  {
-    id: 3,
-    name: "Ficheros con Separadores",
-    description: "Organiza todo por materia o mes.",
-    price: "15.000",
-    image: "/images/mflower_prod_fichero_1772749276913.png"
-  },
-  {
-    id: 4,
-    name: "Vaso de Vidrio Aesthetic",
-    description: "Con tapa de bambú y sorbete de vidrio.",
-    price: "12.000",
-    image: "/images/mflower_prod_vaso_1772749196170.png"
-  },
-  {
-    id: 5,
-    name: "Stickers Varios",
-    description: "Plancha de stickers troquelados mate.",
-    price: "4.500",
-    image: "/images/mflower_prod_stickers_1772749221956.png"
-  },
-  {
-    id: 6,
-    name: "Libreta A5 Notas",
-    description: "Ideal para la cartera, 60 hojas rayadas.",
-    price: "8.500",
-    image: "/images/mflower_prod_cuaderno_1772749182939.png" // reusing image for demo
-  }
-];
+import { supabase } from "../lib/supabase";
 
 export default function ProductGrid() {
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchProducts() {
+      const { data, error } = await supabase
+        .from('products')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (!error && data) {
+        setProducts(data.map(p => ({
+          ...p,
+          image: p.image_url,
+          shortDescription: p.short_description,
+          isBestSeller: p.is_best_seller,
+          // Format price for display (Supabase stores as number)
+          price: typeof p.price === 'number'
+            ? p.price.toLocaleString('es-AR', { minimumFractionDigits: 0, maximumFractionDigits: 0 })
+            : p.price
+        })));
+      }
+      setLoading(false);
+    }
+    fetchProducts();
+  }, []);
+
   return (
     <section className="product-grid-section">
       <div className="container">
         <div className="creative-space-header">
           <h2 className="creative-title">Tu espacio creativo empieza acá.</h2>
           <p className="creative-subtitle">
-            En M•flowerBymaria vas a encontrar herramientas pensadas con amor para organizar tu mundo y hacerlo un poquito mas lindo, para que tus ideas tengan el lugar que se merecen.
+            En M•flower by Maria vas a encontrar herramientas pensadas con amor para organizar tu mundo y hacerlo un poquito mas lindo, para que tus ideas tengan el lugar que se merecen.
           </p>
         </div>
 
-        <div className="grid-container">
-          {mockProducts.map((p) => (
-            <ProductCard key={p.id} product={p} />
-          ))}
-        </div>
+        {loading ? (
+          <div style={{ display: 'flex', justifyContent: 'center', padding: '4rem 0' }}>
+            <div style={{ width: '48px', height: '48px', border: '4px solid var(--pastel-pink)', borderTopColor: 'transparent', borderRadius: '50%', animation: 'spin 1s linear infinite' }}></div>
+          </div>
+        ) : (
+          <div className="grid-container">
+            {products.map((p) => (
+              <ProductCard key={p.id} product={p} />
+            ))}
+          </div>
+        )}
       </div>
 
       <style>{`
@@ -90,6 +81,11 @@ export default function ProductGrid() {
           display: grid;
           grid-template-columns: repeat(3, 1fr);
           gap: 2rem;
+        }
+
+        @keyframes spin {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
         }
 
         @media (max-width: 900px) {

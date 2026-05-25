@@ -1,5 +1,6 @@
 "use client";
 import { useState } from 'react';
+import Logo from './Logo';
 
 export default function AccountModal({ isOpen, onClose }) {
     const [isLogin, setIsLogin] = useState(true);
@@ -17,8 +18,8 @@ export default function AccountModal({ isOpen, onClose }) {
         <div className="modal-overlay">
             <div className="modal-content">
                 <button className="modal-close" onClick={onClose}>&times;</button>
-                <div className="modal-header">
-                    <h2 className="modal-title font-brand">M•flowerBymaria</h2>
+                <div className="modal-header" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                    <Logo size="medium" color="#D47792" className="mb-2" />
                     <p className="modal-subtitle">{isLogin ? '¡Qué lindo verte de nuevo!' : 'Sumate a nuestra comunidad.'}</p>
                 </div>
 

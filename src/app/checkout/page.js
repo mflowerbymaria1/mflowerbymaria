@@ -1,0 +1,467 @@
+"use client";
+import Header from "../../components/Header";
+import Footer from "../../components/Footer";
+import ShippingCalculator from "../../components/ShippingCalculator";
+import { useCart } from "../../store/CartContext";
+import Link from "next/link";
+import { useState } from "react";
+
+export default function CheckoutPage() {
+    const { cartItems, cartCount } = useCart();
+    const [formData, setFormData] = useState({
+        nombre: "", apellido: "", email: "", telefono: "", direccion: "", ciudad: ""
+    });
+    const [shippingType, setShippingType] = useState('envio'); // 'envio' or 'retiro'
+    const [selectedShipping, setSelectedShipping] = useState(null);
+    const [paymentMethod, setPaymentMethod] = useState('mercadopago');
+    const [showTransferModal, setShowTransferModal] = useState(false);
+
+    const cartTotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    const discount = paymentMethod === 'transferencia' ? cartTotal * 0.20 : 0;
+    const shippingCost = selectedShipping ? selectedShipping.price : 0;
+    const finalTotal = cartTotal - discount + shippingCost;
+
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setFormData(prev => ({ ...prev, [name]: value }));
+    };
+
+    const [isProcessing, setIsProcessing] = useState(false);
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        if (shippingType === 'envio' && !selectedShipping) {
+            alert("Por favor calculá y seleccioná una opción de envío antes de continuar.");
+            return;
+        }
+
+        setIsProcessing(true);
+
+        try {
+            if (paymentMethod === 'transferencia') {
+                // Transfer workflow
+                setIsProcessing(false);
+                setShowTransferModal(true);
+                return;
+            }
+
+            // Mercado Pago workflow
+            const res = await fetch('/api/checkout', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    items: cartItems,
+                    payer: formData,
+                    shippingCost: shippingCost
+                })
+            });
+
+            const data = await res.json();
+
+            if (data.success && data.init_point) {
+                // Redirect user to Mercado Pago checkout
+                window.location.href = data.init_point;
+            } else {
+                alert("Ocurrió un error al procesar el pago. Por favor intenta nuevamente.");
+                setIsProcessing(false);
+            }
+        } catch (err) {
+            console.error(err);
+            alert("Error de conexión. Revisa tu internet e intenta nuevamente.");
+            setIsProcessing(false);
+        }
+    };
+
+    if (cartItems.length === 0) {
+        return (
+            <div className="flex flex-col min-h-screen">
+                <Header />
+                <main className="flex-grow flex items-center justify-center py-20 bg-background">
+                    <div className="text-center max-w-md mx-auto p-8 bg-white rounded-2xl shadow-sm border border-gray-100 mt-10">
+                        <span className="text-6xl mb-6 block" style={{ fontSize: '4rem' }}>🛒</span>
+                        <h2 className="text-2xl font-quicksand font-bold text-gray-800 mb-4" style={{ fontSize: '1.5rem', marginBottom: '1rem', fontWeight: 'bold' }}>Tu carrito está vacío</h2>
+                        <p className="text-gray-500 mb-8" style={{ color: '#6b7280', marginBottom: '2rem' }}>Agrega algunos productos antes de finalizar la compra.</p>
+                        <Link href="/productos" className="bg-pink text-white px-8 py-3 rounded-full font-bold hover-bg-pink-dark transition-colors inline-block w-full" style={{ background: 'var(--pastel-pink)', color: 'white', padding: '12px 24px', borderRadius: '9999px', textDecoration: 'none', fontWeight: 'bold', display: 'inline-block' }}>
+                            Volver a la tienda
+                        </Link>
+                    </div>
+                </main>
+                <Footer />
+            </div>
+        );
+    }
+
+    return (
+        <div className="flex flex-col min-h-screen">
+            <Header />
+            <main className="flex-grow bg-background py-12">
+                <div className="container min-h-[60vh]" style={{ padding: '20px' }}>
+                    <h1 className="font-quicksand text-3xl text-gray-800 font-bold mb-8" style={{ fontSize: '2rem', marginBottom: '2rem', fontWeight: 'bold', color: '#1f2937' }}>Finalizar Compra</h1>
+
+                    <div className="checkout-layout">
+                        {/* Formulario */}
+                        <div className="checkout-form-container">
+                            <form onSubmit={handleSubmit} className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100" style={{ background: 'white', padding: '1.5rem', borderRadius: '1rem', boxShadow: '0 1px 2px rgba(0,0,0,0.05)', border: '1px solid #f3f4f6' }}>
+                                <h2 className="text-xl font-bold mb-6 text-gray-800" style={{ fontSize: '1.25rem', marginBottom: '1.5rem', fontWeight: 'bold' }}>Datos de Envío</h2>
+                                <div className="form-grid">
+                                    <div className="form-group">
+                                        <label>Nombre</label>
+                                        <input required type="text" name="nombre" value={formData.nombre} onChange={handleInputChange} />
+                                    </div>
+                                    <div className="form-group">
+                                        <label>Apellido</label>
+                                        <input required type="text" name="apellido" value={formData.apellido} onChange={handleInputChange} />
+                                    </div>
+                                    <div className="form-group full-width">
+                                        <label>Email</label>
+                                        <input required type="email" name="email" value={formData.email} onChange={handleInputChange} />
+                                    </div>
+                                    <div className="form-group full-width">
+                                        <label>Teléfono</label>
+                                        <input required type="tel" name="telefono" value={formData.telefono} onChange={handleInputChange} />
+                                    </div>
+                                    <div className="form-group full-width">
+                                        <label>Dirección {shippingType === 'retiro' && '(Opcional)'}</label>
+                                        <input required={shippingType === 'envio'} type="text" name="direccion" value={formData.direccion} onChange={handleInputChange} />
+                                    </div>
+                                </div>
+
+                                <div className="shipping-type-selector mt-8" style={{ marginTop: '2rem' }}>
+                                    <h3 className="text-lg font-bold mb-4 text-gray-800" style={{ fontSize: '1.125rem', marginBottom: '1rem', fontWeight: 'bold' }}>Método de Entrega</h3>
+                                    <div className="payment-options">
+                                        <label className={`payment-option ${shippingType === 'envio' ? 'active' : ''}`}>
+                                            <input
+                                                type="radio"
+                                                name="shippingType"
+                                                value="envio"
+                                                checked={shippingType === 'envio'}
+                                                onChange={() => setShippingType('envio')}
+                                            />
+                                            <div className="payment-option-details">
+                                                <span className="font-bold">Envío a Domicilio</span>
+                                                <span className="text-sm text-gray-500">Calculá el costo con tu código postal</span>
+                                            </div>
+                                        </label>
+                                        <label className={`payment-option ${shippingType === 'retiro' ? 'active' : ''}`}>
+                                            <input
+                                                type="radio"
+                                                name="shippingType"
+                                                value="retiro"
+                                                checked={shippingType === 'retiro'}
+                                                onChange={() => {
+                                                    setShippingType('retiro');
+                                                    setSelectedShipping(null);
+                                                }}
+                                            />
+                                            <div className="payment-option-details">
+                                                <span className="font-bold text-pink">Acordar retiro</span>
+                                                <span className="text-sm text-gray-500">General Rodriguez</span>
+                                            </div>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div className="payment-method-selector mt-8" style={{ marginTop: '2rem' }}>
+                                    <h3 className="text-lg font-bold mb-4 text-gray-800" style={{ fontSize: '1.125rem', marginBottom: '1rem', fontWeight: 'bold' }}>Medio de Pago</h3>
+                                    <div className="payment-options">
+                                        <label className={`payment-option ${paymentMethod === 'mercadopago' ? 'active' : ''}`}>
+                                            <input
+                                                type="radio"
+                                                name="paymentMethod"
+                                                value="mercadopago"
+                                                checked={paymentMethod === 'mercadopago'}
+                                                onChange={(e) => setPaymentMethod(e.target.value)}
+                                            />
+                                            <div className="payment-option-details">
+                                                <span className="font-bold">Mercado Pago</span>
+                                                <span className="text-sm text-gray-500">Tarjetas, Dinero en cuenta</span>
+                                            </div>
+                                        </label>
+                                        <label className={`payment-option ${paymentMethod === 'transferencia' ? 'active' : ''}`}>
+                                            <input
+                                                type="radio"
+                                                name="paymentMethod"
+                                                value="transferencia"
+                                                checked={paymentMethod === 'transferencia'}
+                                                onChange={(e) => setPaymentMethod(e.target.value)}
+                                            />
+                                            <div className="payment-option-details">
+                                                <span className="font-bold text-pink">Transferencia - 20% OFF</span>
+                                                <span className="text-sm text-gray-500">El descuento se aplica al instante</span>
+                                            </div>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <button type="submit" disabled={isProcessing} className="submit-btn mt-8" style={{ marginTop: '2rem' }}>
+                                    {isProcessing ? 'Procesando...' : (paymentMethod === 'transferencia' ? 'Ver Datos de Transferencia' : 'Pagar con Mercado Pago')}
+                                </button>
+                            </form>
+                        </div>
+
+                        {/* Resumen */}
+                        <div className="checkout-summary-container">
+                            <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 sticky top-24" style={{ background: 'white', padding: '1.5rem', borderRadius: '1rem', boxShadow: '0 1px 2px rgba(0,0,0,0.05)', border: '1px solid #f3f4f6', position: 'sticky', top: '6rem' }}>
+                                <h2 className="text-xl font-bold mb-6 text-gray-800" style={{ fontSize: '1.25rem', marginBottom: '1.5rem', fontWeight: 'bold' }}>Resumen del Pedido</h2>
+                                <div className="summary-items mb-6" style={{ marginBottom: '1.5rem' }}>
+                                    {cartItems.map(item => (
+                                        <div key={item.id} className="summary-item">
+                                            <div className="item-info">
+                                                <span className="item-qty">{item.quantity}x</span>
+                                                <span className="item-name truncate">{item.name}</span>
+                                            </div>
+                                            <span className="item-price">${(item.price * item.quantity).toLocaleString('es-AR')}</span>
+                                        </div>
+                                    ))}
+                                </div>
+                                <div className="summary-calculations pt-4 border-t border-gray-100" style={{ paddingTop: '1rem', borderTop: '1px solid #f3f4f6' }}>
+                                    <div className="flex justify-between mb-2">
+                                        <span className="text-gray-600">Subtotal</span>
+                                        <span className="font-medium">${cartTotal.toLocaleString('es-AR')}</span>
+                                    </div>
+                                    {discount > 0 && (
+                                        <div className="flex justify-between mb-2 text-pink">
+                                            <span>Descuento (20%)</span>
+                                            <span className="font-bold">-${discount.toLocaleString('es-AR')}</span>
+                                        </div>
+                                    )}
+                                    <div className="flex justify-between mb-4">
+                                        <span className="text-gray-600">
+                                            Entrega {shippingType === 'retiro' ? '(Acordar retiro)' : (selectedShipping ? `(${selectedShipping.provider})` : '')}
+                                        </span>
+                                        <span className="font-medium">
+                                            {shippingType === 'retiro' ? 'Gratis' : (selectedShipping ? `$${shippingCost.toLocaleString('es-AR')}` : 'A calcular')}
+                                        </span>
+                                    </div>
+                                    <div className="flex justify-between items-center pt-4 border-t border-gray-200">
+                                        <span className="text-lg font-bold text-gray-800" style={{ fontSize: '1.125rem', color: '#1f2937' }}>Total Final</span>
+                                        <span className="text-2xl font-bold text-pink" style={{ fontSize: '1.5rem' }}>${finalTotal.toLocaleString('es-AR')}</span>
+                                    </div>
+                                </div>
+
+                                {shippingType === 'envio' && (
+                                    <div className="mt-8 pt-6 border-t border-gray-100" style={{ marginTop: '2rem', paddingTop: '1.5rem', borderTop: '1px solid #f3f4f6' }}>
+                                        <ShippingCalculator
+                                            onSelectShipping={setSelectedShipping}
+                                            selectedProvider={selectedShipping?.provider}
+                                        />
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Transfer Modal */}
+                {showTransferModal && (
+                    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50" style={{ zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <div className="bg-white rounded-2xl shadow-2xl relative transfer-modal-content" style={{ background: '#fff', padding: '20px 20px 30px 20px', borderRadius: '20px', maxWidth: '380px', width: '95%', textAlign: 'center', boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)', border: '2px solid #FFD1DC', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                            <button onClick={() => setShowTransferModal(false)} className="absolute top-4 right-4 text-gray-400 hover:text-gray-600" style={{ position: 'absolute', top: '15px', right: '15px', background: 'none', border: 'none', cursor: 'pointer', color: '#9ca3af', zIndex: 10 }}>
+                                <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                            </button>
+                            <div style={{ marginBottom: '25px', width: '100%', textAlign: 'center' }}>
+                                <h3 className="text-2xl font-bold text-gray-800" style={{ fontSize: '1.4rem', fontWeight: 'bold', color: '#1f2937', marginBottom: '10px', width: '100%', textAlign: 'center' }}>¡Pedido Confirmado! ✓</h3>
+                                <p style={{ color: '#6b7280', margin: '0 auto', maxWidth: '90%', textAlign: 'center', fontSize: '0.9rem' }}>
+                                    {shippingType === 'retiro'
+                                        ? "Solo falta que realices el pago y acordar retiro en General Rodríguez."
+                                        : "Solo falta que realices el pago para que preparemos tu envío."}
+                                </p>
+                            </div>
+                            <div className="bg-pink-50 rounded-xl" style={{ backgroundColor: 'rgba(255, 209, 220, 0.2)', padding: '20px', borderRadius: '16px', marginBottom: '25px', display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%' }}>
+                                <div style={{ marginBottom: '20px', textAlign: 'center', width: '100%' }}>
+                                    <span style={{ display: 'block', fontSize: '0.8rem', color: '#6b7280', marginBottom: '4px', textAlign: 'center' }}>Monto a transferir:</span>
+                                    <span className="text-pink" style={{ fontSize: '1.8rem', fontWeight: 'bold', color: 'var(--pastel-pink)', textAlign: 'center', display: 'block' }}>${finalTotal.toLocaleString('es-AR')}</span>
+                                </div>
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', width: '100%', alignItems: 'center' }}>
+                                    <div style={{ textAlign: 'center', width: '100%' }}>
+                                        <span style={{ display: 'block', fontSize: '0.85rem', color: '#6b7280', marginBottom: '2px', textAlign: 'center' }}>CVU:</span>
+                                        <span style={{ fontFamily: 'monospace', fontWeight: '500', color: '#1f2937', fontSize: '1rem', wordBreak: 'break-all', textAlign: 'center', display: 'block' }}>0000003100097797485299</span>
+                                    </div>
+                                    <div style={{ textAlign: 'center', width: '100%' }}>
+                                        <span style={{ display: 'block', fontSize: '0.85rem', color: '#6b7280', marginBottom: '2px', textAlign: 'center' }}>Alias:</span>
+                                        <span style={{ fontFamily: 'monospace', fontWeight: '500', color: '#1f2937', fontSize: '1rem', textAlign: 'center', display: 'block' }}>m.flower</span>
+                                    </div>
+                                    <div style={{ textAlign: 'center', width: '100%' }}>
+                                        <span style={{ display: 'block', fontSize: '0.85rem', color: '#6b7280', marginBottom: '2px', textAlign: 'center' }}>Titular:</span>
+                                        <span style={{ fontWeight: '500', color: '#1f2937', fontSize: '1rem', textAlign: 'center', display: 'block' }}>Maria Florencia Da Costa Cruz</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div style={{ fontSize: '0.85rem', color: '#6b7280', marginBottom: '25px', padding: '0 10px', textAlign: 'center', width: '100%' }}>
+                                Una vez realizada la transferencia, envíanos el comprobante por WhatsApp. Nos contactaremos a <strong style={{ color: '#374151' }}>{formData.email}</strong>.
+                            </div>
+                            <button
+                                onClick={() => {
+                                    setShowTransferModal(false);
+                                    window.location.href = '/';
+                                }}
+                                className="bg-pink text-white"
+                                style={{ width: '100%', backgroundColor: 'var(--pastel-pink)', color: 'white', padding: '14px', borderRadius: '12px', fontWeight: 'bold', border: 'none', cursor: 'pointer', display: 'block', textAlign: 'center', marginBottom: '10px' }}
+                            >
+                                Entendido, volver al inicio
+                            </button>
+                            {/* Spacer to force bottom space */}
+                            <div style={{ height: '30px', width: '100%' }}></div>
+                        </div>
+                    </div>
+                )}
+            </main>
+            <Footer />
+
+            <style>{`
+                .checkout-layout {
+                    display: grid;
+                    grid-template-columns: 1fr 350px;
+                    gap: 30px;
+                    align-items: start;
+                }
+                .form-grid {
+                    display: grid;
+                    grid-template-columns: 1fr 1fr;
+                    gap: 20px;
+                }
+                .form-group {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 8px;
+                }
+                .form-group.full-width {
+                    grid-column: 1 / -1;
+                }
+                .form-group label {
+                    font-size: 0.9rem;
+                    color: #4b5563;
+                    font-weight: 500;
+                }
+                .form-group input {
+                    padding: 12px;
+                    border: 1px solid #e5e7eb;
+                    border-radius: 8px;
+                    font-size: 1rem;
+                    transition: border-color 0.2s;
+                    outline: none;
+                }
+                .form-group input:focus {
+                    border-color: var(--pastel-pink);
+                }
+                .submit-btn {
+                    width: 100%;
+                    background-color: var(--pastel-pink);
+                    color: white;
+                    padding: 16px;
+                    border-radius: 8px;
+                    font-weight: bold;
+                    font-size: 1.1rem;
+                    border: none;
+                    cursor: pointer;
+                    transition: background-color 0.2s;
+                }
+                .submit-btn:hover:not(:disabled) {
+                    background-color: #d18ab2;
+                }
+                .submit-btn:disabled {
+                    opacity: 0.7;
+                    cursor: not-allowed;
+                }
+                .summary-item {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    padding: 10px 0;
+                    border-bottom: 1px dashed #f3f4f6;
+                    font-size: 0.95rem;
+                }
+                .item-info {
+                    display: flex;
+                    gap: 10px;
+                    align-items: center;
+                    max-width: 70%;
+                }
+                .item-qty {
+                    font-weight: 600;
+                    color: #6b7280;
+                }
+                .item-name {
+                    color: #374151;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                }
+                .item-price {
+                    font-weight: 600;
+                    color: #1f2937;
+                }
+                .summary-total {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                }
+                .payment-options {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 12px;
+                }
+                .payment-option {
+                    display: flex;
+                    align-items: center;
+                    gap: 12px;
+                    padding: 16px;
+                    border: 1px solid #e5e7eb;
+                    border-radius: 8px;
+                    cursor: pointer;
+                    transition: all 0.2s;
+                }
+                .payment-option.active {
+                    border-color: var(--pastel-pink);
+                    background-color: rgba(255, 209, 220, 0.05);
+                }
+                .payment-option input[type="radio"] {
+                    accent-color: var(--pastel-pink);
+                    width: 18px;
+                    height: 18px;
+                }
+                .payment-option-details {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 4px;
+                }
+
+                .flex { display: flex; }
+                .flex-col { flex-direction: column; }
+                .justify-between { justify-content: space-between; }
+                .items-center { align-items: center; }
+                .min-h-screen { min-height: 100vh; }
+                .flex-grow { flex-grow: 1; }
+                .bg-background { background-color: #fafafa; }
+                .text-pink { color: var(--pastel-pink); }
+                .font-medium { font-weight: 500; }
+                .mb-2 { margin-bottom: 0.5rem; }
+                .mb-4 { margin-bottom: 1rem; }
+                .border-gray-200 { border-color: #e5e7eb; }
+
+                .transfer-modal-content {
+                    text-align: center !important;
+                    display: flex !important;
+                    flex-direction: column !important;
+                    align-items: center !important;
+                    padding: 25px 25px 50px 25px !important;
+                }
+                .transfer-modal-content * {
+                    text-align: center !important;
+                }
+
+                @media (max-width: 768px) {
+                    .checkout-layout {
+                        grid-template-columns: 1fr;
+                        display: flex;
+                        flex-direction: column-reverse;
+                    }
+                    .form-grid {
+                        grid-template-columns: 1fr;
+                    }
+                }
+            `}</style>
+        </div>
+    );
+}

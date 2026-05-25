@@ -1,7 +1,7 @@
 "use client";
 import { useState } from 'react';
 
-export default function ShippingCalculator() {
+export default function ShippingCalculator({ onSelectShipping, selectedProvider }) {
     const [zipCode, setZipCode] = useState('');
     const [results, setResults] = useState(null);
     const [loading, setLoading] = useState(false);
@@ -23,6 +23,9 @@ export default function ShippingCalculator() {
 
             if (data.success && data.quotes.length > 0) {
                 setResults(data.quotes);
+                if (onSelectShipping) {
+                    onSelectShipping(data.quotes[0]); // Select first result by default
+                }
             } else {
                 setError('No pudimos calcular el envío para ese CP.');
             }
@@ -66,13 +69,19 @@ export default function ShippingCalculator() {
             {results && (
                 <div className="shipping-results mt-4">
                     {results.map((quote, idx) => (
-                        <div key={idx} className="shipping-option">
+                        <div
+                            key={idx}
+                            className={`shipping-option ${selectedProvider === quote.provider ? 'selected' : ''}`}
+                            onClick={() => onSelectShipping && onSelectShipping(quote)}
+                            role="button"
+                            tabIndex={0}
+                        >
                             <div className="shipping-option-left">
                                 <span className="provider font-bold">{quote.provider}</span>
                                 <span className="time text-xs text-gray-500">Demora prod: {quote.days}</span>
                             </div>
                             <div className="shipping-option-right">
-                                <span className="cost font-bold text-pink">${quote.price}</span>
+                                <span className="cost font-bold text-pink">${quote.price.toLocaleString('es-AR')}</span>
                             </div>
                         </div>
                     ))}
@@ -105,29 +114,33 @@ export default function ShippingCalculator() {
                 
                 .shipping-form {
                     display: flex;
-                    gap: 10px;
+                    border: 1px solid #ddd;
+                    border-radius: 8px;
+                    overflow: hidden;
+                    transition: border-color 0.2s;
+                }
+                .shipping-form:focus-within {
+                    border-color: var(--pastel-pink);
                 }
                 .shipping-input {
                     flex: 1;
                     padding: 10px 15px;
-                    border: 1px solid #ddd;
-                    border-radius: 8px;
+                    border: none;
                     outline: none;
-                    transition: border-color 0.2s;
-                }
-                .shipping-input:focus {
-                    border-color: var(--pastel-pink);
+                    width: 100%; /* Force it to take space */
                 }
                 .shipping-btn {
-                    padding: 10px 20px;
+                    padding: 10px 18px;
                     background-color: var(--pastel-green);
                     border: none;
-                    border-radius: 8px;
-                    color: #fff;
+                    color: #2F5D38;
                     font-weight: bold;
                     cursor: pointer;
                     transition: background-color 0.2s;
-                    color: #2F5D38;
+                    flex-shrink: 0;
+                    white-space: nowrap;
+                    margin-left: -5px; /* Pull it a bit to the left so it doesn't clip */
+                    border-radius: 0 8px 8px 0; /* Match parent's right corners */
                 }
                 .shipping-btn:hover {
                     background-color: var(--pastel-green-hover);
@@ -153,6 +166,16 @@ export default function ShippingCalculator() {
                     border: 1px dashed #ddd;
                     border-radius: 8px;
                     background: #fafafa;
+                    cursor: pointer;
+                    transition: all 0.2s;
+                }
+                .shipping-option:hover {
+                    border-color: #ccc;
+                    background: #f0f0f0;
+                }
+                .shipping-option.selected {
+                    border: 2px solid var(--pastel-pink);
+                    background: rgba(255, 209, 220, 0.1);
                 }
                 .shipping-option-left {
                     display: flex;

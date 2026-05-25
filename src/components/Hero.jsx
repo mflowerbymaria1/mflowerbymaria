@@ -1,18 +1,21 @@
+import Link from "next/link";
+
 export default function Hero() {
   return (
-    <section className="hero-static" style={{ backgroundImage: `url('/images/mflower_hero_desk_1772749167247.png')` }}>
+    <section className="hero-static">
       <div className="overlay"></div>
       <div className="hero-content">
         <p className="hero-subtitle">Todo lo que tu lado girly necesita.</p>
-        <button className="cta-button">EXPLORAR COLECCIÓN</button>
+        <Link href="/productos" className="cta-button">EXPLORAR COLECCIÓN</Link>
       </div>
 
       <style>{`
         .hero-static {
           position: relative;
           width: 100vw;
-          height: 70vh;
-          min-height: 500px;
+          height: 85vh;
+          min-height: 600px;
+          background-image: url('/images/mflower_hero_desk_new.jpg');
           background-size: cover;
           background-position: center;
           display: flex;
@@ -26,7 +29,8 @@ export default function Hero() {
           left: 0;
           width: 100%;
           height: 100%;
-          background: rgba(255, 255, 255, 0.2); /* Very subtle overlay, no heavy glows */
+          background: rgba(255, 255, 255, 0); /* Removed the white filter */
+          z-index: 1;
         }
         .hero-content {
           position: relative;
@@ -56,10 +60,13 @@ export default function Hero() {
           cursor: pointer;
           letter-spacing: 1px;
           transition: all 0.3s ease;
+          text-decoration: none;
+          display: inline-block;
         }
         .cta-button:hover {
           background-color: var(--pastel-pink-hover);
           transform: translateY(-2px);
+          color: white;
         }
       `}</style>
     </section>

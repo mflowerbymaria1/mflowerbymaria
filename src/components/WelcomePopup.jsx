@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from 'react';
+import Logo from './Logo';
 
 export default function WelcomePopup() {
     const [isOpen, setIsOpen] = useState(false);
@@ -35,9 +36,9 @@ export default function WelcomePopup() {
         <div className="popup-overlay">
             <div className="popup-content">
                 <button className="popup-close" onClick={handleClose}>&times;</button>
-                <div className="popup-header">
-                    <h2 className="font-brand popup-title">¡Hola!</h2>
-                    <p className="popup-subtitle">Suscribite a M•flowerBymaria y llevate un <strong>10% OFF</strong> en tu primera compra.</p>
+                <div className="popup-header" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' }}>
+                    <Logo size="large" color="#D47792" />
+                    <p className="popup-subtitle">Suscribite y llevate un <strong>10% OFF</strong> en tu primera compra.</p>
                 </div>
 
                 {!showCode ? (
