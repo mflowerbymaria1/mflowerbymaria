@@ -1,8 +1,11 @@
 import { NextResponse } from 'next/server';
 
-export function proxy(request) {
-    // Only protect /admin routes
-    if (request.nextUrl.pathname.startsWith('/admin')) {
+export function middleware(request) {
+    const url = request.nextUrl.clone();
+    const pathname = url.pathname;
+
+    // 1. Admin Authentication Logic
+    if (pathname.startsWith('/admin')) {
         const authCookie = request.cookies.get('mflower_admin_auth');
         
         // If authenticated, allow through
@@ -11,12 +14,11 @@ export function proxy(request) {
         }
 
         // Check if this is the login attempt (POST to /admin with password in URL)
-        const loginPassword = request.nextUrl.searchParams.get('pw');
+        const loginPassword = url.searchParams.get('pw');
         const adminPassword = process.env.ADMIN_PASSWORD || 'mflower2026';
 
         if (loginPassword === adminPassword) {
             // Set auth cookie and redirect to clean URL
-            const url = request.nextUrl.clone();
             url.searchParams.delete('pw');
             const response = NextResponse.redirect(url);
             response.cookies.set('mflower_admin_auth', 'authenticated', {
@@ -113,9 +115,25 @@ export function proxy(request) {
         });
     }
 
+    // 2. Maintenance Mode Logic
+    // If NEXT_PUBLIC_MAINTENANCE_MODE is true, block everything EXCEPT /admin, /mantenimiento, and static assets
+    if (process.env.NEXT_PUBLIC_MAINTENANCE_MODE === 'true') {
+        if (!pathname.startsWith('/admin') && !pathname.startsWith('/mantenimiento') && !pathname.startsWith('/_next') && !pathname.startsWith('/images') && !pathname.startsWith('/fonts')) {
+            url.pathname = '/mantenimiento';
+            return NextResponse.redirect(url);
+        }
+    } else {
+        // If maintenance is OFF, and user tries to visit /mantenimiento, redirect them to home
+        if (pathname.startsWith('/mantenimiento')) {
+            url.pathname = '/';
+            return NextResponse.redirect(url);
+        }
+    }
+
     return NextResponse.next();
 }
 
 export const config = {
-    matcher: '/admin/:path*'
+    // Matcher config ensures middleware runs on all paths except static files and api routes
+    matcher: ['/((?!_next/static|_next/image|favicon.ico|api).*)']
 };

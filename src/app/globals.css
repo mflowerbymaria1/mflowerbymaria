@@ -1,11 +1,7 @@
 @import "tailwindcss";
 @source "../**/*.{js,ts,jsx,tsx,mdx}";
 
-@font-face {
-  font-family: 'Hans Hand';
-  src: local('Hans Hand');
-  font-display: swap;
-}
+@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&display=swap');
 
 :root {
   --background: #FDFBF7;
@@ -15,7 +11,7 @@
   --pastel-green: #B2F2BB;
   --pastel-pink-hover: #ffb8c9;
   --pastel-green-hover: #9ce6a6;
-  --font-brand: 'Hans Hand', 'Caveat', 'Comic Sans MS', cursive;
+  --font-brand: 'Caveat', 'Comic Sans MS', cursive;
 }
 
 html,
