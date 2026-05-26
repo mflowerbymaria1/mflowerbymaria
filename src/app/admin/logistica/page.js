@@ -30,7 +30,7 @@ export default function LogisticaPage() {
     setLoading(true);
     const { data, error } = await supabase
       .from('orders')
-      .select('*, customers(full_name, phone, address, city)')
+      .select('*')
       .order('created_at', { ascending: false });
 
     if (error) {
@@ -121,10 +121,10 @@ export default function LogisticaPage() {
                     <div className="flex justify-between items-start">
                         <div className="flex items-center space-x-4">
                             <div className="w-14 h-14 rounded-2xl bg-rose-50 flex items-center justify-center text-rose-600 font-black text-xl">
-                                {(order.customers?.full_name || 'C')[0]}
+                                {(order.customer_name || 'C')[0]}
                             </div>
                             <div>
-                                <h3 className="text-xl font-black text-gray-900 leading-none">{order.customers?.full_name}</h3>
+                                <h3 className="text-xl font-black text-gray-900 leading-none">{order.customer_name}</h3>
                                 <p className="text-xs text-gray-400 font-bold uppercase tracking-widest mt-1">Pedido #{order.id.slice(0,8)}</p>
                             </div>
                         </div>
@@ -142,7 +142,7 @@ export default function LogisticaPage() {
                                 <span className="text-[10px] font-black uppercase tracking-wider">Destino</span>
                             </div>
                             <p className="text-sm font-bold text-gray-700 leading-tight">
-                                {order.shipping_address?.street} {order.shipping_address?.number}, {order.shipping_address?.city}
+                                {order.shipping_address}
                             </p>
                         </div>
                         <div className="bg-gray-50 p-5 rounded-3xl space-y-2 border border-gray-100/50">

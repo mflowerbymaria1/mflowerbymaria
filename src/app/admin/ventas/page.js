@@ -19,7 +19,7 @@ export default function VentasPage() {
     setLoading(true);
     const { data, error } = await supabase
       .from('orders')
-      .select('*, customers(full_name, email, phone, address, city, postal_code), order_items(*, products(name))')
+      .select('*')
       .order('created_at', { ascending: false });
 
     if (error) {
@@ -39,7 +39,7 @@ export default function VentasPage() {
 
   const filteredOrders = orders.filter(order => 
     order.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    (order.customers?.full_name || '').toLowerCase().includes(searchTerm.toLowerCase())
+    (order.customer_name || '').toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
@@ -95,7 +95,7 @@ export default function VentasPage() {
                 <tr key={order.id} className="hover:bg-gray-50/50 transition-colors">
                     <td className="px-6 py-4 text-sm font-medium text-rose-600">#{order.id.slice(0, 8)}</td>
                     <td className="px-6 py-4">
-                        <p className="text-sm font-medium text-gray-800">{order.customers?.full_name || 'Desconocido'}</p>
+                        <p className="text-sm font-medium text-gray-800">{order.customer_name || 'Desconocido'}</p>
                         <p className="text-[10px] text-gray-500">{new Date(order.created_at).toLocaleDateString()}</p>
                     </td>
                     <td className="px-6 py-4 text-sm font-bold text-gray-700">${Number(order.total_amount).toLocaleString('es-AR')}</td>
@@ -157,13 +157,12 @@ export default function VentasPage() {
                     <div className="grid grid-cols-2 gap-8">
                         <div className="space-y-1">
                             <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Cliente</p>
-                            <p className="font-bold text-gray-800">{selectedOrder.customers?.full_name}</p>
-                            <p className="text-sm text-gray-500">{selectedOrder.customers?.phone}</p>
+                            <p className="font-bold text-gray-800">{selectedOrder.customer_name}</p>
+                            <p className="text-sm text-gray-500">{selectedOrder.customer_phone}</p>
                         </div>
                         <div className="space-y-1">
                             <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Dirección</p>
-                            <p className="text-sm font-bold text-gray-800">{selectedOrder.shipping_address?.street} {selectedOrder.shipping_address?.number}</p>
-                            <p className="text-sm text-gray-500">{selectedOrder.shipping_address?.city}</p>
+                            <p className="text-sm font-bold text-gray-800">{selectedOrder.shipping_address}</p>
                         </div>
                     </div>
 
@@ -171,15 +170,15 @@ export default function VentasPage() {
                     <div className="space-y-4">
                         <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Productos</p>
                         <div className="space-y-3">
-                            {selectedOrder.order_items?.map((item, idx) => (
+                            {selectedOrder.items?.map((item, idx) => (
                                 <div key={idx} className="flex justify-between items-center p-4 bg-gray-50 rounded-2xl border border-gray-100">
                                     <div className="flex items-center space-x-4">
                                         <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center font-black text-rose-500 text-sm border border-rose-100">
                                             {item.quantity}
                                         </div>
-                                        <p className="font-bold text-gray-800">{item.products?.name}</p>
+                                        <p className="font-bold text-gray-800">{item.name}</p>
                                     </div>
-                                    <p className="font-black text-gray-900">${Number(item.unit_price).toLocaleString('es-AR')}</p>
+                                    <p className="font-black text-gray-900">${Number(item.price || item.unit_price || 0).toLocaleString('es-AR')}</p>
                                 </div>
                             ))}
                         </div>
@@ -226,14 +225,13 @@ export default function VentasPage() {
             <div className="grid grid-cols-2 gap-10 mb-10">
                 <div className="bg-gray-50 p-6 rounded-2xl">
                     <h2 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">Datos del Cliente</h2>
-                    <p className="text-lg font-black text-gray-800">{selectedOrder.customers?.full_name}</p>
-                    <p className="text-sm">{selectedOrder.customers?.email}</p>
-                    <p className="text-sm">{selectedOrder.customers?.phone}</p>
+                    <p className="text-lg font-black text-gray-800">{selectedOrder.customer_name}</p>
+                    <p className="text-sm">{selectedOrder.customer_email}</p>
+                    <p className="text-sm">{selectedOrder.customer_phone}</p>
                 </div>
                 <div className="bg-gray-50 p-6 rounded-2xl border-l-4 border-rose-500">
                     <h2 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">Destino de Envío</h2>
-                    <p className="text-sm font-bold">{selectedOrder.shipping_address?.street} {selectedOrder.shipping_address?.number}</p>
-                    <p className="text-sm">{selectedOrder.shipping_address?.city}, CP {selectedOrder.shipping_address?.postalCode}</p>
+                    <p className="text-sm font-bold">{selectedOrder.shipping_address}</p>
                     <p className="text-sm font-medium mt-2 text-rose-600">Método: {selectedOrder.shipping_method}</p>
                 </div>
             </div>
@@ -241,13 +239,13 @@ export default function VentasPage() {
             <div className="mb-10">
                 <h2 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4 border-b border-gray-100 pb-2">Productos a Preparar</h2>
                 <div className="space-y-4">
-                    {selectedOrder.order_items?.map((item, idx) => (
+                    {selectedOrder.items?.map((item, idx) => (
                         <div key={idx} className="flex items-center justify-between py-3 border-b border-gray-50">
                             <div className="flex items-center space-x-4">
                                 <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center font-bold text-gray-400">
                                     {item.quantity}x
                                 </div>
-                                <p className="text-lg font-bold text-gray-800">{item.products?.name}</p>
+                                <p className="text-lg font-bold text-gray-800">{item.name}</p>
                             </div>
                             <div className="w-6 h-6 border-2 border-gray-200 rounded-md"></div>
                         </div>
