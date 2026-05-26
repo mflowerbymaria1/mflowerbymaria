@@ -14,11 +14,9 @@ export async function POST(request) {
                 customer_email: payer.email,
                 customer_phone: payer.telefono,
                 shipping_address: payer.direccion || 'Retiro en sucursal',
-                shipping_type: shippingType,
-                shipping_cost: shippingCost,
-                payment_method: 'transferencia',
+                shipping_method: shippingType,
                 payment_status: 'pending',
-                total: finalTotal,
+                total_amount: finalTotal,
                 items: items
             })
             .select()

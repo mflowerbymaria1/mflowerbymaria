@@ -38,11 +38,9 @@ export async function POST(request) {
                 customer_email: payer.email,
                 customer_phone: payer.telefono,
                 shipping_address: payer.direccion || 'Retiro en sucursal',
-                shipping_type: shippingType || 'envio',
-                shipping_cost: shippingCost,
-                payment_method: 'mercadopago',
+                shipping_method: shippingType || 'envio',
                 payment_status: 'pending',
-                total: finalTotal || currentItems.reduce((acc, item) => acc + (item.unit_price * item.quantity), 0),
+                total_amount: finalTotal || currentItems.reduce((acc, item) => acc + (item.unit_price * item.quantity), 0),
                 items: items
             })
             .select()
