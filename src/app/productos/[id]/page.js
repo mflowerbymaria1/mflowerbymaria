@@ -78,16 +78,16 @@ export default function ProductDetailPage({ params }) {
     const transferPrice = ((numericPrice * quantity) * 0.8).toLocaleString('es-AR', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
 
     const handleAddToCart = () => {
-        let productToAdd = { ...product };
+        let productToAdd = { ...product, product_id: product.id };
         if (needsNotebookOptions) {
             productToAdd = {
-                ...product,
+                ...productToAdd,
                 id: `${product.id}-${sheetType}-${paperType.replace(/\s+/g, '-')}`,
                 name: `${product.name} (${sheetType}, ${paperType})`
             };
         } else if (needsFicheroOptions) {
             productToAdd = {
-                ...product,
+                ...productToAdd,
                 id: `${product.id}-${paperType.replace(/\s+/g, '-')}`,
                 name: `${product.name} (${paperType})`
             };

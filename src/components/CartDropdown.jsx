@@ -31,7 +31,7 @@ export default function CartDropdown({ isOpen, onClose }) {
         ) : (
           cartItems.map((item) => (
             <div key={item.id} className="cart-item">
-              <Link href={`/productos/${item.id}`} className="item-img-placeholder" onClick={onClose}>
+              <Link href={`/productos/${item.product_id || item.id}`} className="item-img-placeholder" onClick={onClose}>
                 {item.image ? (
                   <img src={item.image} alt={item.name} className="cart-item-img" />
                 ) : (
@@ -40,7 +40,7 @@ export default function CartDropdown({ isOpen, onClose }) {
               </Link>
               <div className="item-details">
                 <div className="item-details-header">
-                  <Link href={`/productos/${item.id}`} className="item-title-link" onClick={onClose}>
+                  <Link href={`/productos/${item.product_id || item.id}`} className="item-title-link" onClick={onClose}>
                     <h4>{item.name}</h4>
                   </Link>
                   <button
