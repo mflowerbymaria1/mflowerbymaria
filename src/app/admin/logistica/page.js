@@ -38,6 +38,59 @@ export default function LogisticaPage() {
     else fetchOrders();
   }
 
+  function openPdfLabel(labelUrl) {
+    if (!labelUrl) return;
+
+    // 1. If it starts with http, it is a normal URL
+    if (labelUrl.startsWith('http://') || labelUrl.startsWith('https://')) {
+      window.open(labelUrl, '_blank');
+      return;
+    }
+
+    // 2. If it is raw PDF binary data
+    if (labelUrl.startsWith('%PDF')) {
+      try {
+        const byteNumbers = new Array(labelUrl.length);
+        for (let i = 0; i < labelUrl.length; i++) {
+          byteNumbers[i] = labelUrl.charCodeAt(i);
+        }
+        const byteArray = new Uint8Array(byteNumbers);
+        const blob = new Blob([byteArray], { type: 'application/pdf' });
+        const fileURL = URL.createObjectURL(blob);
+        window.open(fileURL, '_blank');
+        return;
+      } catch (e) {
+        console.error('Error opening raw PDF:', e);
+      }
+    }
+
+    // 3. If it is base64 or Data URI
+    let base64Data = labelUrl;
+    if (labelUrl.startsWith('data:application/pdf;base64,')) {
+      base64Data = labelUrl.replace('data:application/pdf;base64,', '');
+    }
+
+    if (base64Data.startsWith('JVBER') || base64Data.startsWith('JVBERi')) {
+      try {
+        const byteCharacters = atob(base64Data.trim());
+        const byteNumbers = new Array(byteCharacters.length);
+        for (let i = 0; i < byteCharacters.length; i++) {
+          byteNumbers[i] = byteCharacters.charCodeAt(i);
+        }
+        const byteArray = new Uint8Array(byteNumbers);
+        const blob = new Blob([byteArray], { type: 'application/pdf' });
+        const fileURL = URL.createObjectURL(blob);
+        window.open(fileURL, '_blank');
+        return;
+      } catch (e) {
+        console.error('Error decoding base64 PDF:', e);
+      }
+    }
+
+    // Fallback: Try opening as URL
+    window.open(labelUrl, '_blank');
+  }
+
   async function handleGenerateLabel(order) {
     setLoadingLabel(order.id);
     try {
@@ -62,7 +115,7 @@ export default function LogisticaPage() {
           .eq('id', order.id);
         
         if (labelUrl) {
-          window.open(labelUrl, '_blank');
+          openPdfLabel(labelUrl);
         } else {
           alert('Etiqueta generada con éxito, pero no se encontró la URL de descarga.');
         }
@@ -212,18 +265,16 @@ export default function LogisticaPage() {
                     )}
 
                     {order.shipping_status === 'ready_to_pack' && order.shipping_label_url && (
-                      <a
-                        href={order.shipping_label_url}
-                        target="_blank"
-                        rel="noopener noreferrer"
+                      <button
+                        onClick={() => openPdfLabel(order.shipping_label_url)}
                         style={{
                           padding: '10px 20px', background: '#E8F5E9', border: '1px solid #C8E6C9', color: '#2E7D32', borderRadius: 12,
-                          fontWeight: 800, fontSize: 12, textTransform: 'uppercase', letterSpacing: '0.05em',
-                          display: 'flex', alignItems: 'center', gap: 6, textDecoration: 'none'
+                          fontWeight: 800, fontSize: 12, cursor: 'pointer', textTransform: 'uppercase', letterSpacing: '0.05em',
+                          display: 'flex', alignItems: 'center', gap: 6
                         }}
                       >
                         <Printer size={16} /> Ver Etiqueta
-                      </a>
+                      </button>
                     )}
 
                     {(order.shipping_status === 'pending' || order.shipping_status === 'ready_to_pack') && (
