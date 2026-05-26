@@ -1,6 +1,6 @@
 import { Resend } from 'resend';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
 
 export async function sendOrderNotificationAdmin(orderData) {
     try {
@@ -12,6 +12,8 @@ export async function sendOrderNotificationAdmin(orderData) {
                 <td style="padding: 10px; border-bottom: 1px solid #eee;">$${Number(item.price || item.unit_price || 0).toLocaleString('es-AR')}</td>
             </tr>
         `).join('');
+
+        const subject = `¡Nueva Venta! 🌸 Pedido #${String(id).slice(0, 8)} por $${Number(total_amount).toLocaleString('es-AR')}`;
 
         const htmlContent = `
             <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #eaeaea; border-radius: 10px;">
@@ -55,10 +57,15 @@ export async function sendOrderNotificationAdmin(orderData) {
             </div>
         `;
 
+        if (!resend) {
+            console.log("Resend API Key is missing. Simulating email notification for:", subject);
+            return { success: true, simulated: true };
+        }
+
         const { data, error } = await resend.emails.send({
             from: 'Mflower Store <onboarding@resend.dev>',
             to: ['contacto.mflower@gmail.com'],
-            subject: `¡Nueva Venta! 🌸 Pedido #${String(id).slice(0, 8)} por $${Number(total_amount).toLocaleString('es-AR')}`,
+            subject,
             html: htmlContent
         });
 

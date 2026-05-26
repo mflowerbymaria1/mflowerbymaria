@@ -81,14 +81,14 @@ export default function VentasPage() {
         ) : filteredOrders.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {filteredOrders.map((order) => (
-                    <div key={order.id} className="bg-white rounded-[2rem] border-2 border-gray-900 shadow-[0_8px_0_0_#111827] overflow-hidden hover:translate-y-1 hover:shadow-[0_4px_0_0_#111827] transition-all duration-200 flex flex-col mb-8">
-                        {/* HEADER NEGRO SÚPER CLARO */}
-                        <div className="bg-gray-900 px-6 py-4 flex justify-between items-center text-white">
+                    <div key={order.id} className="bg-white rounded-[2rem] border-2 border-rose-200 shadow-sm overflow-hidden hover:-translate-y-1 hover:shadow-xl hover:shadow-rose-100 hover:border-rose-300 transition-all duration-300 flex flex-col mb-8">
+                        {/* HEADER ROSA SÚPER CLARO */}
+                        <div className="bg-rose-50 border-b border-rose-100 px-6 py-4 flex justify-between items-center text-rose-900">
                             <div className="space-y-1">
-                                <span className="text-xs font-black text-rose-400 uppercase tracking-widest bg-rose-950/50 px-3 py-1 rounded-full border border-rose-500/30">
+                                <span className="text-xs font-black text-rose-600 uppercase tracking-widest bg-white px-3 py-1 rounded-full border border-rose-200">
                                     PEDIDO #{order.id.slice(0, 8)}
                                 </span>
-                                <p className="text-[11px] text-gray-400 font-bold uppercase tracking-widest mt-2">
+                                <p className="text-[11px] text-rose-500/80 font-bold uppercase tracking-widest mt-2">
                                     {new Date(order.created_at).toLocaleString('es-AR', { day: '2-digit', month: 'long', hour: '2-digit', minute: '2-digit' })}
                                 </p>
                             </div>
@@ -102,8 +102,8 @@ export default function VentasPage() {
                         </div>
 
                         <div className="p-6 space-y-6 flex-grow bg-white">
-                            <div className="py-4 border-b-2 border-gray-100 flex items-center space-x-4">
-                                <div className="w-16 h-16 rounded-2xl bg-gray-100 flex items-center justify-center text-gray-900 font-black text-2xl border-2 border-gray-200">
+                            <div className="py-4 border-b-2 border-rose-50 flex items-center space-x-4">
+                                <div className="w-16 h-16 rounded-2xl bg-rose-50 flex items-center justify-center text-rose-600 font-black text-2xl border border-rose-100">
                                     {(order.customer_name || 'C')[0]}
                                 </div>
                                 <div>
@@ -112,7 +112,7 @@ export default function VentasPage() {
                                 </div>
                             </div>
 
-                            <div className="flex items-center justify-between text-xs font-black text-gray-600 uppercase tracking-widest bg-gray-50 p-4 rounded-2xl border-2 border-gray-100">
+                            <div className="flex items-center justify-between text-xs font-black text-rose-700 uppercase tracking-widest bg-rose-50/50 p-4 rounded-2xl border border-rose-100">
                                 <div className="flex items-center">
                                     {order.shipping_status === 'pending' ? <Package size={14} className="text-amber-500 mr-1.5" /> : <CheckCircle2 size={14} className="text-emerald-500 mr-1.5" />}
                                     <span className="capitalize">{order.shipping_status}</span>
@@ -121,16 +121,16 @@ export default function VentasPage() {
                             </div>
                         </div>
 
-                        <div className="bg-gray-100 px-6 py-5 border-t-2 border-gray-200 flex gap-4">
+                        <div className="bg-rose-50/30 px-6 py-5 border-t border-rose-100 flex gap-4">
                             <button 
                                 onClick={() => setSelectedOrder(order)}
-                                className="flex-1 bg-white border-2 border-gray-900 text-gray-900 font-black text-[10px] uppercase tracking-widest py-3 rounded-xl hover:bg-gray-900 hover:text-white transition-all flex items-center justify-center space-x-2"
+                                className="flex-1 bg-white border border-rose-200 text-rose-600 font-black text-[10px] uppercase tracking-widest py-3 rounded-xl hover:bg-rose-50 transition-all flex items-center justify-center space-x-2"
                             >
                                 <Eye size={16} /> <span>Ver Todos Los Datos</span>
                             </button>
                             <button 
                                 onClick={() => handlePrint(order)}
-                                className="bg-rose-600 text-white p-3 rounded-xl hover:bg-rose-700 transition-all shadow-md border-2 border-rose-700"
+                                className="bg-rose-600 text-white p-3 rounded-xl hover:bg-rose-700 transition-all shadow-md shadow-rose-200 border border-rose-700"
                                 title="Imprimir Remito"
                             >
                                 <Printer size={16} />
