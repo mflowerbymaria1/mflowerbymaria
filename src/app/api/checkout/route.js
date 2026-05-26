@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { MercadoPagoConfig, Preference } from 'mercadopago';
+import { supabase } from '@/lib/supabase';
 
 const client = new MercadoPagoConfig({
     accessToken: process.env.MP_ACCESS_TOKEN
@@ -8,7 +9,7 @@ const client = new MercadoPagoConfig({
 export async function POST(request) {
     try {
         const body = await request.json();
-        const { items, payer, shippingCost } = body;
+        const { items, payer, shippingCost, shippingType, finalTotal } = body;
 
         // Map frontend cart items to Mercado Pago preference items
         const currentItems = items.map(item => ({
@@ -29,6 +30,29 @@ export async function POST(request) {
             });
         }
 
+        // 1. Create order in Supabase BEFORE going to MercadoPago
+        const { data: order, error } = await supabase
+            .from('orders')
+            .insert({
+                customer_name: `${payer.nombre} ${payer.apellido}`,
+                customer_email: payer.email,
+                customer_phone: payer.telefono,
+                shipping_address: payer.direccion || 'Retiro en sucursal',
+                shipping_type: shippingType || 'envio',
+                shipping_cost: shippingCost,
+                payment_method: 'mercadopago',
+                payment_status: 'pending',
+                total: finalTotal || currentItems.reduce((acc, item) => acc + (item.unit_price * item.quantity), 0),
+                items: items
+            })
+            .select()
+            .single();
+
+        if (error) {
+            console.error('Error inserting order for MP:', error);
+            return NextResponse.json({ success: false, error: 'No se pudo guardar la orden.' }, { status: 500 });
+        }
+
         const preference = new Preference(client);
 
         const response = await preference.create({
@@ -46,6 +70,7 @@ export async function POST(request) {
                     }
                 },
                 statement_descriptor: 'MFLOWERBYMARIA',
+                external_reference: order.id,
                 back_urls: {
                     success: `${process.env.NEXT_PUBLIC_BASE_URL}/gracias`,
                     failure: `${process.env.NEXT_PUBLIC_BASE_URL}/error`,
