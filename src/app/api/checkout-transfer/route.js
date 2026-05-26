@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
+import { sendOrderNotificationAdmin } from '@/lib/email';
 
 export async function POST(request) {
     try {
@@ -25,6 +26,11 @@ export async function POST(request) {
         if (error) {
             console.error('Error inserting order:', error);
             return NextResponse.json({ success: false, error: 'No se pudo guardar la orden.' }, { status: 500 });
+        }
+
+        // Send email notification to admin asynchronously
+        if (order) {
+            sendOrderNotificationAdmin(order).catch(err => console.error("Email notification error:", err));
         }
 
         return NextResponse.json({
