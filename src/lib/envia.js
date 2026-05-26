@@ -24,7 +24,7 @@ export async function getShippingRates(destination) {
                     name: "M•flower",
                     company: "M•flower by Maria",
                     email: "contacto@mflowerbymaria.com",
-                    phone: "1100000000",
+                    phone: "1141817424",
                     street: "Centro",
                     number: "123",
                     district: "Centro",
@@ -68,6 +68,10 @@ export async function getShippingRates(destination) {
     }
 }
 
+/**
+ * Genera una etiqueta de envío
+ * @param {Object} order - Datos del pedido y destino
+ */
 export async function generateShippingLabel(order) {
     const token = process.env.ENVIA_API_TOKEN;
 
@@ -122,28 +126,39 @@ export async function generateShippingLabel(order) {
                     phone: order.customer_phone || "1100000000",
                     street: street,
                     number: number,
-                    district: city,
+                    district: "N/A",
                     postalCode: postalCode,
                     city: city,
                     state: "BA",
                     country: "AR"
                 },
                 packages: [{
-                    content: "Productos M•flower",
+                    content: "Cuaderno / Planner",
                     amount: 1,
                     type: "box",
                     weight: 1,
-                    dimensions: { length: 30, width: 20, height: 10 }
+                    insurance: 0,
+                    declaredValue: 0,
+                    weightUnit: "kg",
+                    lengthUnit: "cm",
+                    dimensions: {
+                        length: 30,
+                        width: 25,
+                        height: 5
+                    }
                 }],
                 shipment: {
                     carrier: "correoargentino",
-                    type: 1,
-                    service: "express"
+                    type: 1
+                },
+                settings: {
+                    currency: "ARS"
                 }
             })
         });
 
         const data = await response.json();
+
         if (data.data && data.data.length > 0) {
             return { success: true, data: data.data[0] };
         } else {
