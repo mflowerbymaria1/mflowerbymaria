@@ -126,7 +126,7 @@ export async function generateShippingLabel(order) {
                     phone: order.customer_phone || "1100000000",
                     street: street,
                     number: number,
-                    district: "N/A",
+                    district: "",
                     postalCode: postalCode,
                     city: city,
                     state: "BA",
@@ -139,8 +139,8 @@ export async function generateShippingLabel(order) {
                     weight: 1,
                     insurance: 0,
                     declaredValue: 0,
-                    weightUnit: "kg",
-                    lengthUnit: "cm",
+                    weightUnit: "KG",
+                    lengthUnit: "CM",
                     dimensions: {
                         length: 30,
                         width: 25,
@@ -150,7 +150,7 @@ export async function generateShippingLabel(order) {
                 shipment: {
                     carrier: "correoargentino",
                     type: 1,
-                    service: "express"
+                    service: "standard_dom"
                 },
                 settings: {
                     currency: "ARS"
