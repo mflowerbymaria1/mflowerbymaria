@@ -102,8 +102,8 @@ export default function LogisticaPage() {
       const result = await response.json();
       
       if (result.success) {
-        const trackingNum = result.label.trackingNumber || result.label.tracking_number || '';
-        const labelUrl = result.label.labelUrl || result.label.label_url || '';
+        const trackingNum = result.label.trackingNumber || result.label.tracking_number || result.label.tracking || '';
+        const labelUrl = result.label.label || result.label.labelUrl || result.label.label_url || '';
         
         await supabase
           .from('orders')
