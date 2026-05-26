@@ -149,7 +149,8 @@ export async function generateShippingLabel(order) {
                 }],
                 shipment: {
                     carrier: "correoargentino",
-                    type: 1
+                    type: 1,
+                    service: "express"
                 },
                 settings: {
                     currency: "ARS"
