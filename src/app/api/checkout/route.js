@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { MercadoPagoConfig, Preference } from 'mercadopago';
 import { supabase } from '@/lib/supabase';
-import { sendOrderNotificationAdmin } from '@/lib/email';
+import { sendOrderNotificationAdmin, sendOrderNotificationCustomer } from '@/lib/email';
 
 const client = new MercadoPagoConfig({
     accessToken: process.env.MP_ACCESS_TOKEN
@@ -52,9 +52,10 @@ export async function POST(request) {
             return NextResponse.json({ success: false, error: 'No se pudo guardar la orden.' }, { status: 500 });
         }
 
-        // Send email notification to admin asynchronously (don't await)
+        // Send email notification to admin and customer asynchronously (don't await)
         if (order) {
-            sendOrderNotificationAdmin(order).catch(err => console.error("Email notification error:", err));
+            sendOrderNotificationAdmin(order).catch(err => console.error("Email notification admin error:", err));
+            sendOrderNotificationCustomer(order).catch(err => console.error("Email notification customer error:", err));
         }
 
         const preference = new Preference(client);
