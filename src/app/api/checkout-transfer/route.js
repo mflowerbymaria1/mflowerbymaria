@@ -30,8 +30,9 @@ export async function POST(request) {
 
         // Send email notification to admin and customer asynchronously
         if (order) {
-            sendOrderNotificationAdmin(order).catch(err => console.error("Email notification admin error:", err));
-            sendOrderNotificationCustomer(order).catch(err => console.error("Email notification customer error:", err));
+            const emailData = { ...order, payment_method: 'transferencia' };
+            sendOrderNotificationAdmin(emailData).catch(err => console.error("Email notification admin error:", err));
+            sendOrderNotificationCustomer(emailData).catch(err => console.error("Email notification customer error:", err));
         }
 
         return NextResponse.json({

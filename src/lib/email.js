@@ -126,12 +126,17 @@ export async function sendOrderNotificationCustomer(orderData) {
                     </table>
                 </div>
 
-                ${payment_status === 'pending' ? `
+                ${payment_method === 'transferencia' ? `
                 <div style="background-color: #fff3cd; color: #856404; padding: 15px; border-radius: 8px; margin-top: 20px; border: 1px solid #ffeeba;">
                     <h3 style="margin-top: 0; font-size: 16px;">⏳ Pendiente de Pago</h3>
                     <p style="margin: 5px 0; font-size: 14px;">Recuerda que si elegiste pago por transferencia, tu pedido se procesará una vez que confirmemos el ingreso del dinero.</p>
                 </div>
-                ` : ''}
+                ` : `
+                <div style="background-color: #e8f5e9; color: #2e7d32; padding: 15px; border-radius: 8px; margin-top: 20px; border: 1px solid #c8e6c9;">
+                    <h3 style="margin-top: 0; font-size: 16px;">💳 Pago Electrónico</h3>
+                    <p style="margin: 5px 0; font-size: 14px;">El pago se gestiona a través de Mercado Pago de forma 100% segura. Si el pago fue exitoso, no tenés que hacer nada más, ¡ya estamos preparando todo!</p>
+                </div>
+                `}
                 
                 <div style="text-align: center; margin-top: 30px; font-size: 14px; color: #777;">
                     <p>Si tenés alguna consulta, no dudes en responder este correo o contactarnos por WhatsApp.</p>
