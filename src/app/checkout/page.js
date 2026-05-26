@@ -307,8 +307,19 @@ export default function CheckoutPage() {
                                     </div>
                                 </div>
                             </div>
-                            <div style={{ fontSize: '0.85rem', color: '#6b7280', marginBottom: '25px', padding: '0 10px', textAlign: 'center', width: '100%' }}>
-                                Una vez realizada la transferencia, envíanos el comprobante por WhatsApp. Nos contactaremos a <strong style={{ color: '#374151' }}>{formData.email}</strong>.
+                            <div style={{ fontSize: '0.85rem', color: '#6b7280', marginBottom: '15px', padding: '0 10px', textAlign: 'center', width: '100%' }}>
+                                Una vez realizada la transferencia, envíanos el comprobante por WhatsApp o por Mail.
+                            </div>
+                            
+                            <div className="bg-gray-50 rounded-xl" style={{ backgroundColor: '#f9fafb', padding: '15px', borderRadius: '12px', marginBottom: '20px', width: '100%', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                                    <span style={{ fontSize: '0.75rem', color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Nuestro WhatsApp:</span>
+                                    <span style={{ fontWeight: 'bold', color: '#1f2937', fontSize: '1rem' }}>+54 9 11 4181-7424</span>
+                                </div>
+                                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                                    <span style={{ fontSize: '0.75rem', color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Nuestro Email:</span>
+                                    <span style={{ fontWeight: 'bold', color: '#1f2937', fontSize: '1rem' }}>contacto.mflower@gmail.com</span>
+                                </div>
                             </div>
                             <button
                                 onClick={() => {
