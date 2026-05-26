@@ -153,6 +153,8 @@ export async function generateShippingLabel(order) {
                     service: "standard_dom"
                 },
                 settings: {
+                    printFormat: "PDF",
+                    printSize: "STOCK_4X6",
                     currency: "ARS"
                 }
             })
