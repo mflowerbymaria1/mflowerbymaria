@@ -486,14 +486,20 @@ export default function CheckoutPage() {
                     text-align: center !important;
                 }
 
-                @media (max-width: 768px) {
+                @media (max-width: 1024px) {
                     .checkout-layout {
-                        grid-template-columns: 1fr;
                         display: flex;
                         flex-direction: column-reverse;
+                        width: 100%;
                     }
                     .form-grid {
                         grid-template-columns: 1fr;
+                        width: 100%;
+                    }
+                    .checkout-form-container, .checkout-summary-container {
+                        width: 100%;
+                        max-width: 100vw;
+                        overflow-x: hidden;
                     }
                 }
             `}</style>
