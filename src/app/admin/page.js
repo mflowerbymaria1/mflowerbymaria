@@ -94,7 +94,7 @@ export default function DashboardPage() {
         // 5. Recent Sales
         const { data: recentSalesData } = await supabase
           .from('orders')
-          .select('*, customers(full_name)')
+          .select('*')
           .order('created_at', { ascending: false })
           .limit(6);
 
@@ -182,10 +182,10 @@ export default function DashboardPage() {
               <div key={order.id} className="group flex items-center justify-between p-6 hover:bg-rose-50/30 rounded-[1.5rem] transition-all duration-300 border border-transparent hover:border-rose-100">
                 <div className="flex items-center space-x-6">
                   <div className="w-14 h-14 rounded-2xl bg-white border border-gray-100 flex items-center justify-center text-rose-600 font-black text-lg shadow-sm group-hover:scale-110 transition-transform">
-                    {(order.customers?.full_name || 'C')[0]}
+                    {(order.customer_name || 'C')[0]}
                   </div>
                   <div className="space-y-1">
-                    <p className="text-lg font-black text-gray-900 leading-none">{order.customers?.full_name || 'Cliente'}</p>
+                    <p className="text-lg font-black text-gray-900 leading-none">{order.customer_name || 'Cliente'}</p>
                     <div className="flex items-center text-[10px] text-gray-400 font-bold uppercase tracking-widest">
                         <Calendar size={12} className="mr-1" />
                         {new Date(order.created_at).toLocaleDateString('es-AR', { day: '2-digit', month: 'short' })}
