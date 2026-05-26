@@ -81,37 +81,38 @@ export default function VentasPage() {
         ) : filteredOrders.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {filteredOrders.map((order) => (
-                    <div key={order.id} className="bg-white rounded-[2rem] border border-gray-100 shadow-sm overflow-hidden hover:shadow-xl hover:shadow-rose-500/5 transition-all duration-500 flex flex-col">
-                        <div className="p-6 space-y-4 flex-grow">
-                            <div className="flex justify-between items-start">
-                                <div className="space-y-1">
-                                    <span className="text-xs font-black text-rose-500 uppercase tracking-widest bg-rose-50 px-3 py-1 rounded-full">
-                                        #{order.id.slice(0, 8)}
-                                    </span>
-                                    <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest mt-2">
-                                        {new Date(order.created_at).toLocaleString('es-AR', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' })}
-                                    </p>
-                                </div>
-                                <div className={`text-[10px] px-3 py-1 rounded-full font-black uppercase tracking-widest ${
-                                    order.payment_status === 'approved' ? 'bg-emerald-50 text-emerald-600' : 
-                                    order.payment_status === 'pending' ? 'bg-amber-50 text-amber-600' : 
-                                    'bg-red-50 text-red-600'
-                                }`}>
-                                    {order.payment_status}
-                                </div>
+                    <div key={order.id} className="bg-white rounded-[2rem] border-2 border-gray-900 shadow-[0_8px_0_0_#111827] overflow-hidden hover:translate-y-1 hover:shadow-[0_4px_0_0_#111827] transition-all duration-200 flex flex-col mb-8">
+                        {/* HEADER NEGRO SÚPER CLARO */}
+                        <div className="bg-gray-900 px-6 py-4 flex justify-between items-center text-white">
+                            <div className="space-y-1">
+                                <span className="text-xs font-black text-rose-400 uppercase tracking-widest bg-rose-950/50 px-3 py-1 rounded-full border border-rose-500/30">
+                                    PEDIDO #{order.id.slice(0, 8)}
+                                </span>
+                                <p className="text-[11px] text-gray-400 font-bold uppercase tracking-widest mt-2">
+                                    {new Date(order.created_at).toLocaleString('es-AR', { day: '2-digit', month: 'long', hour: '2-digit', minute: '2-digit' })}
+                                </p>
                             </div>
+                            <div className={`text-[10px] px-4 py-1.5 rounded-full font-black uppercase tracking-widest border-2 ${
+                                order.payment_status === 'approved' ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/50' : 
+                                order.payment_status === 'pending' ? 'bg-amber-500/10 text-amber-400 border-amber-500/50' : 
+                                'bg-red-500/10 text-red-400 border-red-500/50'
+                            }`}>
+                                {order.payment_status}
+                            </div>
+                        </div>
 
-                            <div className="py-2 border-y border-gray-50 flex items-center space-x-4">
-                                <div className="w-12 h-12 rounded-2xl bg-gray-50 flex items-center justify-center text-gray-400 font-black text-lg border border-gray-100">
+                        <div className="p-6 space-y-6 flex-grow bg-white">
+                            <div className="py-4 border-b-2 border-gray-100 flex items-center space-x-4">
+                                <div className="w-16 h-16 rounded-2xl bg-gray-100 flex items-center justify-center text-gray-900 font-black text-2xl border-2 border-gray-200">
                                     {(order.customer_name || 'C')[0]}
                                 </div>
                                 <div>
-                                    <h3 className="text-lg font-black text-gray-900 leading-tight">{order.customer_name || 'Desconocido'}</h3>
-                                    <p className="text-xl font-black text-rose-600 tracking-tighter">${Number(order.total_amount).toLocaleString('es-AR')}</p>
+                                    <h3 className="text-xl font-black text-gray-900 leading-tight">{order.customer_name || 'Desconocido'}</h3>
+                                    <p className="text-2xl font-black text-rose-600 tracking-tighter mt-1">${Number(order.total_amount).toLocaleString('es-AR')}</p>
                                 </div>
                             </div>
 
-                            <div className="flex items-center justify-between text-xs font-medium text-gray-500">
+                            <div className="flex items-center justify-between text-xs font-black text-gray-600 uppercase tracking-widest bg-gray-50 p-4 rounded-2xl border-2 border-gray-100">
                                 <div className="flex items-center">
                                     {order.shipping_status === 'pending' ? <Package size={14} className="text-amber-500 mr-1.5" /> : <CheckCircle2 size={14} className="text-emerald-500 mr-1.5" />}
                                     <span className="capitalize">{order.shipping_status}</span>
@@ -120,16 +121,16 @@ export default function VentasPage() {
                             </div>
                         </div>
 
-                        <div className="bg-gray-50 px-6 py-4 border-t border-gray-100 flex gap-3">
+                        <div className="bg-gray-100 px-6 py-5 border-t-2 border-gray-200 flex gap-4">
                             <button 
                                 onClick={() => setSelectedOrder(order)}
-                                className="flex-1 bg-white border border-gray-200 text-gray-600 font-black text-[10px] uppercase tracking-widest py-2.5 rounded-xl hover:bg-rose-50 hover:text-rose-600 hover:border-rose-100 transition-all flex items-center justify-center space-x-2"
+                                className="flex-1 bg-white border-2 border-gray-900 text-gray-900 font-black text-[10px] uppercase tracking-widest py-3 rounded-xl hover:bg-gray-900 hover:text-white transition-all flex items-center justify-center space-x-2"
                             >
-                                <Eye size={14} /> <span>Ver Más</span>
+                                <Eye size={16} /> <span>Ver Todos Los Datos</span>
                             </button>
                             <button 
                                 onClick={() => handlePrint(order)}
-                                className="bg-gray-900 text-white p-2.5 rounded-xl hover:bg-rose-600 transition-all shadow-md"
+                                className="bg-rose-600 text-white p-3 rounded-xl hover:bg-rose-700 transition-all shadow-md border-2 border-rose-700"
                                 title="Imprimir Remito"
                             >
                                 <Printer size={16} />

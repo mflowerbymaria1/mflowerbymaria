@@ -179,9 +179,9 @@ export default function DashboardPage() {
                     <div key={i} className="h-20 bg-gray-50 animate-pulse rounded-2xl"></div>
                 ))
             ) : recentSales.length > 0 ? recentSales.map((order) => (
-              <div key={order.id} className="group flex items-center justify-between p-6 hover:bg-rose-50/30 rounded-[1.5rem] transition-all duration-300 border border-transparent hover:border-rose-100">
+              <div key={order.id} className="group flex items-center justify-between p-6 bg-white rounded-[1.5rem] border-2 border-gray-200 shadow-sm hover:shadow-lg hover:border-gray-900 transition-all duration-300 mb-4">
                 <div className="flex items-center space-x-6">
-                  <div className="w-14 h-14 rounded-2xl bg-white border border-gray-100 flex items-center justify-center text-rose-600 font-black text-lg shadow-sm group-hover:scale-110 transition-transform">
+                  <div className="w-16 h-16 rounded-2xl bg-gray-100 border-2 border-gray-200 flex items-center justify-center text-gray-900 font-black text-2xl shadow-inner group-hover:scale-105 transition-transform">
                     {(order.customer_name || 'C')[0]}
                   </div>
                   <div className="space-y-1">
@@ -194,10 +194,10 @@ export default function DashboardPage() {
                     </div>
                   </div>
                 </div>
-                <div className="text-right space-y-2">
-                  <p className="text-xl font-black text-gray-900 tracking-tighter">${Number(order.total_amount).toLocaleString('es-AR')}</p>
-                  <div className={`inline-flex px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest ${
-                    order.payment_status === 'approved' ? 'bg-emerald-100 text-emerald-600' : 'bg-amber-100 text-amber-600'
+                <div className="text-right space-y-3">
+                  <p className="text-2xl font-black text-rose-600 tracking-tighter">${Number(order.total_amount).toLocaleString('es-AR')}</p>
+                  <div className={`inline-flex px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest border-2 ${
+                    order.payment_status === 'approved' ? 'bg-emerald-50 text-emerald-600 border-emerald-200' : 'bg-amber-50 text-amber-600 border-amber-200'
                   }`}>
                     {order.payment_status}
                   </div>
