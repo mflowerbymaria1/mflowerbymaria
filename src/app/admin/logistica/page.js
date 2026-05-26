@@ -110,13 +110,13 @@ export default function LogisticaPage() {
       </div>
 
       {/* Grid de Pedidos a Despachar */}
-      <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-12">
         {loading ? (
             Array(4).fill(0).map((_, i) => (
                 <div key={i} className="h-64 bg-white rounded-[2rem] animate-pulse border border-gray-100"></div>
             ))
         ) : filteredOrders.length > 0 ? filteredOrders.map((order) => (
-            <div key={order.id} className="bg-white rounded-[2.5rem] border border-gray-100 shadow-sm overflow-hidden hover:shadow-xl hover:shadow-rose-500/5 transition-all duration-500 group">
+            <div key={order.id} className="bg-white rounded-[2.5rem] border-2 border-gray-200 shadow-lg overflow-hidden hover:shadow-2xl hover:border-gray-300 transition-all duration-500 group">
                 <div className="p-8 space-y-6">
                     <div className="flex justify-between items-start">
                         <div className="flex items-center space-x-4">
@@ -135,9 +135,9 @@ export default function LogisticaPage() {
                         </div>
                     </div>
 
-                    <div className="grid grid-cols-2 gap-4">
-                        <div className="bg-gray-50 p-5 rounded-3xl space-y-2 border border-gray-100/50">
-                            <div className="flex items-center text-gray-400 space-x-2">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="bg-gray-50 p-6 rounded-3xl space-y-2 border border-gray-200">
+                            <div className="flex items-center text-gray-500 space-x-2">
                                 <MapPin size={14} />
                                 <span className="text-[10px] font-black uppercase tracking-wider">Destino</span>
                             </div>
@@ -145,8 +145,8 @@ export default function LogisticaPage() {
                                 {order.shipping_address}
                             </p>
                         </div>
-                        <div className="bg-gray-50 p-5 rounded-3xl space-y-2 border border-gray-100/50">
-                            <div className="flex items-center text-gray-400 space-x-2">
+                        <div className="bg-gray-50 p-6 rounded-3xl space-y-2 border border-gray-200">
+                            <div className="flex items-center text-gray-500 space-x-2">
                                 <Navigation size={14} />
                                 <span className="text-[10px] font-black uppercase tracking-wider">Método</span>
                             </div>
@@ -181,8 +181,8 @@ export default function LogisticaPage() {
                 </div>
                 
                 {/* Status Bar */}
-                <div className="bg-gray-50 px-8 py-3 flex items-center justify-between border-t border-gray-100">
-                    <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Estado Logístico</span>
+                <div className="bg-gray-100 px-8 py-4 flex items-center justify-between border-t-2 border-gray-200">
+                    <span className="text-[10px] font-black text-gray-500 uppercase tracking-widest">Estado Logístico</span>
                     <div className="flex items-center space-x-2">
                         <div className={`w-2 h-2 rounded-full ${order.shipping_status === 'pending' ? 'bg-amber-400 animate-pulse' : 'bg-emerald-400'}`}></div>
                         <span className="text-xs font-bold text-gray-700 capitalize">{order.shipping_status}</span>

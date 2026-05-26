@@ -71,70 +71,77 @@ export default function VentasPage() {
         </div>
       </div>
 
-      {/* Table */}
-      <div className="bg-white border border-gray-100 rounded-2xl shadow-sm overflow-hidden print:hidden">
+      {/* Orders Grid instead of Table */}
+      <div className="print:hidden">
         {loading ? (
-            <div className="p-20 flex flex-col items-center justify-center space-y-4">
+            <div className="p-20 flex flex-col items-center justify-center space-y-4 bg-white border border-gray-100 rounded-2xl shadow-sm">
                 <Loader2 className="animate-spin text-rose-500" size={40} />
-                <p className="text-gray-400">Cargando pedidos...</p>
+                <p className="text-gray-400 font-medium">Cargando pedidos...</p>
+            </div>
+        ) : filteredOrders.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {filteredOrders.map((order) => (
+                    <div key={order.id} className="bg-white rounded-[2rem] border border-gray-100 shadow-sm overflow-hidden hover:shadow-xl hover:shadow-rose-500/5 transition-all duration-500 flex flex-col">
+                        <div className="p-6 space-y-4 flex-grow">
+                            <div className="flex justify-between items-start">
+                                <div className="space-y-1">
+                                    <span className="text-xs font-black text-rose-500 uppercase tracking-widest bg-rose-50 px-3 py-1 rounded-full">
+                                        #{order.id.slice(0, 8)}
+                                    </span>
+                                    <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest mt-2">
+                                        {new Date(order.created_at).toLocaleString('es-AR', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' })}
+                                    </p>
+                                </div>
+                                <div className={`text-[10px] px-3 py-1 rounded-full font-black uppercase tracking-widest ${
+                                    order.payment_status === 'approved' ? 'bg-emerald-50 text-emerald-600' : 
+                                    order.payment_status === 'pending' ? 'bg-amber-50 text-amber-600' : 
+                                    'bg-red-50 text-red-600'
+                                }`}>
+                                    {order.payment_status}
+                                </div>
+                            </div>
+
+                            <div className="py-2 border-y border-gray-50 flex items-center space-x-4">
+                                <div className="w-12 h-12 rounded-2xl bg-gray-50 flex items-center justify-center text-gray-400 font-black text-lg border border-gray-100">
+                                    {(order.customer_name || 'C')[0]}
+                                </div>
+                                <div>
+                                    <h3 className="text-lg font-black text-gray-900 leading-tight">{order.customer_name || 'Desconocido'}</h3>
+                                    <p className="text-xl font-black text-rose-600 tracking-tighter">${Number(order.total_amount).toLocaleString('es-AR')}</p>
+                                </div>
+                            </div>
+
+                            <div className="flex items-center justify-between text-xs font-medium text-gray-500">
+                                <div className="flex items-center">
+                                    {order.shipping_status === 'pending' ? <Package size={14} className="text-amber-500 mr-1.5" /> : <CheckCircle2 size={14} className="text-emerald-500 mr-1.5" />}
+                                    <span className="capitalize">{order.shipping_status}</span>
+                                </div>
+                                <span>{order.items?.length || 0} prod.</span>
+                            </div>
+                        </div>
+
+                        <div className="bg-gray-50 px-6 py-4 border-t border-gray-100 flex gap-3">
+                            <button 
+                                onClick={() => setSelectedOrder(order)}
+                                className="flex-1 bg-white border border-gray-200 text-gray-600 font-black text-[10px] uppercase tracking-widest py-2.5 rounded-xl hover:bg-rose-50 hover:text-rose-600 hover:border-rose-100 transition-all flex items-center justify-center space-x-2"
+                            >
+                                <Eye size={14} /> <span>Ver Más</span>
+                            </button>
+                            <button 
+                                onClick={() => handlePrint(order)}
+                                className="bg-gray-900 text-white p-2.5 rounded-xl hover:bg-rose-600 transition-all shadow-md"
+                                title="Imprimir Remito"
+                            >
+                                <Printer size={16} />
+                            </button>
+                        </div>
+                    </div>
+                ))}
             </div>
         ) : (
-            <table className="w-full text-left border-collapse">
-            <thead>
-                <tr className="bg-gray-50/50 border-b border-gray-100">
-                <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">ID Pedido</th>
-                <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Cliente</th>
-                <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Total</th>
-                <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Pago</th>
-                <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Logística</th>
-                <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider text-right">Acciones</th>
-                </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-50">
-                {filteredOrders.map((order) => (
-                <tr key={order.id} className="hover:bg-gray-50/50 transition-colors">
-                    <td className="px-6 py-4 text-sm font-medium text-rose-600">#{order.id.slice(0, 8)}</td>
-                    <td className="px-6 py-4">
-                        <p className="text-sm font-medium text-gray-800">{order.customer_name || 'Desconocido'}</p>
-                        <p className="text-[10px] text-gray-500">{new Date(order.created_at).toLocaleDateString()}</p>
-                    </td>
-                    <td className="px-6 py-4 text-sm font-bold text-gray-700">${Number(order.total_amount).toLocaleString('es-AR')}</td>
-                    <td className="px-6 py-4">
-                    <span className={`text-[10px] px-2.5 py-1 rounded-full font-bold uppercase ${
-                        order.payment_status === 'approved' ? 'bg-green-100 text-green-600' : 
-                        order.payment_status === 'pending' ? 'bg-amber-100 text-amber-600' : 
-                        'bg-red-100 text-red-600'
-                    }`}>
-                        {order.payment_status}
-                    </span>
-                    </td>
-                    <td className="px-6 py-4">
-                    <div className="flex items-center text-xs text-gray-600">
-                        {order.shipping_status === 'pending' && <Package size={14} className="text-amber-500 mr-1" />}
-                        {order.shipping_status === 'shipped' && <CheckCircle2 size={14} className="text-green-500 mr-1" />}
-                        {order.shipping_status}
-                    </div>
-                    </td>
-                    <td className="px-6 py-4 text-right space-x-2">
-                    <button 
-                        onClick={() => setSelectedOrder(order)}
-                        className="p-2 text-gray-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors" 
-                        title="Ver Detalle"
-                    >
-                        <Eye size={16} />
-                    </button>
-                    <button 
-                        onClick={() => handlePrint(order)}
-                        className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors" 
-                        title="Imprimir Hoja de Ruta"
-                    >
-                        <Printer size={16} />
-                    </button>
-                    </td>
-                </tr>
-                ))}
-            </tbody>
-            </table>
+            <div className="text-center py-20 bg-white rounded-[2rem] border border-dashed border-gray-200 shadow-sm">
+                <p className="text-gray-400 font-bold">No hay ventas que coincidan con la búsqueda.</p>
+            </div>
         )}
       </div>
 
