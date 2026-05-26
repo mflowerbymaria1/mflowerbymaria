@@ -248,7 +248,7 @@ export default function LogisticaPage() {
 
                   {/* Actions */}
                   <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end', paddingTop: 12, borderTop: '1px solid #eee' }}>
-                    {order.shipping_status === 'pending' && (
+                    {order.shipping_status === 'pending' && order.shipping_method !== 'retiro' && order.shipping_address !== 'Retiro en sucursal' && (
                       <button
                         onClick={() => handleGenerateLabel(order)}
                         disabled={loadingLabel === order.id}
