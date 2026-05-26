@@ -25,6 +25,19 @@ export default function VentasPage() {
     setLoading(false);
   }
 
+  async function handleUpdatePaymentStatus(id, newStatus) {
+    const { error } = await supabase
+      .from('orders')
+      .update({ payment_status: newStatus })
+      .eq('id', id);
+    if (error) {
+      alert('Error al actualizar el estado de pago: ' + error.message);
+    } else {
+      setOrders(prev => prev.map(o => o.id === id ? { ...o, payment_status: newStatus } : o));
+      setSelectedOrder(prev => prev && prev.id === id ? { ...prev, payment_status: newStatus } : prev);
+    }
+  }
+
   const handlePrint = (order) => {
     setSelectedOrder(order);
     setTimeout(() => window.print(), 100);
@@ -129,7 +142,16 @@ export default function VentasPage() {
                       <div style={{ fontSize: 11, color: '#aaa' }}>{new Date(order.created_at).toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' })}</div>
                     </td>
                     <td style={{ ...tdBase, borderRight: `2px solid ${rowBorder}`, borderRadius: '0 12px 12px 0', textAlign: 'center' }}>
-                      <div style={{ display: 'flex', gap: 8, justifyContent: 'center' }}>
+                      <div style={{ display: 'flex', gap: 8, justifyContent: 'center', alignItems: 'center' }}>
+                        {order.payment_status === 'pending' && (
+                          <button
+                            style={{ background: '#E8F5E9', border: '1px solid #C8E6C9', cursor: 'pointer', padding: '6px 10px', borderRadius: 8, color: '#2E7D32', display: 'flex', alignItems: 'center', gap: 4, fontSize: 11, fontWeight: 700 }}
+                            onClick={() => handleUpdatePaymentStatus(order.id, 'approved')}
+                            title="Confirmar Pago (Marcar como Pagado)"
+                          >
+                            <CheckCircle2 size={14} /> Pagado
+                          </button>
+                        )}
                         <button style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 8, borderRadius: 8, color: ROSE }} onClick={() => setSelectedOrder(order)} title="Ver detalle">
                           <Eye size={20} />
                         </button>
@@ -187,12 +209,22 @@ export default function VentasPage() {
                 </div>
               </div>
 
-              <div style={{ display: 'flex', gap: 12, marginBottom: 28 }}>
-                <span style={{ ...badgeStyle(selectedOrder.payment_status === 'approved' ? GREEN_BG : AMBER_BG, selectedOrder.payment_status === 'approved' ? GREEN : AMBER), padding: '8px 16px', fontSize: 12 }}>
-                  Pago: {paymentLabel(selectedOrder.payment_status)}
+              <div style={{ display: 'flex', gap: 12, marginBottom: 28, alignItems: 'center', flexWrap: 'wrap' }}>
+                <span style={{ ...badgeStyle(selectedOrder.payment_status === 'approved' ? GREEN_BG : AMBER_BG, selectedOrder.payment_status === 'approved' ? GREEN : AMBER), padding: '8px 16px', fontSize: 12, display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+                  <CreditCard size={14} /> Pago: {paymentLabel(selectedOrder.payment_status)}
                 </span>
-                <span style={{ ...badgeStyle(selectedOrder.shipping_status === 'pending' ? AMBER_BG : GREEN_BG, selectedOrder.shipping_status === 'pending' ? AMBER : GREEN), padding: '8px 16px', fontSize: 12 }}>
-                  Envío: {shippingLabel(selectedOrder.shipping_status)}
+                {selectedOrder.payment_status === 'pending' && (
+                  <button
+                    onClick={() => handleUpdatePaymentStatus(selectedOrder.id, 'approved')}
+                    style={{
+                      background: '#22C55E', color: '#fff', border: 'none', padding: '8px 16px', borderRadius: 12, fontSize: 12, fontWeight: 800, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6, transition: 'background 0.2s'
+                    }}
+                  >
+                    <CheckCircle2 size={14} /> Confirmar Pago
+                  </button>
+                )}
+                <span style={{ ...badgeStyle(selectedOrder.shipping_status === 'pending' ? AMBER_BG : GREEN_BG, selectedOrder.shipping_status === 'pending' ? AMBER : GREEN), padding: '8px 16px', fontSize: 12, display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+                  <Package size={14} /> Envío: {shippingLabel(selectedOrder.shipping_status)}
                 </span>
               </div>
 
