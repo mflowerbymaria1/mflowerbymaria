@@ -38,6 +38,45 @@ export default function LogisticaPage() {
     else fetchOrders();
   }
 
+  async function handleGenerateLabel(order) {
+    setLoadingLabel(order.id);
+    try {
+      const response = await fetch('/api/shipping/label', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(order)
+      });
+      const result = await response.json();
+      
+      if (result.success) {
+        const trackingNum = result.label.trackingNumber || result.label.tracking_number || '';
+        const labelUrl = result.label.labelUrl || result.label.label_url || '';
+        
+        await supabase
+          .from('orders')
+          .update({ 
+            shipping_status: 'ready_to_pack',
+            tracking_number: trackingNum,
+            shipping_label_url: labelUrl
+          })
+          .eq('id', order.id);
+        
+        if (labelUrl) {
+          window.open(labelUrl, '_blank');
+        } else {
+          alert('Etiqueta generada con éxito, pero no se encontró la URL de descarga.');
+        }
+        fetchOrders();
+      } else {
+        alert('Error al generar etiqueta: ' + (result.error || 'No especificado. Verificá los campos de dirección.'));
+      }
+    } catch (err) {
+      alert('Error de conexión al generar etiqueta: ' + err.message);
+    } finally {
+      setLoadingLabel(null);
+    }
+  }
+
   const filteredOrders = orders.filter(order => {
     if (activeTab === 'pendientes') return order.shipping_status === 'pending' || order.shipping_status === 'ready_to_pack';
     return order.shipping_status === 'shipped' || order.shipping_status === 'delivered';
@@ -156,7 +195,38 @@ export default function LogisticaPage() {
 
                   {/* Actions */}
                   <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end', paddingTop: 12, borderTop: '1px solid #eee' }}>
-                    {order.shipping_status === 'pending' && (
+                    {order.shipping_method === 'envio' && order.shipping_status === 'pending' && (
+                      <button
+                        onClick={() => handleGenerateLabel(order)}
+                        disabled={loadingLabel === order.id}
+                        style={{
+                          padding: '10px 20px', background: '#1a1a1a', color: '#fff', border: 'none', borderRadius: 12,
+                          fontWeight: 800, fontSize: 12, cursor: 'pointer', textTransform: 'uppercase', letterSpacing: '0.05em',
+                          display: 'flex', alignItems: 'center', gap: 6,
+                          opacity: loadingLabel === order.id ? 0.7 : 1
+                        }}
+                      >
+                        {loadingLabel === order.id ? <Loader2 size={16} style={{ animation: 'spin 1s linear infinite' }} /> : <Printer size={16} />}
+                        Generar Etiqueta
+                      </button>
+                    )}
+
+                    {order.shipping_status === 'ready_to_pack' && order.shipping_label_url && (
+                      <a
+                        href={order.shipping_label_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{
+                          padding: '10px 20px', background: '#E8F5E9', border: '1px solid #C8E6C9', color: '#2E7D32', borderRadius: 12,
+                          fontWeight: 800, fontSize: 12, textTransform: 'uppercase', letterSpacing: '0.05em',
+                          display: 'flex', alignItems: 'center', gap: 6, textDecoration: 'none'
+                        }}
+                      >
+                        <Printer size={16} /> Ver Etiqueta
+                      </a>
+                    )}
+
+                    {(order.shipping_status === 'pending' || order.shipping_status === 'ready_to_pack') && (
                       <button
                         onClick={() => handleUpdateStatus(order.id, 'shipped')}
                         style={{
