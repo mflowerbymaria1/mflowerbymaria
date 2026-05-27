@@ -14,19 +14,25 @@ function ProductosContent() {
     const categoria = searchParams.get('categoria') || "";
 
     const [allProducts, setAllProducts] = useState([]);
+    const [dbCategories, setDbCategories] = useState([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        async function fetchProducts() {
+        async function fetchData() {
             setLoading(true);
             try {
-                const { data, error } = await supabase
-                    .from('products')
-                    .select('*');
+                const [productsRes, categoriesRes] = await Promise.all([
+                    supabase.from('products').select('*'),
+                    supabase.from('categories').select('*')
+                ]);
                 
-                if (!error && data) {
+                if (!categoriesRes.error && categoriesRes.data) {
+                    setDbCategories(categoriesRes.data);
+                }
+
+                if (!productsRes.error && productsRes.data) {
                     // Mapping Supabase schema to component expectations and formatting prices
-                    const formatted = data.map(p => {
+                    const formatted = productsRes.data.map(p => {
                         let formattedPrice = p.price;
                         if (typeof p.price === 'number') {
                             formattedPrice = p.price.toLocaleString('es-AR', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
@@ -46,16 +52,16 @@ function ProductosContent() {
                     });
                     setAllProducts(formatted);
                 } else {
-                    console.error("Error fetching products from Supabase:", error);
+                    console.error("Error fetching products from Supabase:", productsRes.error);
                     setAllProducts([]);
                 }
             } catch (err) {
-                console.error("Error fetching products:", err);
+                console.error("Error fetching data:", err);
                 setAllProducts([]);
             }
             setLoading(false);
         }
-        fetchProducts();
+        fetchData();
     }, []);
 
     // Helper to normalize category comparison safely
@@ -114,7 +120,18 @@ function ProductosContent() {
     };
 
     const filteredProducts = allProducts.filter(p => {
-        if (categoria && getSlug(p.category) !== getSlug(categoria)) return false;
+        if (categoria) {
+            // Find the category in DB that matches the slug
+            const matchedCategory = dbCategories.find(c => c.slug === categoria);
+            
+            if (matchedCategory) {
+                // If we found the category by slug, the product's category must match the name exactly
+                if (p.category !== matchedCategory.name) return false;
+            } else {
+                // Fallback for old/hardcoded categories if they don't exist in DB
+                if (getSlug(p.category) !== getSlug(categoria)) return false;
+            }
+        }
         
         if (!query) return true;
         const lowerQ = query.toLowerCase();
