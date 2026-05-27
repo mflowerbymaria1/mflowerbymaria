@@ -275,7 +275,15 @@ export default function Header() {
           background: none;
           border: none;
           font-family: inherit;
+          font-weight: 500;
+          font-size: 0.95rem;
+          color: #333;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
           cursor: pointer;
+        }
+        .nav-link-dropdown:hover {
+          color: var(--pastel-pink);
         }
         .dropdown-menu {
           visibility: hidden;
