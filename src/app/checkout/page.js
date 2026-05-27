@@ -113,7 +113,9 @@ export default function CheckoutPage() {
                 body: JSON.stringify({
                     items: cartItems,
                     payer: formData,
-                    shippingCost: shippingCost
+                    shippingCost: shippingCost,
+                    shippingType: shippingType,
+                    finalTotal: finalTotal
                 })
             });
 
