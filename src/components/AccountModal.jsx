@@ -101,8 +101,15 @@ export default function AccountModal({ isOpen, onClose }) {
                                     )}
                                 </button>
                             </div>
-                            
-                            {errorMsg && <p style={{ color: 'red', fontSize: '0.85rem', textAlign: 'center', margin: 0 }}>{errorMsg === 'Invalid login credentials' ? 'Email o contraseña incorrectos' : errorMsg}</p>}
+                            {errorMsg && (
+                                <p style={{ color: 'red', fontSize: '0.85rem', textAlign: 'center', margin: 0 }}>
+                                    {errorMsg === 'Invalid login credentials' ? 'Email o contraseña incorrectos.' :
+                                     errorMsg.includes('rate limit') ? 'Hiciste muchos intentos seguidos. Por favor, esperá un ratito (aprox. 1 hora) antes de volver a intentar o revisá tu correo.' :
+                                     errorMsg.includes('already registered') ? 'Este correo ya tiene una cuenta. Elegí "Iniciá sesión".' :
+                                     errorMsg.includes('at least 6 characters') ? 'La contraseña debe tener al menos 6 caracteres.' :
+                                     'Ocurrió un error. Por favor, revisá los datos e intentá de nuevo.'}
+                                </p>
+                            )}
 
                             <button type="submit" className="modal-btn" disabled={loading}>
                                 {loading ? 'Cargando...' : (isLogin ? 'Iniciar Sesión' : 'Crear Cuenta')}
