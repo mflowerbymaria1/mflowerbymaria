@@ -10,7 +10,47 @@ const client = new MercadoPagoConfig({
 export async function POST(request) {
     try {
         const body = await request.json();
-        const { items, payer, shippingCost, shippingType, finalTotal } = body;
+        const { items, payer, shippingCost, shippingType, finalTotal, couponCode } = body;
+
+        let finalNotes = payer.notas || '';
+        let actualShippingCost = shippingCost;
+        let cartTotal = items.reduce((acc, item) => acc + (item.price * item.quantity), 0);
+
+        // Validate and apply coupon in backend to ensure security
+        let appliedCoupon = null;
+        let discountAmount = 0;
+
+        if (couponCode) {
+            const { data: coupon, error: couponError } = await supabase
+                .from('products')
+                .select('*')
+                .eq('category', 'COUPON')
+                .eq('name', couponCode)
+                .single();
+                
+            if (!couponError && coupon && coupon.stock > 0) {
+                // Check if already used
+                const { data: pastOrders } = await supabase
+                    .from('orders')
+                    .select('notes')
+                    .eq('customer_email', payer.email);
+                    
+                const alreadyUsed = pastOrders?.some(o => o.notes?.includes(`CUPÓN USADO: ${coupon.name}`));
+                if (!alreadyUsed) {
+                    appliedCoupon = coupon;
+                    finalNotes = finalNotes ? `${finalNotes}\n\nCUPÓN USADO: ${coupon.name}` : `CUPÓN USADO: ${coupon.name}`;
+
+                    // Calculate discount
+                    if (coupon.short_description === 'percentage') {
+                        discountAmount = (cartTotal * (coupon.price / 100));
+                    } else if (coupon.short_description === 'fixed') {
+                        discountAmount = coupon.price;
+                    } else if (coupon.short_description === 'free_shipping') {
+                        actualShippingCost = 0;
+                    }
+                }
+            }
+        }
 
         // Map frontend cart items to Mercado Pago preference items
         const currentItems = items.map(item => ({
@@ -21,11 +61,21 @@ export async function POST(request) {
             currency_id: 'ARS',
         }));
 
-        if (shippingCost > 0) {
+        if (actualShippingCost > 0) {
             currentItems.push({
                 id: 'shipping',
                 title: 'Costo de Envío',
-                unit_price: Number(shippingCost),
+                unit_price: Number(actualShippingCost),
+                quantity: 1,
+                currency_id: 'ARS',
+            });
+        }
+
+        if (discountAmount > 0) {
+            currentItems.push({
+                id: 'discount',
+                title: `Descuento Cupón (${appliedCoupon.name})`,
+                unit_price: -Number(discountAmount),
                 quantity: 1,
                 currency_id: 'ARS',
             });
@@ -43,7 +93,7 @@ export async function POST(request) {
                 payment_status: 'pending',
                 total_amount: finalTotal || currentItems.reduce((acc, item) => acc + (item.unit_price * item.quantity), 0),
                 items: items,
-                notes: payer.notas || null
+                notes: finalNotes || null
             })
             .select()
             .single();
@@ -55,6 +105,15 @@ export async function POST(request) {
 
         // Send email notification to admin and customer asynchronously (don't await)
         if (order) {
+            // Decrement coupon stock
+            if (appliedCoupon) {
+                supabase.from('products')
+                    .update({ stock: appliedCoupon.stock - 1 })
+                    .eq('id', appliedCoupon.id)
+                    .then(() => console.log('Coupon stock decremented'))
+                    .catch(err => console.error('Error decrementing coupon stock:', err));
+            }
+
             const emailData = { ...order, payment_method: 'mercadopago' };
             sendOrderNotificationAdmin(emailData).catch(err => console.error("Email notification admin error:", err));
             sendOrderNotificationCustomer(emailData).catch(err => console.error("Email notification customer error:", err));

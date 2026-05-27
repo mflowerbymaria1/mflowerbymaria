@@ -17,7 +17,8 @@ import {
   ChevronRight,
   Search,
   User,
-  Tag
+  Tag,
+  Ticket
 } from 'lucide-react';
 
 export default function AdminLayout({ children }) {
@@ -38,8 +39,9 @@ export default function AdminLayout({ children }) {
   const menuItems = [
     { name: 'Dashboard', icon: LayoutDashboard, href: '/admin' },
     { name: 'Productos', icon: Package, href: '/admin/productos' },
-    { name: 'Categorías', icon: Tag, iconImport: 'lucide-react', href: '/admin/categorias' },
+    { name: 'Categorías', icon: Tag, href: '/admin/categorias' },
     { name: 'Ventas', icon: ShoppingCart, href: '/admin/ventas' },
+    { name: 'Cupones', icon: Ticket, href: '/admin/cupones' },
     { name: 'Logística', icon: Truck, href: '/admin/logistica' },
     { name: 'Marketing', icon: Mail, href: '/admin/marketing' },
   ];

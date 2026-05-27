@@ -21,6 +21,12 @@ export default function CheckoutPage() {
     const [savedTotal, setSavedTotal] = useState(0);
     const [savedShippingType, setSavedShippingType] = useState('envio');
 
+    // Coupon states
+    const [couponInput, setCouponInput] = useState('');
+    const [appliedCoupon, setAppliedCoupon] = useState(null);
+    const [couponError, setCouponError] = useState('');
+    const [couponLoading, setCouponLoading] = useState(false);
+
     useEffect(() => {
         async function fetchUserData() {
             const { data: { session } } = await supabase.auth.getSession();
@@ -69,9 +75,74 @@ export default function CheckoutPage() {
     }, []);
 
     const cartTotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-    const discount = paymentMethod === 'transferencia' ? cartTotal * 0.20 : 0;
-    const shippingCost = selectedShipping ? selectedShipping.price : 0;
-    const finalTotal = cartTotal - discount + shippingCost;
+    let shippingCost = selectedShipping ? selectedShipping.price : 0;
+    
+    // Calculate discounts
+    let discount = paymentMethod === 'transferencia' ? cartTotal * 0.20 : 0; // Base 20% transfer discount
+    
+    if (appliedCoupon) {
+        if (appliedCoupon.short_description === 'percentage') {
+            discount += (cartTotal * (appliedCoupon.price / 100));
+        } else if (appliedCoupon.short_description === 'fixed') {
+            discount += appliedCoupon.price;
+        } else if (appliedCoupon.short_description === 'free_shipping') {
+            shippingCost = 0;
+        }
+    }
+    
+    const finalTotal = Math.max(0, cartTotal - discount + shippingCost);
+
+    const handleApplyCoupon = async () => {
+        setCouponError('');
+        if (!couponInput.trim()) return;
+        
+        if (!formData.email) {
+            setCouponError('Por favor ingresá tu email en los datos de facturación primero.');
+            return;
+        }
+
+        setCouponLoading(true);
+        const { data: coupon, error } = await supabase
+            .from('products')
+            .select('*')
+            .eq('category', 'COUPON')
+            .eq('name', couponInput.toUpperCase().trim())
+            .single();
+            
+        if (error || !coupon) {
+            setCouponError('Cupón inválido o inexistente.');
+            setCouponLoading(false);
+            return;
+        }
+        
+        if (coupon.stock <= 0) {
+            setCouponError('Este cupón ya no tiene usos disponibles.');
+            setCouponLoading(false);
+            return;
+        }
+
+        // Check if user already used it
+        const { data: pastOrders } = await supabase
+            .from('orders')
+            .select('notes')
+            .eq('customer_email', formData.email);
+            
+        const alreadyUsed = pastOrders?.some(o => o.notes?.includes(`CUPÓN USADO: ${coupon.name}`));
+        if (alreadyUsed) {
+            setCouponError('Ya utilizaste este cupón en una compra anterior.');
+            setCouponLoading(false);
+            return;
+        }
+        
+        setAppliedCoupon(coupon);
+        setCouponInput('');
+        setCouponLoading(false);
+    };
+
+    const handleRemoveCoupon = () => {
+        setAppliedCoupon(null);
+        setCouponError('');
+    };
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -101,7 +172,8 @@ export default function CheckoutPage() {
                         payer: formData,
                         shippingCost: shippingCost,
                         shippingType: shippingType,
-                        finalTotal: finalTotal
+                        finalTotal: finalTotal,
+                        couponCode: appliedCoupon?.name || null
                     })
                 });
                 const data = await res.json();
@@ -129,7 +201,8 @@ export default function CheckoutPage() {
                     payer: formData,
                     shippingCost: shippingCost,
                     shippingType: shippingType,
-                    finalTotal: finalTotal
+                    finalTotal: finalTotal,
+                    couponCode: appliedCoupon?.name || null
                 })
             });
 
@@ -313,23 +386,80 @@ export default function CheckoutPage() {
                                         </div>
                                     ))}
                                 </div>
+                                
+                                {/* Coupon Section */}
+                                <div className="coupon-section mb-6" style={{ marginBottom: '1.5rem', background: '#F9FAFB', padding: '12px', borderRadius: '12px', border: '1px solid #F3F4F6' }}>
+                                    {!appliedCoupon ? (
+                                        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                                            <label style={{ fontSize: '0.85rem', fontWeight: 'bold', color: '#4B5563' }}>¿Tenés un cupón de descuento?</label>
+                                            <div style={{ display: 'flex', gap: '8px' }}>
+                                                <input 
+                                                    type="text" 
+                                                    placeholder="Ej: MAMA20" 
+                                                    value={couponInput}
+                                                    onChange={(e) => setCouponInput(e.target.value.toUpperCase())}
+                                                    style={{ flex: 1, padding: '8px 12px', border: '1px solid #D1D5DB', borderRadius: '8px', textTransform: 'uppercase', outline: 'none' }}
+                                                />
+                                                <button 
+                                                    type="button" 
+                                                    onClick={handleApplyCoupon}
+                                                    disabled={couponLoading}
+                                                    style={{ background: 'var(--pastel-pink)', color: 'white', border: 'none', padding: '8px 16px', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', opacity: couponLoading ? 0.7 : 1 }}
+                                                >
+                                                    {couponLoading ? '...' : 'Aplicar'}
+                                                </button>
+                                            </div>
+                                            {couponError && <span style={{ color: '#EF4444', fontSize: '0.8rem', fontWeight: 'bold' }}>{couponError}</span>}
+                                        </div>
+                                    ) : (
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                                <span style={{ background: '#D1FAE5', color: '#059669', padding: '4px 8px', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 'bold' }}>CUPÓN APLICADO</span>
+                                                <span style={{ fontWeight: 'bold', color: '#1F2937' }}>{appliedCoupon.name}</span>
+                                            </div>
+                                            <button type="button" onClick={handleRemoveCoupon} style={{ background: 'none', border: 'none', color: '#EF4444', fontSize: '0.8rem', cursor: 'pointer', textDecoration: 'underline' }}>
+                                                Quitar
+                                            </button>
+                                        </div>
+                                    )}
+                                </div>
+
                                 <div className="summary-calculations pt-4 border-t border-gray-100" style={{ paddingTop: '1rem', borderTop: '1px solid #f3f4f6' }}>
                                     <div className="flex justify-between mb-2">
                                         <span className="text-gray-600">Subtotal</span>
                                         <span className="font-medium">${cartTotal.toLocaleString('es-AR')}</span>
                                     </div>
-                                    {discount > 0 && (
+                                    
+                                    {/* Mostrar descuento del cupón */}
+                                    {appliedCoupon && appliedCoupon.short_description !== 'free_shipping' && (
                                         <div className="flex justify-between mb-2 text-pink">
-                                            <span>Descuento (20%)</span>
-                                            <span className="font-bold">-${discount.toLocaleString('es-AR')}</span>
+                                            <span>Cupón {appliedCoupon.name}</span>
+                                            <span className="font-bold">
+                                                -{appliedCoupon.short_description === 'percentage' ? `${appliedCoupon.price}%` : `$${appliedCoupon.price.toLocaleString('es-AR')}`}
+                                            </span>
                                         </div>
                                     )}
+                                    {appliedCoupon && appliedCoupon.short_description === 'free_shipping' && (
+                                        <div className="flex justify-between mb-2 text-pink">
+                                            <span>Cupón {appliedCoupon.name}</span>
+                                            <span className="font-bold">ENVÍO GRATIS</span>
+                                        </div>
+                                    )}
+
+                                    {/* Mostrar descuento de transferencia si aplica */}
+                                    {discount > 0 && paymentMethod === 'transferencia' && (
+                                        <div className="flex justify-between mb-2 text-pink">
+                                            <span>Descuento Transferencia (20%)</span>
+                                            <span className="font-bold">-${(cartTotal * 0.20).toLocaleString('es-AR')}</span>
+                                        </div>
+                                    )}
+                                    
                                     <div className="flex justify-between mb-4">
                                         <span className="text-gray-600">
                                             Entrega {shippingType === 'retiro' ? '(Acordar retiro)' : (selectedShipping ? `(${selectedShipping.provider})` : '')}
                                         </span>
                                         <span className="font-medium">
-                                            {shippingType === 'retiro' ? 'Gratis' : (selectedShipping ? `$${shippingCost.toLocaleString('es-AR')}` : 'A calcular')}
+                                            {shippingType === 'retiro' || (appliedCoupon && appliedCoupon.short_description === 'free_shipping') ? 'Gratis' : (selectedShipping ? `$${shippingCost.toLocaleString('es-AR')}` : 'A calcular')}
                                         </span>
                                     </div>
                                     <div className="flex justify-between items-center pt-4 border-t border-gray-200">

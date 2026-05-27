@@ -5,7 +5,34 @@ import { sendOrderNotificationAdmin, sendOrderNotificationCustomer } from '@/lib
 export async function POST(request) {
     try {
         const body = await request.json();
-        const { items, payer, shippingCost, shippingType, finalTotal } = body;
+        const { items, payer, shippingCost, shippingType, finalTotal, couponCode } = body;
+
+        let finalNotes = payer.notas || '';
+
+        // Validate and apply coupon in backend to ensure security
+        let appliedCoupon = null;
+        if (couponCode) {
+            const { data: coupon, error: couponError } = await supabase
+                .from('products')
+                .select('*')
+                .eq('category', 'COUPON')
+                .eq('name', couponCode)
+                .single();
+                
+            if (!couponError && coupon && coupon.stock > 0) {
+                // Check if already used
+                const { data: pastOrders } = await supabase
+                    .from('orders')
+                    .select('notes')
+                    .eq('customer_email', payer.email);
+                    
+                const alreadyUsed = pastOrders?.some(o => o.notes?.includes(`CUPÓN USADO: ${coupon.name}`));
+                if (!alreadyUsed) {
+                    appliedCoupon = coupon;
+                    finalNotes = finalNotes ? `${finalNotes}\n\nCUPÓN USADO: ${coupon.name}` : `CUPÓN USADO: ${coupon.name}`;
+                }
+            }
+        }
 
         // Create the order in Supabase
         const { data: order, error } = await supabase
@@ -19,7 +46,7 @@ export async function POST(request) {
                 payment_status: 'pending',
                 total_amount: finalTotal,
                 items: items,
-                notes: payer.notas || null
+                notes: finalNotes || null
             })
             .select()
             .single();
@@ -31,6 +58,15 @@ export async function POST(request) {
 
         // Send email notification to admin and customer asynchronously
         if (order) {
+            // Decrement coupon stock
+            if (appliedCoupon) {
+                supabase.from('products')
+                    .update({ stock: appliedCoupon.stock - 1 })
+                    .eq('id', appliedCoupon.id)
+                    .then(() => console.log('Coupon stock decremented'))
+                    .catch(err => console.error('Error decrementing coupon stock:', err));
+            }
+
             const emailData = { ...order, payment_method: 'transferencia' };
             sendOrderNotificationAdmin(emailData).catch(err => console.error("Email notification admin error:", err));
             sendOrderNotificationCustomer(emailData).catch(err => console.error("Email notification customer error:", err));
