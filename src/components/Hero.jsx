@@ -13,15 +13,27 @@ export default function Hero() {
         .hero-static {
           position: relative;
           width: 100vw;
-          height: 98vh;
+          height: 85vh;
           min-height: 600px;
           background-image: url('/images/mflower_hero_desk_new.jpg');
           background-size: cover;
-          background-position: center top;
+          background-position: center;
           display: flex;
           align-items: center;
           justify-content: center;
           text-align: center;
+          overflow: hidden;
+        }
+        /* Tapamos el logo de Gemini que está abajo a la derecha */
+        .hero-static::after {
+          content: '';
+          position: absolute;
+          bottom: 0;
+          right: 0;
+          width: 160px;
+          height: 40px;
+          background: linear-gradient(to right, transparent, #f5f0eb 30%);
+          z-index: 5;
         }
         .overlay {
           position: absolute;
@@ -71,9 +83,9 @@ export default function Hero() {
 
         @media (max-width: 768px) {
           .hero-static {
-            min-height: 500px;
-            height: 85vh;
-            background-position: center 85%;
+            min-height: 400px;
+            height: 60vh;
+            background-position: center;
           }
           .hero-subtitle {
             font-size: 1.6rem;

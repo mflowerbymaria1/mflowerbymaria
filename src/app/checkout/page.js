@@ -17,6 +17,7 @@ export default function CheckoutPage() {
     const [paymentMethod, setPaymentMethod] = useState('mercadopago');
     const [showTransferModal, setShowTransferModal] = useState(false);
     const [createdOrderId, setCreatedOrderId] = useState(null);
+    const [orderCompleted, setOrderCompleted] = useState(false);
 
     useEffect(() => {
         async function fetchUserData() {
@@ -96,10 +97,9 @@ export default function CheckoutPage() {
                 if (data.success) {
                     localStorage.setItem('lastShippingType', shippingType);
                     setCreatedOrderId(data.orderId);
-                    // Add this to get clearCart working:
-                    // we need to destructure clearCart from useCart at the top of the component!
-                    clearCart();
+                    setOrderCompleted(true);
                     setShowTransferModal(true);
+                    clearCart();
                 } else {
                     alert("Ocurrió un error al guardar tu pedido. Por favor intentá nuevamente.");
                 }
@@ -136,7 +136,7 @@ export default function CheckoutPage() {
         }
     };
 
-    if (cartItems.length === 0) {
+    if (cartItems.length === 0 && !showTransferModal && !orderCompleted) {
         return (
             <div className="flex flex-col min-h-screen">
                 <Header />
