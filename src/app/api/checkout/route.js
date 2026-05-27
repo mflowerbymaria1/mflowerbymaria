@@ -38,7 +38,7 @@ export async function POST(request) {
                 customer_name: `${payer.nombre} ${payer.apellido}`,
                 customer_email: payer.email,
                 customer_phone: payer.telefono,
-                shipping_address: payer.direccion || 'Retiro en sucursal',
+                shipping_address: shippingType === 'retiro' ? 'Retiro en sucursal' : JSON.stringify({ direccion: payer.direccion, ciudad: payer.ciudad, telefono: payer.telefono }),
                 shipping_method: shippingType || 'envio',
                 payment_status: 'pending',
                 total_amount: finalTotal || currentItems.reduce((acc, item) => acc + (item.unit_price * item.quantity), 0),

@@ -5,7 +5,7 @@ import { Search, Eye, Printer, Loader2, Package, CheckCircle2, X, MapPin, Credit
 import { supabase } from '@/lib/supabase';
 
 const shortId = (id) => id.replace(/-/g, '').slice(0, 6).toUpperCase();
-const paymentLabel = (s) => s === 'approved' ? 'Aprobado' : s === 'pending' ? 'Pendiente' : 'Rechazado';
+const paymentLabel = (s) => s === 'approved' ? 'Aprobado' : s === 'pending' ? 'Pendiente' : s === 'Anulado' ? 'Anulado' : 'Rechazado';
 const shippingLabel = (s, method) => {
   if (s === 'pending') return method === 'retiro' ? 'Pendiente de retiro' : 'Pendiente';
   if (s === 'ready_pickup') return '✅ Listo para retirar';
@@ -20,8 +20,21 @@ export default function VentasPage() {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedOrder, setSelectedOrder] = useState(null);
+  const [seenOrderIds, setSeenOrderIds] = useState([]);
 
-  useEffect(() => { fetchOrders(); }, []);
+  useEffect(() => {
+    const saved = localStorage.getItem('mflower_seen_orders');
+    if (saved) setSeenOrderIds(JSON.parse(saved));
+    fetchOrders();
+  }, []);
+
+  const markAllSeen = () => {
+    const allIds = orders.map(o => o.id);
+    setSeenOrderIds(allIds);
+    localStorage.setItem('mflower_seen_orders', JSON.stringify(allIds));
+  };
+
+  const newOrdersCount = orders.filter(o => !seenOrderIds.includes(o.id)).length;
 
   async function fetchOrders() {
     setLoading(true);
@@ -85,9 +98,16 @@ export default function VentasPage() {
 
   return (
     <div style={{ fontFamily: 'Montserrat, Arial, sans-serif' }} className="print:hidden">
-      <div style={{ marginBottom: 24 }}>
-        <h2 style={{ fontSize: 22, fontWeight: 900, color: '#1a1a1a', marginBottom: 4 }}>Gestión de Ventas</h2>
-        <p style={{ fontSize: 13, color: '#888' }}>Todos los pedidos de tu tienda, organizados y claros.</p>
+      <div style={{ marginBottom: 24, display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12 }}>
+        <div>
+          <h2 style={{ fontSize: 22, fontWeight: 900, color: '#1a1a1a', marginBottom: 4 }}>Gestión de Ventas</h2>
+          <p style={{ fontSize: 13, color: '#888' }}>Todos los pedidos de tu tienda, organizados y claros.</p>
+        </div>
+        {newOrdersCount > 0 && (
+          <button onClick={markAllSeen} style={{ display: 'flex', alignItems: 'center', gap: 8, background: '#EF4444', color: '#fff', border: 'none', padding: '10px 20px', borderRadius: 12, fontSize: 13, fontWeight: 800, cursor: 'pointer', animation: 'pulse 2s infinite' }}>
+            🔔 {newOrdersCount} pedido{newOrdersCount > 1 ? 's' : ''} nuevo{newOrdersCount > 1 ? 's' : ''}
+          </button>
+        )}
       </div>
 
       <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 24 }}>
@@ -126,13 +146,17 @@ export default function VentasPage() {
             <tbody>
               {filteredOrders.map((order) => {
                 const isPending = order.payment_status === 'pending';
-                const rowBg = isPending ? ROSE_LIGHT : '#fff';
-                const rowBorder = isPending ? ROSE_BORDER : '#eee';
+                const isNew = !seenOrderIds.includes(order.id);
+                const rowBg = isNew ? '#FEF9C3' : (isPending ? ROSE_LIGHT : '#fff');
+                const rowBorder = isNew ? '#FDE047' : (isPending ? ROSE_BORDER : '#eee');
                 const tdBase = { padding: '16px', fontSize: 14, background: rowBg, borderTop: `2px solid ${rowBorder}`, borderBottom: `2px solid ${rowBorder}` };
                 return (
                   <tr key={order.id}>
                     <td style={{ ...tdBase, borderLeft: `2px solid ${rowBorder}`, borderRadius: '12px 0 0 12px' }}>
-                      <span style={{ fontWeight: 900, color: ROSE, fontSize: 16 }}>#{shortId(order.id)}</span>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                        {isNew && <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#EF4444', display: 'inline-block', flexShrink: 0 }} />}
+                        <span style={{ fontWeight: 900, color: ROSE, fontSize: 16 }}>#{shortId(order.id)}</span>
+                      </div>
                     </td>
                     <td style={tdBase}>
                       <div style={{ fontWeight: 700, color: '#1a1a1a', fontSize: 14 }}>{order.customer_name || 'Desconocido'}</div>
@@ -238,7 +262,19 @@ export default function VentasPage() {
                 <div style={{ background: '#F0FDF4', padding: 20, borderRadius: 16, borderLeft: '4px solid #22C55E' }}>
                   <p style={{ fontSize: 10, fontWeight: 800, color: '#22C55E', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 8 }}>Envío</p>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontWeight: 700, color: '#1a1a1a', fontSize: 14 }}>
-                    <MapPin size={16} /> {selectedOrder.shipping_address || 'Retiro en sucursal'}
+                    <MapPin size={16} /> 
+                    {(() => {
+                      if (!selectedOrder.shipping_address) return 'Retiro en sucursal';
+                      if (selectedOrder.shipping_address.startsWith('{')) {
+                        try {
+                          const parsed = JSON.parse(selectedOrder.shipping_address);
+                          return `${parsed.direccion || ''} ${parsed.ciudad ? `(${parsed.ciudad})` : ''}`;
+                        } catch (e) {
+                          return selectedOrder.shipping_address;
+                        }
+                      }
+                      return selectedOrder.shipping_address;
+                    })()}
                   </div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 8, fontSize: 13, color: '#666' }}>
                     <Truck size={14} /> {methodLabel(selectedOrder.shipping_method)}
@@ -247,7 +283,10 @@ export default function VentasPage() {
               </div>
 
               <div style={{ display: 'flex', gap: 12, marginBottom: 28, alignItems: 'center', flexWrap: 'wrap' }}>
-                <span style={{ ...badgeStyle(selectedOrder.payment_status === 'approved' ? GREEN_BG : AMBER_BG, selectedOrder.payment_status === 'approved' ? GREEN : AMBER), padding: '8px 16px', fontSize: 12, display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+                <span style={{ ...badgeStyle(
+                  selectedOrder.payment_status === 'approved' ? GREEN_BG : selectedOrder.payment_status === 'Anulado' ? RED_BG : AMBER_BG,
+                  selectedOrder.payment_status === 'approved' ? GREEN : selectedOrder.payment_status === 'Anulado' ? RED : AMBER
+                ), padding: '8px 16px', fontSize: 12, display: 'inline-flex', alignItems: 'center', gap: 6 }}>
                   <CreditCard size={14} /> Pago: {paymentLabel(selectedOrder.payment_status)}
                 </span>
                 {selectedOrder.payment_status === 'pending' && (
@@ -258,6 +297,20 @@ export default function VentasPage() {
                     }}
                   >
                     <CheckCircle2 size={14} /> Confirmar Pago
+                  </button>
+                )}
+                {(selectedOrder.payment_status === 'approved' || selectedOrder.payment_status === 'pending') && selectedOrder.payment_status !== 'Anulado' && (
+                  <button
+                    onClick={() => {
+                      if (confirm('¿Estás segura de anular este pedido? El cliente lo verá como "Anulado" en su perfil.')) {
+                        handleUpdatePaymentStatus(selectedOrder.id, 'Anulado');
+                      }
+                    }}
+                    style={{
+                      background: RED_BG, color: RED, border: `1px solid ${RED}`, padding: '8px 16px', borderRadius: 12, fontSize: 12, fontWeight: 800, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6
+                    }}
+                  >
+                    <X size={14} /> Anular pedido
                   </button>
                 )}
                 <span style={{ ...badgeStyle(
@@ -353,7 +406,20 @@ export default function VentasPage() {
             </div>
             <div style={{ background: '#f9f9f9', padding: 20, borderRadius: 12, borderLeft: `4px solid ${ROSE}` }}>
               <h2 style={{ fontSize: 11, fontWeight: 700, color: '#aaa', textTransform: 'uppercase', marginBottom: 10 }}>Envío</h2>
-              <p style={{ fontSize: 14, fontWeight: 700 }}>{selectedOrder.shipping_address}</p>
+              <p style={{ fontSize: 14, fontWeight: 700 }}>
+                {(() => {
+                  if (!selectedOrder.shipping_address) return 'Retiro en sucursal';
+                  if (selectedOrder.shipping_address.startsWith('{')) {
+                    try {
+                      const parsed = JSON.parse(selectedOrder.shipping_address);
+                      return `${parsed.direccion || ''} ${parsed.ciudad ? `(${parsed.ciudad})` : ''}`;
+                    } catch (e) {
+                      return selectedOrder.shipping_address;
+                    }
+                  }
+                  return selectedOrder.shipping_address;
+                })()}
+              </p>
               <p style={{ fontSize: 13, color: ROSE, marginTop: 8 }}>Método: {methodLabel(selectedOrder.shipping_method)}</p>
             </div>
           </div>
@@ -375,6 +441,7 @@ export default function VentasPage() {
 
       <style jsx global>{`
         @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        @keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.85; transform: scale(1.05); } }
         @media print {
           body * { visibility: hidden; }
           .print\\:block, .print\\:block * { visibility: visible; }

@@ -18,6 +18,8 @@ export default function CheckoutPage() {
     const [showTransferModal, setShowTransferModal] = useState(false);
     const [createdOrderId, setCreatedOrderId] = useState(null);
     const [orderCompleted, setOrderCompleted] = useState(false);
+    const [savedTotal, setSavedTotal] = useState(0);
+    const [savedShippingType, setSavedShippingType] = useState('envio');
 
     useEffect(() => {
         async function fetchUserData() {
@@ -33,14 +35,25 @@ export default function CheckoutPage() {
 
                 if (orders && orders.length > 0) {
                     const lastOrder = orders[0];
+                    let parsedAddress = {};
+                    try {
+                        if (lastOrder.shipping_address && lastOrder.shipping_address.startsWith('{')) {
+                            parsedAddress = JSON.parse(lastOrder.shipping_address);
+                        } else if (lastOrder.shipping_address && lastOrder.shipping_address !== 'Retiro en sucursal') {
+                            parsedAddress.direccion = lastOrder.shipping_address;
+                        }
+                    } catch (e) {
+                        parsedAddress.direccion = lastOrder.shipping_address;
+                    }
+                    
                     setFormData(prev => ({
                         ...prev,
                         nombre: lastOrder.customer_name?.split(' ')[0] || prev.nombre,
                         apellido: lastOrder.customer_name?.split(' ').slice(1).join(' ') || prev.apellido,
                         email: userEmail || prev.email,
-                        telefono: lastOrder.shipping_address?.telefono || prev.telefono,
-                        direccion: lastOrder.shipping_address?.direccion || prev.direccion,
-                        ciudad: lastOrder.shipping_address?.ciudad || prev.ciudad
+                        telefono: parsedAddress.telefono || lastOrder.customer_phone || prev.telefono,
+                        direccion: parsedAddress.direccion || prev.direccion,
+                        ciudad: parsedAddress.ciudad || prev.ciudad
                     }));
                 } else {
                     setFormData(prev => ({
@@ -97,6 +110,8 @@ export default function CheckoutPage() {
                 if (data.success) {
                     localStorage.setItem('lastShippingType', shippingType);
                     setCreatedOrderId(data.orderId);
+                    setSavedTotal(finalTotal);
+                    setSavedShippingType(shippingType);
                     setOrderCompleted(true);
                     setShowTransferModal(true);
                     clearCart();
@@ -347,7 +362,7 @@ export default function CheckoutPage() {
                             <div style={{ marginBottom: '25px', width: '100%', textAlign: 'center' }}>
                                 <h3 className="text-2xl font-bold text-gray-800" style={{ fontSize: '1.4rem', fontWeight: 'bold', color: '#1f2937', marginBottom: '10px', width: '100%', textAlign: 'center' }}>¡Pedido Confirmado! ✓</h3>
                                 <p style={{ color: '#6b7280', margin: '0 auto', maxWidth: '90%', textAlign: 'center', fontSize: '0.9rem' }}>
-                                    {shippingType === 'retiro'
+                                    {savedShippingType === 'retiro'
                                         ? "Solo falta que realices el pago y acordar retiro en General Rodríguez."
                                         : "Solo falta que realices el pago para que preparemos tu envío."}
                                 </p>
@@ -355,7 +370,7 @@ export default function CheckoutPage() {
                             <div className="bg-pink-50 rounded-xl" style={{ backgroundColor: 'rgba(255, 209, 220, 0.2)', padding: '20px', borderRadius: '16px', marginBottom: '25px', display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%' }}>
                                 <div style={{ marginBottom: '20px', textAlign: 'center', width: '100%' }}>
                                     <span style={{ display: 'block', fontSize: '0.8rem', color: '#6b7280', marginBottom: '4px', textAlign: 'center' }}>Monto a transferir:</span>
-                                    <span className="text-pink" style={{ fontSize: '1.8rem', fontWeight: 'bold', color: 'var(--pastel-pink)', textAlign: 'center', display: 'block' }}>${finalTotal.toLocaleString('es-AR')}</span>
+                                    <span className="text-pink" style={{ fontSize: '1.8rem', fontWeight: 'bold', color: 'var(--pastel-pink)', textAlign: 'center', display: 'block' }}>${savedTotal.toLocaleString('es-AR')}</span>
                                 </div>
                                 <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', width: '100%', alignItems: 'center' }}>
                                     <div style={{ textAlign: 'center', width: '100%' }}>
@@ -388,7 +403,7 @@ export default function CheckoutPage() {
                             </div>
                             <button
                                 onClick={() => {
-                                    const msg = `¡Hola Mflower! Acabo de hacer un pedido en la página web.%0A%0A*Mi Orden:* ${createdOrderId || ''}%0A*Nombre:* ${formData.nombre} ${formData.apellido}%0A*Monto a transferir:* $${finalTotal.toLocaleString('es-AR')}%0A%0A¡Te envío el comprobante de pago por acá!`;
+                                    const msg = `¡Hola Mflower! Acabo de hacer un pedido en la página web.%0A%0A*Mi Orden:* ${createdOrderId || ''}%0A*Nombre:* ${formData.nombre} ${formData.apellido}%0A*Monto a transferir:* $${savedTotal.toLocaleString('es-AR')}%0A%0A¡Te envío el comprobante de pago por acá!`;
                                     window.open(`https://wa.me/541141817424?text=${msg}`, '_blank');
                                     window.location.href = '/';
                                 }}
