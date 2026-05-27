@@ -6,7 +6,13 @@ import { supabase } from '@/lib/supabase';
 
 const shortId = (id) => id.replace(/-/g, '').slice(0, 6).toUpperCase();
 const paymentLabel = (s) => s === 'approved' ? 'Aprobado' : s === 'pending' ? 'Pendiente' : 'Rechazado';
-const shippingLabel = (s) => s === 'pending' ? 'Pendiente' : s === 'shipped' ? 'Enviado' : s === 'delivered' ? 'Entregado' : s;
+const shippingLabel = (s, method) => {
+  if (s === 'pending') return method === 'retiro' ? 'Pendiente de retiro' : 'Pendiente';
+  if (s === 'ready_pickup') return '✅ Listo para retirar';
+  if (s === 'shipped') return 'Enviado';
+  if (s === 'delivered') return method === 'retiro' ? 'Retirado' : 'Entregado';
+  return s;
+};
 const methodLabel = (m) => m === 'retiro' ? 'Retiro en sucursal' : m === 'envio' ? 'Envío a domicilio' : m || 'No especificado';
 
 export default function VentasPage() {
@@ -35,6 +41,19 @@ export default function VentasPage() {
     } else {
       setOrders(prev => prev.map(o => o.id === id ? { ...o, payment_status: newStatus } : o));
       setSelectedOrder(prev => prev && prev.id === id ? { ...prev, payment_status: newStatus } : prev);
+    }
+  }
+
+  async function handleUpdateShippingStatus(id, newStatus) {
+    const { error } = await supabase
+      .from('orders')
+      .update({ shipping_status: newStatus })
+      .eq('id', id);
+    if (error) {
+      alert('Error al actualizar el estado de envío: ' + error.message);
+    } else {
+      setOrders(prev => prev.map(o => o.id === id ? { ...o, shipping_status: newStatus } : o));
+      setSelectedOrder(prev => prev && prev.id === id ? { ...prev, shipping_status: newStatus } : prev);
     }
   }
 
@@ -132,7 +151,7 @@ export default function VentasPage() {
                       <span style={badgeStyle(
                         order.shipping_status === 'pending' ? AMBER_BG : GREEN_BG,
                         order.shipping_status === 'pending' ? AMBER : GREEN
-                      )}>{shippingLabel(order.shipping_status)}</span>
+                      )}>{shippingLabel(order.shipping_status, order.shipping_method)}</span>
                     </td>
                     <td style={tdBase}>
                       <span style={{ fontSize: 12, color: '#555', fontWeight: 600 }}>{methodLabel(order.shipping_method)}</span>
@@ -150,6 +169,24 @@ export default function VentasPage() {
                             title="Confirmar Pago (Marcar como Pagado)"
                           >
                             <CheckCircle2 size={14} /> Pagado
+                          </button>
+                        )}
+                        {order.shipping_status === 'pending' && order.shipping_method === 'retiro' && (
+                          <button
+                            style={{ background: '#EDE9FE', border: '1px solid #DDD6FE', cursor: 'pointer', padding: '6px 10px', borderRadius: 8, color: '#7C3AED', display: 'flex', alignItems: 'center', gap: 4, fontSize: 11, fontWeight: 700 }}
+                            onClick={() => handleUpdateShippingStatus(order.id, 'ready_pickup')}
+                            title="Marcar listo para retirar"
+                          >
+                            <Package size={14} /> Listo
+                          </button>
+                        )}
+                        {order.shipping_status === 'pending' && order.shipping_method === 'envio' && (
+                          <button
+                            style={{ background: '#DBEAFE', border: '1px solid #BFDBFE', cursor: 'pointer', padding: '6px 10px', borderRadius: 8, color: '#1D4ED8', display: 'flex', alignItems: 'center', gap: 4, fontSize: 11, fontWeight: 700 }}
+                            onClick={() => handleUpdateShippingStatus(order.id, 'shipped')}
+                            title="Marcar como enviado"
+                          >
+                            <Truck size={14} /> Enviado
                           </button>
                         )}
                         <button style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 8, borderRadius: 8, color: ROSE }} onClick={() => setSelectedOrder(order)} title="Ver detalle">
@@ -223,9 +260,44 @@ export default function VentasPage() {
                     <CheckCircle2 size={14} /> Confirmar Pago
                   </button>
                 )}
-                <span style={{ ...badgeStyle(selectedOrder.shipping_status === 'pending' ? AMBER_BG : GREEN_BG, selectedOrder.shipping_status === 'pending' ? AMBER : GREEN), padding: '8px 16px', fontSize: 12, display: 'inline-flex', alignItems: 'center', gap: 6 }}>
-                  <Package size={14} /> Envío: {shippingLabel(selectedOrder.shipping_status)}
+                <span style={{ ...badgeStyle(
+                  selectedOrder.shipping_status === 'pending' ? AMBER_BG : selectedOrder.shipping_status === 'ready_pickup' ? '#EDE9FE' : GREEN_BG,
+                  selectedOrder.shipping_status === 'pending' ? AMBER : selectedOrder.shipping_status === 'ready_pickup' ? '#7C3AED' : GREEN
+                ), padding: '8px 16px', fontSize: 12, display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+                  <Package size={14} /> {selectedOrder.shipping_method === 'retiro' ? 'Retiro' : 'Envío'}: {shippingLabel(selectedOrder.shipping_status, selectedOrder.shipping_method)}
                 </span>
+                {selectedOrder.shipping_status === 'pending' && selectedOrder.shipping_method === 'retiro' && (
+                  <button
+                    onClick={() => handleUpdateShippingStatus(selectedOrder.id, 'ready_pickup')}
+                    style={{ background: '#7C3AED', color: '#fff', border: 'none', padding: '8px 16px', borderRadius: 12, fontSize: 12, fontWeight: 800, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6 }}
+                  >
+                    <Package size={14} /> Marcar listo para retirar
+                  </button>
+                )}
+                {selectedOrder.shipping_status === 'ready_pickup' && (
+                  <button
+                    onClick={() => handleUpdateShippingStatus(selectedOrder.id, 'delivered')}
+                    style={{ background: '#059669', color: '#fff', border: 'none', padding: '8px 16px', borderRadius: 12, fontSize: 12, fontWeight: 800, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6 }}
+                  >
+                    <CheckCircle2 size={14} /> Ya retiró
+                  </button>
+                )}
+                {selectedOrder.shipping_status === 'pending' && selectedOrder.shipping_method !== 'retiro' && (
+                  <button
+                    onClick={() => handleUpdateShippingStatus(selectedOrder.id, 'shipped')}
+                    style={{ background: '#1D4ED8', color: '#fff', border: 'none', padding: '8px 16px', borderRadius: 12, fontSize: 12, fontWeight: 800, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6 }}
+                  >
+                    <Truck size={14} /> Marcar como enviado
+                  </button>
+                )}
+                {selectedOrder.shipping_status === 'shipped' && (
+                  <button
+                    onClick={() => handleUpdateShippingStatus(selectedOrder.id, 'delivered')}
+                    style={{ background: '#059669', color: '#fff', border: 'none', padding: '8px 16px', borderRadius: 12, fontSize: 12, fontWeight: 800, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6 }}
+                  >
+                    <CheckCircle2 size={14} /> Marcar como entregado
+                  </button>
+                )}
               </div>
 
               <p style={{ fontSize: 10, fontWeight: 800, color: '#aaa', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 12 }}>Productos</p>

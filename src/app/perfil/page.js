@@ -118,14 +118,20 @@ export default function PerfilPage() {
                                                 </td>
                                                 <td style={{ padding: '16px 12px' }}>
                                                     <span style={{ 
-                                                        background: order.shipping_status === 'shipped' ? '#dbeafe' : (order.shipping_status === 'ready' ? '#f3e8ff' : '#f3f4f6'),
-                                                        color: order.shipping_status === 'shipped' ? '#1e40af' : (order.shipping_status === 'ready' ? '#6b21a8' : '#374151'),
+                                                        background: order.shipping_status === 'shipped' ? '#dbeafe' : (order.shipping_status === 'ready_pickup' ? '#ede9fe' : (order.shipping_status === 'delivered' ? '#dcfce7' : '#f3f4f6')),
+                                                        color: order.shipping_status === 'shipped' ? '#1e40af' : (order.shipping_status === 'ready_pickup' ? '#7c3aed' : (order.shipping_status === 'delivered' ? '#166534' : '#374151')),
                                                         padding: '4px 8px',
                                                         borderRadius: '4px',
                                                         fontSize: '0.85rem',
                                                         fontWeight: 'bold'
                                                     }}>
-                                                        {order.shipping_status === 'shipped' ? 'Enviado' : (order.shipping_status === 'ready' ? 'Listo' : (order.shipping_method === 'retiro' ? 'Confirmación de retiro pendiente' : 'Envío pendiente'))}
+                                                        {order.shipping_status === 'delivered' 
+                                                            ? (order.shipping_method === 'retiro' ? '✅ Retirado' : '✅ Entregado')
+                                                            : order.shipping_status === 'shipped' 
+                                                                ? '📦 Enviado' 
+                                                                : order.shipping_status === 'ready_pickup' 
+                                                                    ? '🎉 ¡Ya podés retirar tu pedido!' 
+                                                                    : (order.shipping_method === 'retiro' ? 'Confirmación de retiro pendiente' : 'Envío pendiente')}
                                                     </span>
                                                 </td>
                                             </tr>

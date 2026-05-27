@@ -332,6 +332,7 @@ export default function AdminLayout({ children }) {
            /* Fix for table overflowing in mobile */
            .content-container > div { overflow-x: auto; }
         }
+      `}</style>
     </div>
   );
 }
