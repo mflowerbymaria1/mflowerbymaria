@@ -71,8 +71,9 @@ export default function Hero() {
 
         @media (max-width: 768px) {
           .hero-static {
-            min-height: 400px;
-            height: 60vh;
+            min-height: 500px;
+            height: 85vh;
+            background-position: center 85%;
           }
           .hero-subtitle {
             font-size: 1.6rem;
