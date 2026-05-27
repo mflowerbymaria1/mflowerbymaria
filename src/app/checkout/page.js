@@ -9,7 +9,7 @@ import { useState } from "react";
 export default function CheckoutPage() {
     const { cartItems, cartCount } = useCart();
     const [formData, setFormData] = useState({
-        nombre: "", apellido: "", email: "", telefono: "", direccion: "", ciudad: ""
+        nombre: "", apellido: "", email: "", telefono: "", direccion: "", ciudad: "", notas: ""
     });
     const [shippingType, setShippingType] = useState('envio'); // 'envio' or 'retiro'
     const [selectedShipping, setSelectedShipping] = useState(null);
@@ -57,6 +57,7 @@ export default function CheckoutPage() {
                 
                 setIsProcessing(false);
                 if (data.success) {
+                    localStorage.setItem('lastShippingType', shippingType);
                     setCreatedOrderId(data.orderId);
                     setShowTransferModal(true);
                 } else {
@@ -80,6 +81,7 @@ export default function CheckoutPage() {
 
             if (data.success && data.init_point) {
                 // Redirect user to Mercado Pago checkout
+                localStorage.setItem('lastShippingType', shippingType);
                 window.location.href = data.init_point;
             } else {
                 alert("Ocurrió un error al procesar el pago. Por favor intenta nuevamente.");
@@ -122,7 +124,7 @@ export default function CheckoutPage() {
                         {/* Formulario */}
                         <div className="checkout-form-container">
                             <form onSubmit={handleSubmit} className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100" style={{ background: 'white', padding: '1.5rem', borderRadius: '1rem', boxShadow: '0 1px 2px rgba(0,0,0,0.05)', border: '1px solid #f3f4f6' }}>
-                                <h2 className="text-xl font-bold mb-6 text-gray-800" style={{ fontSize: '1.25rem', marginBottom: '1.5rem', fontWeight: 'bold' }}>Datos de Envío</h2>
+                                <h2 className="text-xl font-bold mb-6 text-gray-800" style={{ fontSize: '1.25rem', marginBottom: '1.5rem', fontWeight: 'bold' }}>Datos del Comprador</h2>
                                 <div className="form-grid">
                                     <div className="form-group">
                                         <label>Nombre</label>
@@ -140,11 +142,19 @@ export default function CheckoutPage() {
                                         <label>Teléfono</label>
                                         <input required type="tel" name="telefono" value={formData.telefono} onChange={handleInputChange} />
                                     </div>
-                                    <div className="form-group full-width">
-                                        <label>Dirección {shippingType === 'retiro' && '(Opcional)'}</label>
-                                        <input required={shippingType === 'envio'} type="text" name="direccion" value={formData.direccion} onChange={handleInputChange} />
-                                    </div>
                                 </div>
+
+                                {shippingType === 'envio' && (
+                                    <>
+                                        <h2 className="text-xl font-bold mb-6 mt-8 text-gray-800" style={{ fontSize: '1.25rem', marginBottom: '1.5rem', marginTop: '2rem', fontWeight: 'bold' }}>Datos de Envío</h2>
+                                        <div className="form-grid">
+                                            <div className="form-group full-width">
+                                                <label>Dirección</label>
+                                                <input required type="text" name="direccion" value={formData.direccion} onChange={handleInputChange} />
+                                            </div>
+                                        </div>
+                                    </>
+                                )}
 
                                 <div className="shipping-type-selector mt-8" style={{ marginTop: '2rem' }}>
                                     <h3 className="text-lg font-bold mb-4 text-gray-800" style={{ fontSize: '1.125rem', marginBottom: '1rem', fontWeight: 'bold' }}>Método de Entrega</h3>
@@ -210,6 +220,19 @@ export default function CheckoutPage() {
                                                 <span className="text-sm text-gray-500">El descuento se aplica al instante</span>
                                             </div>
                                         </label>
+                                    </div>
+                                </div>
+
+                                <div className="notes-section mt-8" style={{ marginTop: '2rem' }}>
+                                    <h3 className="text-lg font-bold mb-4 text-gray-800" style={{ fontSize: '1.125rem', marginBottom: '1rem', fontWeight: 'bold' }}>Observaciones / Notas adicionales</h3>
+                                    <div className="form-group full-width">
+                                        <textarea 
+                                            name="notas" 
+                                            value={formData.notas} 
+                                            onChange={handleInputChange} 
+                                            placeholder="Si elegiste retiro y viene otra persona, indicanos acá su nombre y DNI. También podés dejar aclaraciones sobre tu entrega."
+                                            style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid #ddd', minHeight: '100px', fontFamily: 'inherit', resize: 'vertical' }}
+                                        ></textarea>
                                     </div>
                                 </div>
 

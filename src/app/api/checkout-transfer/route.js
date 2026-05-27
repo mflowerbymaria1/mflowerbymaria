@@ -18,7 +18,8 @@ export async function POST(request) {
                 shipping_method: shippingType,
                 payment_status: 'pending',
                 total_amount: finalTotal,
-                items: items
+                items: items,
+                notes: payer.notas || null
             })
             .select()
             .single();

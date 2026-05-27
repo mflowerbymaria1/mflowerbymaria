@@ -42,7 +42,8 @@ export async function POST(request) {
                 shipping_method: shippingType || 'envio',
                 payment_status: 'pending',
                 total_amount: finalTotal || currentItems.reduce((acc, item) => acc + (item.unit_price * item.quantity), 0),
-                items: items
+                items: items,
+                notes: payer.notas || null
             })
             .select()
             .single();

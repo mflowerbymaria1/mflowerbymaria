@@ -79,8 +79,17 @@ function GraciasContent() {
                         </p>
                         <ul style={{ fontSize: '0.85rem', color: '#6b7280', paddingLeft: '1.5rem', lineHeight: 1.8 }}>
                             <li>Recibirás un email de confirmación</li>
-                            <li>Te avisaremos cuando tu pedido esté en camino</li>
-                            <li>Podés seguir tu envío con el código de tracking</li>
+                            {typeof window !== 'undefined' && localStorage.getItem('lastShippingType') === 'retiro' ? (
+                                <>
+                                    <li>Te avisaremos cuando tu pedido esté listo para retirar</li>
+                                    <li>Acordate de traer tu número de pedido y DNI</li>
+                                </>
+                            ) : (
+                                <>
+                                    <li>Te avisaremos cuando tu pedido esté en camino</li>
+                                    <li>Podés seguir tu envío con el código de tracking</li>
+                                </>
+                            )}
                         </ul>
                     </div>
 

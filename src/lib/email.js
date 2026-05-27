@@ -4,7 +4,7 @@ const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KE
 
 export async function sendOrderNotificationAdmin(orderData) {
     try {
-        const { id, customer_name, customer_email, customer_phone, total_amount, payment_status, shipping_method, items } = orderData;
+        const { id, customer_name, customer_email, customer_phone, total_amount, payment_status, shipping_method, items, notes } = orderData;
         
         let itemsHtml = items.map(item => `
             <tr>
@@ -25,6 +25,12 @@ export async function sendOrderNotificationAdmin(orderData) {
                     <p style="margin: 5px 0;"><strong>Nombre:</strong> ${customer_name}</p>
                     <p style="margin: 5px 0;"><strong>Email:</strong> ${customer_email}</p>
                     <p style="margin: 5px 0;"><strong>WhatsApp:</strong> <a href="https://wa.me/${customer_phone?.replace(/\D/g, '')}" style="color: #25D366; text-decoration: none; font-weight: bold;">${customer_phone} (Click para abrir)</a></p>
+                    ${notes ? `
+                    <div style="margin-top: 15px; padding: 10px; background-color: #fff; border-left: 4px solid #D47792; border-radius: 4px;">
+                        <h3 style="margin: 0 0 5px 0; font-size: 14px; color: #D47792;">📝 Notas del Pedido</h3>
+                        <p style="margin: 0; font-size: 14px; color: #555;">${notes}</p>
+                    </div>
+                    ` : ''}
                 </div>
 
                 <div style="background-color: #f9f9f9; padding: 15px; border-radius: 8px; margin-top: 20px;">
@@ -127,14 +133,16 @@ export async function sendOrderNotificationCustomer(orderData) {
                 </div>
 
                 ${payment_method === 'transferencia' ? `
-                <div style="background-color: #fff3cd; color: #856404; padding: 15px; border-radius: 8px; margin-top: 20px; border: 1px solid #ffeeba;">
+                <div style="background-color: #fff3cd; color: #856404; padding: 15px; border-radius: 8px; margin-top: 20px; border: 1px solid #ffeeba; text-align: center;">
                     <h3 style="margin-top: 0; font-size: 16px;">⏳ Pendiente de Pago</h3>
-                    <p style="margin: 5px 0; font-size: 14px;">Recuerda que si elegiste pago por transferencia, tu pedido se procesará una vez que confirmemos el ingreso del dinero.</p>
+                    <p style="margin: 5px 0 15px 0; font-size: 14px;">Recuerda que si elegiste pago por transferencia, tu pedido se procesará una vez que confirmemos el ingreso del dinero.</p>
+                    <a href="https://wa.me/5491141817424?text=Hola,%20soy%20${encodeURIComponent(customer_name)}.%20Te%20env%C3%ADo%20el%20comprobante%20de%20mi%20pedido%20%23${String(id).slice(0, 8)}" style="background-color: #25D366; color: white; padding: 10px 20px; text-decoration: none; border-radius: 20px; font-weight: bold; font-size: 14px; display: inline-block;">📱 Enviar comprobante por WhatsApp</a>
                 </div>
                 ` : `
-                <div style="background-color: #e8f5e9; color: #2e7d32; padding: 15px; border-radius: 8px; margin-top: 20px; border: 1px solid #c8e6c9;">
+                <div style="background-color: #e8f5e9; color: #2e7d32; padding: 15px; border-radius: 8px; margin-top: 20px; border: 1px solid #c8e6c9; text-align: center;">
                     <h3 style="margin-top: 0; font-size: 16px;">💳 Pago Electrónico</h3>
-                    <p style="margin: 5px 0; font-size: 14px;">El pago se gestiona a través de Mercado Pago de forma 100% segura. Si el pago fue exitoso, no tenés que hacer nada más, ¡ya estamos preparando todo!</p>
+                    <p style="margin: 5px 0 15px 0; font-size: 14px;">El pago se gestiona a través de Mercado Pago de forma 100% segura. Si el pago fue exitoso, no tenés que hacer nada más, ¡ya estamos preparando todo!</p>
+                    <a href="https://wa.me/5491141817424?text=Hola,%20soy%20${encodeURIComponent(customer_name)}.%20Tengo%20una%20consulta%20sobre%20mi%20pedido%20%23${String(id).slice(0, 8)}" style="background-color: #25D366; color: white; padding: 10px 20px; text-decoration: none; border-radius: 20px; font-weight: bold; font-size: 14px; display: inline-block;">📱 Consultas por WhatsApp</a>
                 </div>
                 `}
                 

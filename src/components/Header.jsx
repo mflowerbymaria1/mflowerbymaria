@@ -23,6 +23,7 @@ export default function Header() {
   const [isCartBumping, setIsCartBumping] = useState(false);
   const [isFavBumping, setIsFavBumping] = useState(false);
   const [categories, setCategories] = useState([]);
+  const [user, setUser] = useState(null);
   const isInitialMountCart = useRef(true);
   const isInitialMountFav = useRef(true);
 
@@ -71,6 +72,17 @@ export default function Header() {
       }
     }
     fetchCategories();
+
+    // Check auth state
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUser(session?.user ?? null);
+    });
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+    });
+
+    return () => subscription.unsubscribe();
   }, []);
 
   const handleSearchSubmit = (e) => {
@@ -161,7 +173,7 @@ export default function Header() {
             </button>
           </div>
 
-          <button className="icon-btn" aria-label="Mi Cuenta" onClick={() => setIsAccountOpen(true)}>
+          <button className="icon-btn" aria-label="Mi Cuenta" onClick={() => user ? router.push('/perfil') : setIsAccountOpen(true)}>
             <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
               <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
               <circle cx="12" cy="7" r="4"></circle>

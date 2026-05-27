@@ -1,17 +1,46 @@
 "use client";
 import { useState } from 'react';
 import Logo from './Logo';
+import { supabase } from '../lib/supabase';
+import { useRouter } from 'next/navigation';
 
 export default function AccountModal({ isOpen, onClose }) {
     const [isLogin, setIsLogin] = useState(true);
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [name, setName] = useState('');
+    const [loading, setLoading] = useState(false);
+    const [errorMsg, setErrorMsg] = useState('');
+    const router = useRouter();
 
     if (!isOpen) return null;
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        // Mock authentication
-        alert(isLogin ? "Iniciando sesión..." : "Creando cuenta...");
-        onClose();
+        setLoading(true);
+        setErrorMsg('');
+
+        try {
+            if (isLogin) {
+                const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+                if (error) throw error;
+                onClose();
+                router.push('/perfil');
+            } else {
+                const { data, error } = await supabase.auth.signUp({
+                    email,
+                    password,
+                    options: { data: { full_name: name } }
+                });
+                if (error) throw error;
+                onClose();
+                router.push('/perfil');
+            }
+        } catch (error) {
+            setErrorMsg(error.message);
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
@@ -27,24 +56,27 @@ export default function AccountModal({ isOpen, onClose }) {
                     {!isLogin && (
                         <div className="form-group">
                             <label>Nombre y Apellido</label>
-                            <input type="text" placeholder="Ej. Flor Pérez" required />
+                            <input type="text" placeholder="Ej. Flor Pérez" value={name} onChange={e => setName(e.target.value)} required />
                         </div>
                     )}
                     <div className="form-group">
                         <label>E-mail</label>
-                        <input type="email" placeholder="tucorreo@ejemplo.com" required />
+                        <input type="email" placeholder="tucorreo@ejemplo.com" value={email} onChange={e => setEmail(e.target.value)} required />
                     </div>
                     <div className="form-group">
                         <label>Contraseña</label>
-                        <input type="password" placeholder="••••••••" required />
+                        <input type="password" placeholder="••••••••" value={password} onChange={e => setPassword(e.target.value)} required />
                     </div>
-                    <button type="submit" className="modal-btn">
-                        {isLogin ? 'Iniciar Sesión' : 'Crear Cuenta'}
+                    
+                    {errorMsg && <p style={{ color: 'red', fontSize: '0.85rem', textAlign: 'center', margin: 0 }}>{errorMsg === 'Invalid login credentials' ? 'Email o contraseña incorrectos' : errorMsg}</p>}
+
+                    <button type="submit" className="modal-btn" disabled={loading}>
+                        {loading ? 'Cargando...' : (isLogin ? 'Iniciar Sesión' : 'Crear Cuenta')}
                     </button>
                 </form>
 
                 <div className="modal-footer">
-                    <button className="toggle-btn" onClick={() => setIsLogin(!isLogin)}>
+                    <button className="toggle-btn" onClick={() => { setIsLogin(!isLogin); setErrorMsg(''); }}>
                         {isLogin ? '¿No tenés cuenta? Registrate acá.' : '¿Ya tenés cuenta? Iniciá sesión.'}
                     </button>
                 </div>
