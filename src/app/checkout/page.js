@@ -4,10 +4,11 @@ import Footer from "../../components/Footer";
 import ShippingCalculator from "../../components/ShippingCalculator";
 import { useCart } from "../../store/CartContext";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { supabase } from "../../lib/supabase";
 
 export default function CheckoutPage() {
-    const { cartItems, cartCount } = useCart();
+    const { cartItems, cartCount, clearCart } = useCart();
     const [formData, setFormData] = useState({
         nombre: "", apellido: "", email: "", telefono: "", direccion: "", ciudad: "", notas: ""
     });
@@ -16,6 +17,42 @@ export default function CheckoutPage() {
     const [paymentMethod, setPaymentMethod] = useState('mercadopago');
     const [showTransferModal, setShowTransferModal] = useState(false);
     const [createdOrderId, setCreatedOrderId] = useState(null);
+
+    useEffect(() => {
+        async function fetchUserData() {
+            const { data: { session } } = await supabase.auth.getSession();
+            if (session) {
+                const userEmail = session.user.email;
+                const { data: orders } = await supabase
+                    .from('orders')
+                    .select('*')
+                    .eq('customer_email', userEmail)
+                    .order('created_at', { ascending: false })
+                    .limit(1);
+
+                if (orders && orders.length > 0) {
+                    const lastOrder = orders[0];
+                    setFormData(prev => ({
+                        ...prev,
+                        nombre: lastOrder.customer_name?.split(' ')[0] || prev.nombre,
+                        apellido: lastOrder.customer_name?.split(' ').slice(1).join(' ') || prev.apellido,
+                        email: userEmail || prev.email,
+                        telefono: lastOrder.shipping_address?.telefono || prev.telefono,
+                        direccion: lastOrder.shipping_address?.direccion || prev.direccion,
+                        ciudad: lastOrder.shipping_address?.ciudad || prev.ciudad
+                    }));
+                } else {
+                    setFormData(prev => ({
+                        ...prev,
+                        email: userEmail,
+                        nombre: session.user.user_metadata?.full_name?.split(' ')[0] || prev.nombre,
+                        apellido: session.user.user_metadata?.full_name?.split(' ').slice(1).join(' ') || prev.apellido,
+                    }));
+                }
+            }
+        }
+        fetchUserData();
+    }, []);
 
     const cartTotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
     const discount = paymentMethod === 'transferencia' ? cartTotal * 0.20 : 0;
@@ -59,6 +96,9 @@ export default function CheckoutPage() {
                 if (data.success) {
                     localStorage.setItem('lastShippingType', shippingType);
                     setCreatedOrderId(data.orderId);
+                    // Add this to get clearCart working:
+                    // we need to destructure clearCart from useCart at the top of the component!
+                    clearCart();
                     setShowTransferModal(true);
                 } else {
                     alert("Ocurrió un error al guardar tu pedido. Por favor intentá nuevamente.");

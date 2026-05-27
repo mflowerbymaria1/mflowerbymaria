@@ -111,7 +111,7 @@ export default function Header() {
         <div className="header-left">
           <span className="country-flag" title="Argentina">🇦🇷</span>
           <nav className="main-nav">
-            <Link href="/">Inicio</Link>
+            <Link href="/">INICIO</Link>
             <div 
               className="nav-item-dropdown"
               onMouseEnter={() => setIsDropdownOpen(true)}
@@ -124,11 +124,11 @@ export default function Header() {
                   setIsDropdownOpen(!isDropdownOpen);
                 }}
               >
-                Productos
+                PRODUCTOS
               </button>
               <div className={`dropdown-menu ${isDropdownOpen ? 'open' : ''}`}>
                 <Link href="/productos" className="dropdown-item font-bold" onClick={() => setIsDropdownOpen(false)}>
-                  Todos los productos
+                  TODOS LOS PRODUCTOS
                 </Link>
                 {categories.map(cat => (
                   <Link

@@ -13,11 +13,11 @@ export default function Hero() {
         .hero-static {
           position: relative;
           width: 100vw;
-          height: 85vh;
+          height: 94vh;
           min-height: 600px;
           background-image: url('/images/mflower_hero_desk_new.jpg');
           background-size: cover;
-          background-position: center;
+          background-position: center 10%;
           display: flex;
           align-items: center;
           justify-content: center;

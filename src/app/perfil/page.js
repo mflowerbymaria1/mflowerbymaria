@@ -106,14 +106,14 @@ export default function PerfilPage() {
                                                 </td>
                                                 <td style={{ padding: '16px 12px' }}>
                                                     <span style={{ 
-                                                        background: order.payment_status === 'approved' ? '#dcfce7' : '#fef3c7',
-                                                        color: order.payment_status === 'approved' ? '#166534' : '#92400e',
+                                                        background: order.payment_status === 'approved' ? '#dcfce7' : (order.payment_status === 'Anulado' ? '#fee2e2' : '#fef3c7'),
+                                                        color: order.payment_status === 'approved' ? '#166534' : (order.payment_status === 'Anulado' ? '#991b1b' : '#92400e'),
                                                         padding: '4px 8px',
                                                         borderRadius: '4px',
                                                         fontSize: '0.85rem',
                                                         fontWeight: 'bold'
                                                     }}>
-                                                        {order.payment_status === 'approved' ? 'Aprobado' : 'Pendiente'}
+                                                        {order.payment_status === 'approved' ? 'Aprobado' : (order.payment_status === 'Anulado' ? 'Anulado' : 'Pendiente')}
                                                     </span>
                                                 </td>
                                                 <td style={{ padding: '16px 12px' }}>
@@ -125,7 +125,7 @@ export default function PerfilPage() {
                                                         fontSize: '0.85rem',
                                                         fontWeight: 'bold'
                                                     }}>
-                                                        {order.shipping_status === 'shipped' ? 'Enviado' : (order.shipping_status === 'ready' ? 'Listo' : 'Pendiente')}
+                                                        {order.shipping_status === 'shipped' ? 'Enviado' : (order.shipping_status === 'ready' ? 'Listo' : (order.shipping_method === 'retiro' ? 'Confirmación de retiro pendiente' : 'Envío pendiente'))}
                                                     </span>
                                                 </td>
                                             </tr>

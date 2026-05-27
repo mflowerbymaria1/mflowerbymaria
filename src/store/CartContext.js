@@ -55,13 +55,17 @@ export function CartProvider({ children }) {
         setCartItems(prev => prev.filter(item => item.id !== productId));
     };
 
+    const clearCart = () => {
+        setCartItems([]);
+    };
+
     const cartCount = cartItems.reduce((total, item) => total + item.quantity, 0);
 
     const openCart = () => setIsCartOpen(true);
     const closeCart = () => setIsCartOpen(false);
 
     return (
-        <CartContext.Provider value={{ cartItems, addToCart, removeFromCart, cartCount, isCartOpen, setIsCartOpen, openCart, closeCart }}>
+        <CartContext.Provider value={{ cartItems, addToCart, removeFromCart, clearCart, cartCount, isCartOpen, setIsCartOpen, openCart, closeCart }}>
             {children}
         </CartContext.Provider>
     );

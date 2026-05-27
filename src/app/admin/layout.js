@@ -308,13 +308,30 @@ export default function AdminLayout({ children }) {
           margin: 0 auto;
         }
 
+        /* Global table responsive */
+        table { width: 100%; border-collapse: collapse; }
+        .table-responsive { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
         @media (max-width: 1024px) {
            .main-wrapper { margin-left: 80px !important; }
-           .admin-sidebar.open { transform: translateX(0); }
-           .admin-sidebar.collapsed { transform: translateX(0); }
            .header-search { display: none; }
         }
-      `}</style>
+        
+        @media (max-width: 768px) {
+           .main-wrapper { margin-left: 0 !important; }
+           .admin-sidebar { 
+               width: var(--sidebar-w) !important; 
+               transform: translateX(-100%);
+               box-shadow: 4px 0 10px rgba(0,0,0,0.1);
+           }
+           .admin-sidebar.open { transform: translateX(0); }
+           .admin-header { padding: 0 20px; }
+           .page-content { padding: 15px; }
+           .logo-area { display: flex !important; } /* Force logo to show on mobile when open */
+           
+           /* Fix for table overflowing in mobile */
+           .content-container > div { overflow-x: auto; }
+        }
     </div>
   );
 }

@@ -3,12 +3,18 @@ import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { Suspense } from "react";
+import { Suspense, useEffect } from "react";
+import { useCart } from "../../store/CartContext";
 
 function GraciasContent() {
     const searchParams = useSearchParams();
     const status = searchParams.get('status') || 'approved';
     const paymentId = searchParams.get('payment_id') || '';
+    const { clearCart } = useCart();
+
+    useEffect(() => {
+        clearCart();
+    }, [clearCart]);
 
     return (
         <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>

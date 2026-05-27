@@ -26,12 +26,17 @@ export async function POST(request) {
             console.log(`[MP Webhook] Payment ${paymentId} status: ${status} for Order: ${externalReference}`);
 
             if (externalReference) {
+                let finalStatus = status;
+                if (['cancelled', 'rejected', 'refunded', 'charged_back'].includes(status)) {
+                    finalStatus = 'Anulado';
+                }
+
                 // Actualizamos el estado del pedido en Supabase
                 // El trigger 'on_payment_approved' en SQL se encargará de bajar el stock si status === 'approved'
                 const { error } = await supabase
                     .from('orders')
                     .update({ 
-                        payment_status: status,
+                        payment_status: finalStatus,
                         mercadopago_id: paymentId.toString()
                     })
                     .eq('id', externalReference);
