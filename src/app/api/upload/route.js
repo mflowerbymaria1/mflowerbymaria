@@ -19,9 +19,9 @@ export async function POST(request) {
         const fileName = `${uuidv4()}.${fileExt}`;
         const filePath = `products/${fileName}`;
 
-        // Upload to Supabase Storage bucket named 'products'
+        // Upload to Supabase Storage bucket named 'productos'
         const { data, error } = await supabase.storage
-            .from('products')
+            .from('productos')
             .upload(filePath, buffer, {
                 contentType: file.type,
                 upsert: false
@@ -34,7 +34,7 @@ export async function POST(request) {
 
         // Get public URL
         const { data: { publicUrl } } = supabase.storage
-            .from('products')
+            .from('productos')
             .getPublicUrl(filePath);
 
         return NextResponse.json({ url: publicUrl }, { status: 200 });
