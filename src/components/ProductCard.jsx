@@ -15,14 +15,15 @@ export default function ProductCard({ product }) {
   const [isAdded, setIsAdded] = useState(false);
   
   const [showOptionsModal, setShowOptionsModal] = useState(false);
-  const [sheetType, setSheetType] = useState('rayadas');
-  const [paperType, setPaperType] = useState('natural');
+  const [sheetType, setSheetType] = useState(product.name.toLowerCase().includes('libreta') ? 'lisas' : 'rayadas');
+  const [paperType, setPaperType] = useState(product.name.toLowerCase().includes('libreta') ? 'blanco' : 'natural');
 
   const notebookIds = [2, 5, 9, 11, 12, 13];
   const ficheroIds = [4, 7, 14];
 
-  const isNotebook = notebookIds.includes(Number(product.id)) || product.name.toLowerCase().includes('cuaderno');
+  const isNotebook = notebookIds.includes(Number(product.id)) || product.name.toLowerCase().includes('cuaderno') || product.name.toLowerCase().includes('libreta');
   const isFichero = ficheroIds.includes(Number(product.id)) || product.name.toLowerCase().includes('fichero');
+  const isLibreta = product.name.toLowerCase().includes('libreta');
 
   const isFav = isFavorite(product.id);
   const needsNotebookOptions = isNotebook;
@@ -153,10 +154,16 @@ export default function ProductCard({ product }) {
               <div className="options-group">
                 <label>Tipo de hoja:</label>
                 <select value={sheetType} onChange={(e) => setSheetType(e.target.value)} className="options-select">
-                  <option value="rayadas">Rayadas</option>
-                  <option value="lisas">Lisas</option>
-                  <option value="cuadriculadas">Cuadriculadas</option>
-                  <option value="punteadas">Punteadas</option>
+                  {isLibreta ? (
+                    <option value="lisas">Lisas</option>
+                  ) : (
+                    <>
+                      <option value="rayadas">Rayadas</option>
+                      <option value="lisas">Lisas</option>
+                      <option value="cuadriculadas">Cuadriculadas</option>
+                      <option value="punteadas">Punteadas</option>
+                    </>
+                  )}
                 </select>
               </div>
             )}
@@ -165,8 +172,14 @@ export default function ProductCard({ product }) {
               <div className="options-group">
                 <label>Tipo de papel:</label>
                 <select value={paperType} onChange={(e) => setPaperType(e.target.value)} className="options-select">
-                  <option value="natural">Natural</option>
-                  <option value="blanco">Blanco</option>
+                  {isLibreta ? (
+                    <option value="blanco">Blanco</option>
+                  ) : (
+                    <>
+                      <option value="natural">Natural</option>
+                      <option value="blanco">Blanco</option>
+                    </>
+                  )}
                 </select>
               </div>
             )}

@@ -46,6 +46,10 @@ export default function ProductDetailPage({ params }) {
                             ? data.price.toLocaleString('es-AR', { minimumFractionDigits: 0, maximumFractionDigits: 0 })
                             : data.price
                     });
+                    if (data.name.toLowerCase().includes('libreta')) {
+                        setSheetType('lisas');
+                        setPaperType('blanco');
+                    }
                 }
             } catch (err) {
                 console.error("Error al obtener detalles del producto:", err);
@@ -66,8 +70,9 @@ export default function ProductDetailPage({ params }) {
     const ficheroIds = [4, 7, 14];
 
     // Lógica para detectar si es cuaderno por nombre si no es ID estático
-    const isNotebook = notebookIds.includes(Number(product.id)) || product.name.toLowerCase().includes('cuaderno');
+    const isNotebook = notebookIds.includes(Number(product.id)) || product.name.toLowerCase().includes('cuaderno') || product.name.toLowerCase().includes('libreta');
     const isFichero = ficheroIds.includes(Number(product.id)) || product.name.toLowerCase().includes('fichero');
+    const isLibreta = product.name.toLowerCase().includes('libreta');
 
     const needsNotebookOptions = isNotebook;
     const needsFicheroOptions = isFichero;
@@ -224,10 +229,16 @@ export default function ProductDetailPage({ params }) {
                                     <div className="sheet-selector-box">
                                         <h4 className="font-quicksand font-bold mb-2 text-gray-800">Tipo de hojas</h4>
                                         <div className="flex gap-3 flex-wrap">
-                                            <button className={`sheet-btn ${sheetType === 'rayadas' ? 'active' : ''}`} onClick={() => setSheetType('rayadas')}>Rayadas</button>
-                                            <button className={`sheet-btn ${sheetType === 'lisas' ? 'active' : ''}`} onClick={() => setSheetType('lisas')}>Lisas</button>
-                                            <button className={`sheet-btn ${sheetType === 'cuadriculadas' ? 'active' : ''}`} onClick={() => setSheetType('cuadriculadas')}>Cuadriculadas</button>
-                                            <button className={`sheet-btn ${sheetType === 'punteadas' ? 'active' : ''}`} onClick={() => setSheetType('punteadas')}>Punteadas</button>
+                                            {isLibreta ? (
+                                                <button className="sheet-btn active">Lisas</button>
+                                            ) : (
+                                                <>
+                                                    <button className={`sheet-btn ${sheetType === 'rayadas' ? 'active' : ''}`} onClick={() => setSheetType('rayadas')}>Rayadas</button>
+                                                    <button className={`sheet-btn ${sheetType === 'lisas' ? 'active' : ''}`} onClick={() => setSheetType('lisas')}>Lisas</button>
+                                                    <button className={`sheet-btn ${sheetType === 'cuadriculadas' ? 'active' : ''}`} onClick={() => setSheetType('cuadriculadas')}>Cuadriculadas</button>
+                                                    <button className={`sheet-btn ${sheetType === 'punteadas' ? 'active' : ''}`} onClick={() => setSheetType('punteadas')}>Punteadas</button>
+                                                </>
+                                            )}
                                         </div>
                                     </div>
                                 )}
@@ -235,7 +246,7 @@ export default function ProductDetailPage({ params }) {
                                     <div className="sheet-selector-box">
                                         <h4 className="font-quicksand font-bold mb-2 text-gray-800">Tipo de papel</h4>
                                         <div className="flex gap-3">
-                                            {isNotebook && (
+                                            {isNotebook && !isLibreta && (
                                                 <button className={`sheet-btn ${paperType === 'natural' ? 'active' : ''}`} onClick={() => setPaperType('natural')}>Natural</button>
                                             )}
                                             <button className={`sheet-btn ${paperType === 'blanco' ? 'active' : ''}`} onClick={() => { setPaperType('blanco'); }}>Blanco</button>
