@@ -66,7 +66,7 @@ export default function ProductDetailPage({ params }) {
     const ficheroIds = [4, 7, 14];
 
     // Lógica para detectar si es cuaderno por nombre si no es ID estático
-    const isNotebook = notebookIds.includes(Number(product.id)) || product.name.toLowerCase().includes('cuaderno') || product.name.toLowerCase().includes('libreta');
+    const isNotebook = notebookIds.includes(Number(product.id)) || product.name.toLowerCase().includes('cuaderno');
     const isFichero = ficheroIds.includes(Number(product.id)) || product.name.toLowerCase().includes('fichero');
 
     const needsNotebookOptions = isNotebook;

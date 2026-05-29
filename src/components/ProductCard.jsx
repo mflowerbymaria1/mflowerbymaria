@@ -21,7 +21,7 @@ export default function ProductCard({ product }) {
   const notebookIds = [2, 5, 9, 11, 12, 13];
   const ficheroIds = [4, 7, 14];
 
-  const isNotebook = notebookIds.includes(Number(product.id)) || product.name.toLowerCase().includes('cuaderno') || product.name.toLowerCase().includes('libreta');
+  const isNotebook = notebookIds.includes(Number(product.id)) || product.name.toLowerCase().includes('cuaderno');
   const isFichero = ficheroIds.includes(Number(product.id)) || product.name.toLowerCase().includes('fichero');
 
   const isFav = isFavorite(product.id);
