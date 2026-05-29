@@ -210,6 +210,7 @@ export default function ProductCarousel() {
           height: 100%;
           object-fit: contain;
           transition: transform 0.5s ease;
+          mix-blend-mode: multiply;
         }
         .product-card-aesthetic:hover .product-image-wrapper img {
           transform: scale(1.05);
