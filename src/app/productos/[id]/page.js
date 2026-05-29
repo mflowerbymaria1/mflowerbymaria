@@ -490,6 +490,7 @@ export default function ProductDetailPage({ params }) {
                     height: 100%;
                     object-fit: contain;
                     background-color: white;
+                    mix-blend-mode: multiply;
                 }
                 .product-image-placeholder {
                     width: 100%;
@@ -526,6 +527,7 @@ export default function ProductDetailPage({ params }) {
                     width: 100%;
                     height: 100%;
                     object-fit: cover;
+                    mix-blend-mode: multiply;
                 }
                 .product-info-container {
                     display: flex;

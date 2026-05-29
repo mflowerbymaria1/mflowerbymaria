@@ -234,6 +234,7 @@ export default function ProductCard({ product }) {
           height: 100%;
           object-fit: contain;
           transition: transform 0.5s ease;
+          mix-blend-mode: multiply;
         }
         .product-card:hover .product-image-wrapper img {
           transform: scale(1.05);
