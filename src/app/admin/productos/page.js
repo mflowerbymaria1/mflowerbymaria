@@ -254,62 +254,7 @@ export default function ProductosPage() {
                               </select>
                           </div>
                           <div className="form-group span-2">
-                              <label>Imagen Principal</label>
-                              <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
-                                <input 
-                                  type="file" 
-                                  accept="image/*"
-                                  onChange={async (e) => {
-                                      const file = e.target.files[0];
-                                      if (!file) return;
-                                      
-                                      setSaving(true);
-                                      const formData = new FormData();
-                                      formData.append('file', file);
-                                      
-                                      try {
-                                          const res = await fetch('/api/upload', {
-                                              method: 'POST',
-                                              body: formData
-                                          });
-                                          const data = await res.json();
-                                          if (res.ok) {
-                                              setEditingProduct({...editingProduct, image_url: data.url});
-                                          } else {
-                                              alert('Error al subir: ' + data.error);
-                                          }
-                                      } catch (err) {
-                                          alert('Error al subir imagen.');
-                                      }
-                                      setSaving(false);
-                                  }}
-                                  className="styled-input-file"
-                                />
-                                {editingProduct.image_url && <img src={editingProduct.image_url} alt="Preview" style={{ width: 40, height: 40, borderRadius: 8, objectFit: 'cover' }} />}
-                              </div>
-                          </div>
-                          <div className="form-group span-2">
-                              <label>Descripción Corta</label>
-                              <input 
-                                type="text" 
-                                value={editingProduct.short_description || ''}
-                                onChange={(e) => setEditingProduct({...editingProduct, short_description: e.target.value})}
-                                placeholder="Resumen breve del producto"
-                              />
-                          </div>
-                          <div className="form-group span-2">
-                              <label>Descripción Completa</label>
-                              <textarea 
-                                value={editingProduct.description || ''}
-                                onChange={(e) => setEditingProduct({...editingProduct, description: e.target.value})}
-                                placeholder="Descripción detallada..."
-                                rows={4}
-                                style={{ padding: '14px 16px', background: '#F9FAFB', border: '1px solid #F3F4F6', borderRadius: '12px', fontWeight: 500, color: '#374151', outline: 'none', resize: 'vertical', fontFamily: 'inherit', width: '100%' }}
-                              />
-                          </div>
-                          
-                          <div className="form-group span-2">
-                              <label>Imágenes de Galería Adicionales</label>
+                              <label>Imágenes del Producto (La primera será la principal)</label>
                               <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                                 <input 
                                   type="file" 
@@ -320,7 +265,7 @@ export default function ProductosPage() {
                                       if (files.length === 0) return;
                                       
                                       setSaving(true);
-                                      let newGalleryUrls = [];
+                                      let newUrls = [];
                                       for (let file of files) {
                                           const formData = new FormData();
                                           formData.append('file', file);
@@ -331,38 +276,80 @@ export default function ProductosPage() {
                                               });
                                               const data = await res.json();
                                               if (res.ok) {
-                                                  newGalleryUrls.push(data.url);
+                                                  newUrls.push(data.url);
+                                              } else {
+                                                  alert('Error al subir: ' + data.error);
                                               }
                                           } catch (err) {
                                               console.error('Error al subir', err);
                                           }
                                       }
                                       
-                                      const currentGallery = Array.isArray(editingProduct.gallery) ? editingProduct.gallery : [];
-                                      setEditingProduct({...editingProduct, gallery: [...currentGallery, ...newGalleryUrls]});
+                                      let updatedProduct = { ...editingProduct };
+                                      if (!updatedProduct.image_url && newUrls.length > 0) {
+                                          updatedProduct.image_url = newUrls[0];
+                                          newUrls.shift();
+                                      }
+                                      updatedProduct.gallery = [...(updatedProduct.gallery || []), ...newUrls];
+                                      setEditingProduct(updatedProduct);
                                       setSaving(false);
                                   }}
                                   className="styled-input-file"
                                 />
-                                {editingProduct.gallery && editingProduct.gallery.length > 0 && (
-                                  <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-                                    {editingProduct.gallery.map((url, idx) => (
-                                      <div key={idx} style={{ position: 'relative' }}>
-                                        <img src={url} alt="Gallery item" style={{ width: 60, height: 60, borderRadius: 8, objectFit: 'cover' }} />
-                                        <button 
-                                          type="button" 
-                                          onClick={() => {
-                                            const newGallery = editingProduct.gallery.filter((_, i) => i !== idx);
-                                            setEditingProduct({...editingProduct, gallery: newGallery});
-                                          }}
-                                          style={{ position: 'absolute', top: -5, right: -5, background: 'red', color: 'white', borderRadius: '50%', width: 20, height: 20, fontSize: 12, border: 'none', cursor: 'pointer' }}
-                                        >
-                                          &times;
-                                        </button>
-                                      </div>
-                                    ))}
-                                  </div>
-                                )}
+                                <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', marginTop: '10px' }}>
+                                  {/* Render Main Image */}
+                                  {editingProduct.image_url && (
+                                    <div style={{ position: 'relative', border: '3px solid #D47792', padding: 2, borderRadius: 12 }}>
+                                      <img src={editingProduct.image_url} alt="Principal" style={{ width: 80, height: 80, borderRadius: 8, objectFit: 'cover' }} />
+                                      <div style={{ position: 'absolute', bottom: -10, left: '50%', transform: 'translateX(-50%)', background: '#D47792', color: 'white', fontSize: 10, padding: '2px 8px', borderRadius: 10, fontWeight: 'bold' }}>Principal</div>
+                                      <button 
+                                        type="button" 
+                                        onClick={() => {
+                                          const newGallery = [...(editingProduct.gallery || [])];
+                                          let newMain = '';
+                                          if (newGallery.length > 0) {
+                                              newMain = newGallery.shift();
+                                          }
+                                          setEditingProduct({...editingProduct, image_url: newMain, gallery: newGallery});
+                                        }}
+                                        style={{ position: 'absolute', top: -5, right: -5, background: 'red', color: 'white', borderRadius: '50%', width: 22, height: 22, fontSize: 12, border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                                      >
+                                        &times;
+                                      </button>
+                                    </div>
+                                  )}
+                                  
+                                  {/* Render Gallery Images */}
+                                  {(editingProduct.gallery || []).map((url, idx) => (
+                                    <div key={idx} style={{ position: 'relative', padding: 2 }}>
+                                      <img src={url} alt={`Gallery ${idx}`} style={{ width: 80, height: 80, borderRadius: 8, objectFit: 'cover' }} />
+                                      <button 
+                                        type="button" 
+                                        title="Hacer Principal"
+                                        onClick={() => {
+                                          const oldMain = editingProduct.image_url;
+                                          const newGallery = editingProduct.gallery.filter((_, i) => i !== idx);
+                                          if (oldMain) newGallery.push(oldMain);
+                                          setEditingProduct({...editingProduct, image_url: url, gallery: newGallery});
+                                        }}
+                                        style={{ position: 'absolute', bottom: -10, left: '50%', transform: 'translateX(-50%)', background: '#4B5563', color: 'white', fontSize: 10, padding: '2px 8px', borderRadius: 10, border: 'none', cursor: 'pointer' }}
+                                      >
+                                        Hacer Principal
+                                      </button>
+                                      <button 
+                                        type="button" 
+                                        title="Eliminar"
+                                        onClick={() => {
+                                          const newGallery = editingProduct.gallery.filter((_, i) => i !== idx);
+                                          setEditingProduct({...editingProduct, gallery: newGallery});
+                                        }}
+                                        style={{ position: 'absolute', top: -5, right: -5, background: 'red', color: 'white', borderRadius: '50%', width: 22, height: 22, fontSize: 12, border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                                      >
+                                        &times;
+                                      </button>
+                                    </div>
+                                  ))}
+                                </div>
                               </div>
                           </div>
                       </div>
