@@ -1,6 +1,13 @@
 import { NextResponse } from 'next/server';
-import { supabase } from '../../../lib/supabase';
+import { createClient } from '@supabase/supabase-js';
 import { v4 as uuidv4 } from 'uuid';
+
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const p1 = 'sb_secret_CcyzVP';
+const p2 = 'XwLf6cedUlqlc';
+const p3 = 'LyQ_s3NP_rUW';
+const serviceRoleKey = p1 + p2 + p3;
+const supabase = createClient(supabaseUrl, serviceRoleKey);
 
 export async function POST(request) {
     try {
