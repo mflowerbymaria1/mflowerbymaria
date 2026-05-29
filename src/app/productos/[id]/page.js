@@ -38,7 +38,7 @@ export default function ProductDetailPage({ params }) {
                     setProduct({
                         ...data,
                         image: data.image_url,
-                        images: data.gallery || [data.image_url],
+                        images: data.image_url ? [data.image_url, ...(data.gallery || [])] : (data.gallery || []),
                         shortDescription: data.short_description,
                         isBestSeller: data.is_best_seller,
                         // Format price for display
