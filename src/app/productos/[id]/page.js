@@ -22,6 +22,7 @@ export default function ProductDetailPage({ params }) {
     const [selectedImage, setSelectedImage] = useState(0);
     const [zoomOrigin, setZoomOrigin] = useState('center center');
     const [isLightboxOpen, setIsLightboxOpen] = useState(false);
+    const [relatedProducts, setRelatedProducts] = useState([]);
 
     useEffect(() => {
         async function fetchProduct() {
@@ -49,6 +50,22 @@ export default function ProductDetailPage({ params }) {
                     if (data.name.toLowerCase().includes('libreta')) {
                         setSheetType('lisas');
                         setPaperType('blanco');
+                    }
+
+                    // Fetch related products from the same category
+                    const { data: related, error: relError } = await supabase
+                        .from('products')
+                        .select('id, name, price, image_url, short_description')
+                        .eq('category', data.category)
+                        .neq('id', data.id)
+                        .limit(4);
+                    if (!relError && related) {
+                        setRelatedProducts(related.map(p => ({
+                            ...p,
+                            price: typeof p.price === 'number'
+                                ? p.price.toLocaleString('es-AR', { minimumFractionDigits: 0, maximumFractionDigits: 0 })
+                                : p.price
+                        })));
                     }
                 }
             } catch (err) {
@@ -120,14 +137,28 @@ export default function ProductDetailPage({ params }) {
         setZoomOrigin('center center');
     };
 
+    const getCategorySlug = (cat) => {
+        if (!cat) return "";
+        return cat
+            .toLowerCase()
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .replace(/[^a-z0-9]+/g, "-")
+            .replace(/^-+|-+$/g, "");
+    };
+
+    const categorySlug = product ? getCategorySlug(product.category) : "";
+    const backUrl = categorySlug ? `/productos?categoria=${categorySlug}` : '/productos';
+    const backLabel = product && product.category ? `Volver a ${product.category}` : 'Volver a todos los productos';
+
     return (
         <div className="flex flex-col min-h-screen">
             <Header />
             <main className="flex-grow bg-background py-16">
                 <div className="container">
                     <div className="mb-6">
-                        <Link href="/productos" className="back-link">
-                            ← Volver a todos los productos
+                        <Link href={backUrl} className="back-link">
+                            ← {backLabel}
                         </Link>
                     </div>
 
@@ -280,12 +311,41 @@ export default function ProductDetailPage({ params }) {
                                     <span>Envíos a todo el país o retiro por General Rodríguez.</span>
                                 </div>
 
+                                <div className="production-delay-info">
+                                    <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
+                                        <circle cx="12" cy="12" r="10"></circle>
+                                        <polyline points="12 6 12 12 16 14"></polyline>
+                                    </svg>
+                                    <span><strong>Plazo de fabricación/despacho:</strong> De 7 a 14 días según disponibilidad de stock (adicional al tiempo del correo).</span>
+                                </div>
+
                                 <div className="shipping-calc-wrapper">
                                     <ShippingCalculator />
                                 </div>
                             </div>
                         </div>
                     </div>
+
+                    {/* Productos Relacionados */}
+                    {relatedProducts.length > 0 && (
+                        <div className="related-products-section">
+                            <h2 className="related-title font-quicksand">Productos Relacionados</h2>
+                            <div className="related-grid">
+                                {relatedProducts.map(relProd => (
+                                    <Link key={relProd.id} href={`/productos/${relProd.id}`} style={{ textDecoration: 'none' }}>
+                                        <div className="related-card">
+                                            <div className="related-image-wrapper">
+                                                <img src={relProd.image_url} alt={relProd.name} className="related-image" />
+                                            </div>
+                                            <h3 className="related-card-title">{relProd.name}</h3>
+                                            <p className="related-card-desc">{relProd.short_description}</p>
+                                            <span className="related-card-price">${relProd.price}</span>
+                                        </div>
+                                    </Link>
+                                ))}
+                            </div>
+                        </div>
+                    )}
                 </div>
             </main>
             <Footer />
@@ -703,7 +763,7 @@ export default function ProductDetailPage({ params }) {
                     transform: translateY(-2px);
                     box-shadow: 0 6px 20px rgba(212, 119, 146, 0.4);
                 }
-                .shipping-info {
+                 .shipping-info {
                     display: flex;
                     align-items: center;
                     gap: 10px;
@@ -713,6 +773,20 @@ export default function ProductDetailPage({ params }) {
                     background-color: #f9fafb;
                     padding: 12px;
                     border-radius: 8px;
+                }
+                .production-delay-info {
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+                    color: #b45309;
+                    font-size: 0.95rem;
+                    justify-content: center;
+                    background-color: #fffbeb;
+                    padding: 12px;
+                    border-radius: 8px;
+                    border: 1px solid #fef3c7;
+                    margin-top: 0.8rem;
+                    line-height: 1.4;
                 }
                 .back-link {
                     display: inline-flex;
@@ -886,7 +960,88 @@ export default function ProductDetailPage({ params }) {
                 .flex-grow { flex-grow: 1; }
                 .bg-background { background-color: #fafafa; }
                 .py-16 { padding-top: 4rem; padding-bottom: 4rem; }
-                .mb-6 { margin-bottom: 1.5rem; }
+                 .mb-6 { margin-bottom: 1.5rem; }
+
+                .related-products-section {
+                    margin-top: 4rem;
+                }
+                .related-title {
+                    font-size: 1.8rem;
+                    font-weight: 700;
+                    color: #1f2937;
+                    margin-bottom: 2rem;
+                    border-bottom: 2px solid #eaeaea;
+                    padding-bottom: 0.5rem;
+                }
+                .related-grid {
+                    display: grid;
+                    grid-template-columns: repeat(4, 1fr);
+                    gap: 2rem;
+                }
+                .related-card {
+                    background: #fff;
+                    border-radius: 15px;
+                    overflow: hidden;
+                    padding: 1rem;
+                    box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+                    border: 1px solid #f0f0f0;
+                    transition: all 0.3s ease;
+                    display: flex;
+                    flex-direction: column;
+                    height: 100%;
+                    cursor: pointer;
+                }
+                .related-card:hover {
+                    transform: translateY(-5px);
+                    box-shadow: 0 10px 25px rgba(0,0,0,0.06);
+                }
+                .related-image-wrapper {
+                    aspect-ratio: 1;
+                    width: 100%;
+                    overflow: hidden;
+                    border-radius: 10px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    margin-bottom: 1rem;
+                    background: #fff;
+                }
+                .related-image {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: contain;
+                    mix-blend-mode: multiply;
+                }
+                .related-card-title {
+                    font-size: 1rem;
+                    font-weight: 600;
+                    color: #333;
+                    margin-bottom: 0.5rem;
+                    line-height: 1.3;
+                    text-decoration: none;
+                }
+                .related-card-desc {
+                    font-size: 0.8rem;
+                    color: #777;
+                    flex-grow: 1;
+                    margin-bottom: 1rem;
+                    line-height: 1.4;
+                }
+                .related-card-price {
+                    font-size: 1.2rem;
+                    font-weight: 800;
+                    color: #111;
+                }
+                @media (max-width: 900px) {
+                    .related-grid {
+                        grid-template-columns: repeat(2, 1fr);
+                    }
+                }
+                @media (max-width: 600px) {
+                    .related-grid {
+                        grid-template-columns: 1fr;
+                    }
+                }
             `}</style>
         </div>
     );
