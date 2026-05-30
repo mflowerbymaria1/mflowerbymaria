@@ -515,17 +515,17 @@ export default function ProductCard({ product }) {
 
         .card-thumbnails-preview {
           display: flex;
-          gap: 6px;
+          gap: 8px;
           justify-content: center;
-          padding: 8px 12px;
+          padding: 10px 12px;
           background: #fff;
           border-bottom: 1.5px solid #fcfcfc;
           flex-wrap: wrap;
         }
         .card-thumbnail-item {
-          width: 32px;
-          height: 32px;
-          border-radius: 6px;
+          width: 44px;
+          height: 44px;
+          border-radius: 8px;
           overflow: hidden;
           border: 1.5px solid #eee;
           cursor: pointer;
