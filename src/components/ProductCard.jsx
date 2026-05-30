@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useCart } from "../store/CartContext";
 import { useFavorites } from "../store/FavoritesContext";
 import Link from "next/link";
@@ -17,6 +17,12 @@ export default function ProductCard({ product }) {
   const [showOptionsModal, setShowOptionsModal] = useState(false);
   const [sheetType, setSheetType] = useState(product.name.toLowerCase().includes('libreta') ? 'lisas' : 'rayadas');
   const [paperType, setPaperType] = useState(product.name.toLowerCase().includes('libreta') ? 'blanco' : 'natural');
+  
+  const [activeImage, setActiveImage] = useState(product.image);
+
+  useEffect(() => {
+    setActiveImage(product.image);
+  }, [product.image]);
 
   const notebookIds = [2, 5, 9, 11, 12, 13];
   const ficheroIds = [4, 7, 14];
@@ -104,8 +110,8 @@ export default function ProductCard({ product }) {
             <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
           </svg>
         </button>
-        {product.image ? (
-          <img src={product.image} alt={product.name} />
+        {activeImage ? (
+          <img src={activeImage} alt={product.name} />
         ) : (
           <div className="product-image-placeholder bg-green h-full w-full relative z-0">
             <Logo size="medium" color="#4A8C55" />
@@ -115,6 +121,26 @@ export default function ProductCard({ product }) {
           <div className="bestseller-badge">🔥 Más Vendido</div>
         )}
       </div>
+      
+      {/* Miniaturas de vista previa */}
+      {(() => {
+        const uniqueImages = Array.from(new Set([product.image, ...(product.gallery || [])].filter(Boolean))).slice(0, 5);
+        if (uniqueImages.length <= 1) return null;
+        return (
+          <div className="card-thumbnails-preview" onClick={(e) => e.stopPropagation()}>
+            {uniqueImages.map((imgUrl, index) => (
+              <div 
+                key={index} 
+                className={`card-thumbnail-item ${activeImage === imgUrl ? 'active' : ''}`}
+                onMouseEnter={() => setActiveImage(imgUrl)}
+                onClick={() => setActiveImage(imgUrl)}
+              >
+                <img src={imgUrl} alt={`${product.name} miniatura ${index + 1}`} />
+              </div>
+            ))}
+          </div>
+        );
+      })()}
       <div className="product-info flex flex-col flex-grow select-none">
         <h3 className="product-title relative z-20 cursor-pointer">{product.name}</h3>
         <p className="product-desc">{product.shortDescription}</p>
@@ -486,6 +512,39 @@ export default function ProductCard({ product }) {
           cursor: pointer; line-height: 1;
         }
         .close-modal-btn:hover { color: #333; }
+
+        .card-thumbnails-preview {
+          display: flex;
+          gap: 6px;
+          justify-content: center;
+          padding: 8px 12px;
+          background: #fff;
+          border-bottom: 1.5px solid #fcfcfc;
+          flex-wrap: wrap;
+        }
+        .card-thumbnail-item {
+          width: 32px;
+          height: 32px;
+          border-radius: 6px;
+          overflow: hidden;
+          border: 1.5px solid #eee;
+          cursor: pointer;
+          transition: all 0.2s ease;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: #fff;
+        }
+        .card-thumbnail-item:hover, .card-thumbnail-item.active {
+          border-color: var(--pastel-pink);
+          transform: scale(1.05);
+        }
+        .card-thumbnail-item img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          mix-blend-mode: multiply;
+        }
       `}</style>
     </div>
   );
