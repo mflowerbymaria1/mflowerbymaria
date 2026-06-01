@@ -47,6 +47,37 @@ export default function ProductosPage() {
 
   const fetchProducts = fetchData; // Mantener alias para compatibilidad
 
+  const handleDragStart = (e, index) => {
+    e.dataTransfer.setData("text/plain", index);
+  };
+
+  const handleDragOver = (e) => {
+    e.preventDefault();
+  };
+
+  const handleDrop = (e, targetIndex) => {
+    e.preventDefault();
+    const sourceIndex = parseInt(e.dataTransfer.getData("text/plain"));
+    if (isNaN(sourceIndex) || sourceIndex === targetIndex) return;
+
+    const allImages = [editingProduct.image_url, ...(editingProduct.gallery || [])].filter(Boolean);
+    const updatedImages = [...allImages];
+    
+    // Move item
+    const [movedImage] = updatedImages.splice(sourceIndex, 1);
+    updatedImages.splice(targetIndex, 0, movedImage);
+
+    // Re-assign main image (first one) and gallery (rest)
+    const newMain = updatedImages[0] || '';
+    const newGallery = updatedImages.slice(1);
+    
+    setEditingProduct({
+      ...editingProduct,
+      image_url: newMain,
+      gallery: newGallery
+    });
+  };
+
   const handleOpenEdit = (product = null) => {
     setEditingProduct(product || { name: '', price: 0, stock: 0, category: '', image_url: '', description: '' });
     setIsModalOpen(true);
@@ -296,59 +327,69 @@ export default function ProductosPage() {
                                   }}
                                   className="styled-input-file"
                                 />
-                                <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', marginTop: '10px' }}>
-                                  {/* Render Main Image */}
-                                  {editingProduct.image_url && (
-                                    <div style={{ position: 'relative', border: '3px solid #D47792', padding: 2, borderRadius: 12 }}>
-                                      <img src={editingProduct.image_url} alt="Principal" style={{ width: 80, height: 80, borderRadius: 8, objectFit: 'cover' }} />
-                                      <div style={{ position: 'absolute', bottom: -10, left: '50%', transform: 'translateX(-50%)', background: '#D47792', color: 'white', fontSize: 10, padding: '2px 8px', borderRadius: 10, fontWeight: 'bold' }}>Principal</div>
-                                      <button 
-                                        type="button" 
-                                        onClick={() => {
-                                          const newGallery = [...(editingProduct.gallery || [])];
-                                          let newMain = '';
-                                          if (newGallery.length > 0) {
-                                              newMain = newGallery.shift();
-                                          }
-                                          setEditingProduct({...editingProduct, image_url: newMain, gallery: newGallery});
-                                        }}
-                                        style={{ position: 'absolute', top: -5, right: -5, background: 'red', color: 'white', borderRadius: '50%', width: 22, height: 22, fontSize: 12, border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-                                      >
-                                        &times;
-                                      </button>
-                                    </div>
-                                  )}
-                                  
-                                  {/* Render Gallery Images */}
-                                  {(editingProduct.gallery || []).map((url, idx) => (
-                                    <div key={idx} style={{ position: 'relative', padding: 2 }}>
-                                      <img src={url} alt={`Gallery ${idx}`} style={{ width: 80, height: 80, borderRadius: 8, objectFit: 'cover' }} />
-                                      <button 
-                                        type="button" 
-                                        title="Hacer Principal"
-                                        onClick={() => {
-                                          const oldMain = editingProduct.image_url;
-                                          const newGallery = editingProduct.gallery.filter((_, i) => i !== idx);
-                                          if (oldMain) newGallery.push(oldMain);
-                                          setEditingProduct({...editingProduct, image_url: url, gallery: newGallery});
-                                        }}
-                                        style={{ position: 'absolute', bottom: -10, left: '50%', transform: 'translateX(-50%)', background: '#4B5563', color: 'white', fontSize: 10, padding: '2px 8px', borderRadius: 10, border: 'none', cursor: 'pointer' }}
-                                      >
-                                        Hacer Principal
-                                      </button>
-                                      <button 
-                                        type="button" 
-                                        title="Eliminar"
-                                        onClick={() => {
-                                          const newGallery = editingProduct.gallery.filter((_, i) => i !== idx);
-                                          setEditingProduct({...editingProduct, gallery: newGallery});
-                                        }}
-                                        style={{ position: 'absolute', top: -5, right: -5, background: 'red', color: 'white', borderRadius: '50%', width: 22, height: 22, fontSize: 12, border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-                                      >
-                                        &times;
-                                      </button>
-                                    </div>
-                                  ))}
+                                <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap', marginTop: '10px', padding: '10px 0' }}>
+                                  {(() => {
+                                    const allImages = [editingProduct.image_url, ...(editingProduct.gallery || [])].filter(Boolean);
+                                    if (allImages.length === 0) return null;
+                                    return allImages.map((url, idx) => {
+                                      const isMain = url === editingProduct.image_url && idx === 0;
+                                      return (
+                                        <div 
+                                          key={url + '-' + idx} 
+                                          draggable
+                                          onDragStart={(e) => handleDragStart(e, idx)}
+                                          onDragOver={handleDragOver}
+                                          onDrop={(e) => handleDrop(e, idx)}
+                                          style={{ 
+                                            position: 'relative', 
+                                            padding: 4, 
+                                            border: isMain ? '3px solid #D47792' : '1px solid #ddd', 
+                                            borderRadius: 12,
+                                            cursor: 'grab',
+                                            transition: 'all 0.2s ease',
+                                            background: '#fff',
+                                            boxShadow: '0 4px 10px rgba(0,0,0,0.05)',
+                                            userSelect: 'none'
+                                          }}
+                                          onDragEnd={(e) => { e.currentTarget.style.opacity = '1'; }}
+                                          onDragLeave={(e) => { e.currentTarget.style.transform = 'scale(1)'; }}
+                                          onDragEnter={(e) => { e.currentTarget.style.transform = 'scale(1.05)'; }}
+                                        >
+                                          <img src={url} alt={`Imagen ${idx}`} style={{ width: 80, height: 80, borderRadius: 8, objectFit: 'cover', pointerEvents: 'none' }} />
+                                          {isMain ? (
+                                            <div style={{ position: 'absolute', bottom: -10, left: '50%', transform: 'translateX(-50%)', background: '#D47792', color: 'white', fontSize: 10, padding: '2px 8px', borderRadius: 10, fontWeight: 'bold', whiteSpace: 'nowrap', boxShadow: '0 2px 4px rgba(212,119,146,0.2)' }}>Principal</div>
+                                          ) : (
+                                            <button 
+                                              type="button" 
+                                              title="Hacer Principal"
+                                              onClick={() => {
+                                                const oldMain = editingProduct.image_url;
+                                                const newGallery = allImages.filter((_, i) => i !== idx);
+                                                if (oldMain) newGallery.unshift(oldMain);
+                                                setEditingProduct({...editingProduct, image_url: url, gallery: newGallery});
+                                              }}
+                                              style={{ position: 'absolute', bottom: -10, left: '50%', transform: 'translateX(-50%)', background: '#4B5563', color: 'white', fontSize: 10, padding: '2px 8px', borderRadius: 10, border: 'none', cursor: 'pointer', whiteSpace: 'nowrap', zIndex: 10, boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}
+                                            >
+                                              Hacer Principal
+                                            </button>
+                                          )}
+                                          <button 
+                                            type="button" 
+                                            title="Eliminar"
+                                            onClick={() => {
+                                              const newImages = allImages.filter((_, i) => i !== idx);
+                                              const newMain = newImages[0] || '';
+                                              const newGallery = newImages.slice(1);
+                                              setEditingProduct({...editingProduct, image_url: newMain, gallery: newGallery});
+                                            }}
+                                            style={{ position: 'absolute', top: -5, right: -5, background: 'red', color: 'white', borderRadius: '50%', width: 22, height: 22, fontSize: 12, border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 10, boxShadow: '0 2px 4px rgba(0,0,0,0.2)' }}
+                                          >
+                                            &times;
+                                          </button>
+                                        </div>
+                                      );
+                                    });
+                                  })()}
                                 </div>
                               </div>
                           </div>
