@@ -98,7 +98,7 @@ export default function ProductCard({ product }) {
   };
 
   return (
-    <div className="product-card relative group cursor-pointer" onClick={goToProduct}>
+    <div className="product-card relative group cursor-pointer" onClick={goToProduct} onMouseLeave={() => setActiveImage(product.image)}>
       
       <div className="product-image-wrapper">
         <button
