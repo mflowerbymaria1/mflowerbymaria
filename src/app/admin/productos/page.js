@@ -363,11 +363,10 @@ export default function ProductosPage() {
                                               type="button" 
                                               title="Hacer Principal"
                                               onClick={() => {
-                                                const oldMain = editingProduct.image_url;
-                                                const newGallery = allImages.filter((_, i) => i !== idx);
-                                                if (oldMain) newGallery.unshift(oldMain);
-                                                setEditingProduct({...editingProduct, image_url: url, gallery: newGallery});
-                                              }}
+                                                 const newMain = allImages[idx];
+                                                 const newGallery = allImages.filter((_, i) => i !== idx);
+                                                 setEditingProduct({...editingProduct, image_url: newMain, gallery: newGallery});
+                                               }}
                                               style={{ position: 'absolute', bottom: -10, left: '50%', transform: 'translateX(-50%)', background: '#4B5563', color: 'white', fontSize: 10, padding: '2px 8px', borderRadius: 10, border: 'none', cursor: 'pointer', whiteSpace: 'nowrap', zIndex: 10, boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}
                                             >
                                               Hacer Principal
