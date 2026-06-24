@@ -283,10 +283,6 @@ export default function ProductDetailPage({ params }) {
                                     <h4 className="tech-desc-label font-quicksand">Detalle del producto</h4>
                                     <p className="desc-text">{product.description}</p>
                                 </div>
-                                
-                                <div className="mt-6 p-4 bg-gray-50 rounded-lg border border-gray-100 text-sm text-gray-500 italic" style={{marginTop: '20px', padding: '15px', backgroundColor: '#f9fafb', borderRadius: '8px', border: '1px solid #f3f4f6', fontSize: '0.875rem', color: '#6b7280', fontStyle: 'italic'}}>
-                                    Nota: Las imágenes publicadas son a modo ilustrativo. Los colores pueden variar ligeramente debido a la iluminación de la fotografía y la configuración de su pantalla. Los colores de los discos del sistema inteligente no son a elección y pueden variar según disponibilidad, salvo que se indique lo contrario en la descripción.
-                                </div>
                             </div>
 
                             <div className="actions-box">
@@ -384,6 +380,8 @@ export default function ProductDetailPage({ params }) {
                             </div>
                         </div>
                     )}
+
+                    <p className="product-page-disclaimer">Nota: Las imágenes son ilustrativas. Los colores pueden variar según pantalla. Los discos del sistema inteligente pueden variar según disponibilidad.</p>
                 </div>
             </main>
             <Footer />
@@ -731,15 +729,15 @@ export default function ProductDetailPage({ params }) {
                     border-left: 4px solid var(--pastel-pink);
                     border-radius: 0 12px 12px 0;
                     font-style: italic;
-                    position: relative;
                 }
-                .intro-desc-text::before {
-                    content: '✨';
-                    position: absolute;
-                    top: -8px;
-                    left: -12px;
-                    font-size: 1.2rem;
-                    font-style: normal;
+                .product-page-disclaimer {
+                    text-align: center;
+                    font-size: 0.75rem;
+                    color: #b0b0b0;
+                    margin-top: 3rem;
+                    padding-top: 1.5rem;
+                    border-top: 1px solid #f0f0f0;
+                    font-style: italic;
                 }
                 .tech-desc-section {
                     margin-top: 0.5rem;
