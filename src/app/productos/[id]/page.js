@@ -94,6 +94,34 @@ export default function ProductDetailPage({ params }) {
     const needsNotebookOptions = isNotebook;
     const needsFicheroOptions = isFichero;
 
+    // Descripción introductoria cálida según categoría/producto
+    const getIntroDescription = () => {
+        const name = product.name || '';
+        const cat = product.category || '';
+
+        // Overrides específicos por producto
+        if (name.includes('Notas borrables')) return 'Escribí, borrá y volvé a escribir. Perfectas para listas de tareas, recordatorios o mensajes temporales. Una forma práctica y sustentable de tener siempre a mano lo que necesitás recordar.';
+        if (name.includes('Set Escolar')) return 'Todo lo que necesitás para arrancar las clases con la mejor onda. Un combo completo con cuaderno, separadores y stickers para que tengas todo organizado y lindo desde el primer día.';
+        if (name.includes('Vaso')) return 'Llevá tu bebida favorita a todos lados con estilo argentino. Mantiene tus bebidas frías o calientes por más tiempo. Perfecto para el mate, el café o lo que más te guste.';
+
+        // Por categoría
+        const intros = {
+            'Cuadernos A4': 'Tu compañero ideal para la facu, el trabajo o tus proyectos creativos. Con sistema de discos inteligente, podés agregar, quitar y reorganizar hojas cuando quieras. Diseñado para acompañarte en cada idea, cada clase y cada momento de inspiración.',
+            'Cuadernos A5': 'Compacto y versátil, perfecto para llevar a todos lados. Con sistema de discos inteligente que te permite personalizarlo a tu gusto. Ideal para tomar notas rápidas, hacer listas o dejar volar tu creatividad donde sea que estés.',
+            'Libretas A5': 'Liviana y práctica, tu aliada para el día a día. Perfecta para anotar ideas sueltas, listas de pendientes o esos pensamientos que no querés olvidar. Llevala en la cartera, la mochila o tenela siempre a mano.',
+            'Ficheros N° 3': 'Organizá tus fichas de estudio con estilo. Ideal para resumir materias, repasar antes de un examen o tener tus notas siempre ordenadas. Con sistema de discos inteligente para agregar y reorganizar fichas fácilmente.',
+            'Planners': 'Planificá tu semana y tu mes con claridad y tranquilidad. Un planner pensado para ayudarte a organizar tus tiempos, metas y tareas diarias. Interior perpetuo: empezá a usarlo cuando quieras, sin fechas fijas.',
+            'Blocks de hojas': 'Hojas sueltas de alta calidad para darle rienda suelta a tu creatividad. Ideales para dibujar, escribir, hacer collages o usarlas como complemento de tus cuadernos y journals.',
+            'Repuestos': 'Dale vida nueva a tu cuaderno o fichero con hojas de recambio de alta calidad. Papel suave y resistente que hace que escribir sea un placer. Porque tu cuaderno merece siempre hojas nuevas y frescas.',
+            'Set de separadores': 'Mantenelo todo organizado y fácil de encontrar. Los separadores te ayudan a dividir materias, proyectos o secciones de tu cuaderno para que nunca pierdas de vista lo importante.',
+            'Stickers & Varios': 'Dale tu toque personal a todo lo que uses. Perfectos para decorar cuadernos, libretas, notebooks o cualquier superficie. Porque los detalles hacen la diferencia.',
+            'Cápsula Argentina': 'Llevá el orgullo argentino a todos lados. Diseños exclusivos inspirados en nuestra cultura y tradición, para que cada producto cuente una historia que nos representa.',
+        };
+        return intros[cat] || '';
+    };
+
+    const introDescription = getIntroDescription();
+
     const priceStr = product.price ? String(product.price) : "0";
     const numericPrice = parseFloat(priceStr.replace(/\./g, '')) || 0;
     const installmentPrice = ((numericPrice * quantity) / 3).toLocaleString('es-AR', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
@@ -248,7 +276,13 @@ export default function ProductDetailPage({ params }) {
 
                             <div className="description-box">
                                 <h3 className="desc-title font-quicksand">Descripción</h3>
-                                <p className="desc-text">{product.description}</p>
+                                {introDescription && (
+                                    <p className="intro-desc-text">{introDescription}</p>
+                                )}
+                                <div className="tech-desc-section">
+                                    <h4 className="tech-desc-label font-quicksand">Detalle del producto</h4>
+                                    <p className="desc-text">{product.description}</p>
+                                </div>
                                 
                                 <div className="mt-6 p-4 bg-gray-50 rounded-lg border border-gray-100 text-sm text-gray-500 italic" style={{marginTop: '20px', padding: '15px', backgroundColor: '#f9fafb', borderRadius: '8px', border: '1px solid #f3f4f6', fontSize: '0.875rem', color: '#6b7280', fontStyle: 'italic'}}>
                                     Nota: Las imágenes publicadas son a modo ilustrativo. Los colores pueden variar ligeramente debido a la iluminación de la fotografía y la configuración de su pantalla. Los colores de los discos del sistema inteligente no son a elección y pueden variar según disponibilidad, salvo que se indique lo contrario en la descripción.
@@ -686,6 +720,37 @@ export default function ProductDetailPage({ params }) {
                     font-size: 1.05rem;
                     color: #6b7280;
                     line-height: 1.6;
+                }
+                .intro-desc-text {
+                    font-size: 1.1rem;
+                    color: #4b5563;
+                    line-height: 1.7;
+                    margin-bottom: 1.5rem;
+                    padding: 1.2rem 1.4rem;
+                    background: linear-gradient(135deg, #fff5f7 0%, #fdf2f8 100%);
+                    border-left: 4px solid var(--pastel-pink);
+                    border-radius: 0 12px 12px 0;
+                    font-style: italic;
+                    position: relative;
+                }
+                .intro-desc-text::before {
+                    content: '✨';
+                    position: absolute;
+                    top: -8px;
+                    left: -12px;
+                    font-size: 1.2rem;
+                    font-style: normal;
+                }
+                .tech-desc-section {
+                    margin-top: 0.5rem;
+                }
+                .tech-desc-label {
+                    font-size: 0.9rem;
+                    font-weight: 700;
+                    color: #9ca3af;
+                    text-transform: uppercase;
+                    letter-spacing: 0.05em;
+                    margin-bottom: 0.6rem;
                 }
                 .actions-box {
                     margin-top: auto;
