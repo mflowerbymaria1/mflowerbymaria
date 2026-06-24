@@ -97,27 +97,27 @@ export default function ProductDetailPage({ params }) {
     // Descripción introductoria cálida según categoría/producto
     const getIntroDescription = () => {
         const name = product.name || '';
-        const cat = product.category || '';
+        const cat = (product.category || '').toLowerCase();
 
         // Overrides específicos por producto
         if (name.includes('Notas borrables')) return 'Escribí, borrá y volvé a escribir. Perfectas para listas de tareas, recordatorios o mensajes temporales. Una forma práctica y sustentable de tener siempre a mano lo que necesitás recordar.';
         if (name.includes('Set Escolar')) return 'Todo lo que necesitás para arrancar las clases con la mejor onda. Un combo completo con cuaderno, separadores y stickers para que tengas todo organizado y lindo desde el primer día.';
         if (name.includes('Vaso')) return 'Llevá tu bebida favorita a todos lados con estilo argentino. Mantiene tus bebidas frías o calientes por más tiempo. Perfecto para el mate, el café o lo que más te guste.';
+        if (name.includes('Planner')) return 'Planificá tu semana y tu mes con claridad y tranquilidad. Un planner pensado para ayudarte a organizar tus tiempos, metas y tareas diarias. Interior perpetuo: empezá a usarlo cuando quieras, sin fechas fijas.';
 
-        // Por categoría
-        const intros = {
-            'Cuadernos A4': 'Tu compañero ideal para la facu, el trabajo o tus proyectos creativos. Con sistema de discos inteligente, podés agregar, quitar y reorganizar hojas cuando quieras. Diseñado para acompañarte en cada idea, cada clase y cada momento de inspiración.',
-            'Cuadernos A5': 'Compacto y versátil, perfecto para llevar a todos lados. Con sistema de discos inteligente que te permite personalizarlo a tu gusto. Ideal para tomar notas rápidas, hacer listas o dejar volar tu creatividad donde sea que estés.',
-            'Libretas A5': 'Liviana y práctica, tu aliada para el día a día. Perfecta para anotar ideas sueltas, listas de pendientes o esos pensamientos que no querés olvidar. Llevala en la cartera, la mochila o tenela siempre a mano.',
-            'Ficheros N° 3': 'Organizá tus fichas de estudio con estilo. Ideal para resumir materias, repasar antes de un examen o tener tus notas siempre ordenadas. Con sistema de discos inteligente para agregar y reorganizar fichas fácilmente.',
-            'Planners': 'Planificá tu semana y tu mes con claridad y tranquilidad. Un planner pensado para ayudarte a organizar tus tiempos, metas y tareas diarias. Interior perpetuo: empezá a usarlo cuando quieras, sin fechas fijas.',
-            'Blocks de hojas': 'Hojas sueltas de alta calidad para darle rienda suelta a tu creatividad. Ideales para dibujar, escribir, hacer collages o usarlas como complemento de tus cuadernos y journals.',
-            'Repuestos': 'Dale vida nueva a tu cuaderno o fichero con hojas de recambio de alta calidad. Papel suave y resistente que hace que escribir sea un placer. Porque tu cuaderno merece siempre hojas nuevas y frescas.',
-            'Set de separadores': 'Mantenelo todo organizado y fácil de encontrar. Los separadores te ayudan a dividir materias, proyectos o secciones de tu cuaderno para que nunca pierdas de vista lo importante.',
-            'Stickers & Varios': 'Dale tu toque personal a todo lo que uses. Perfectos para decorar cuadernos, libretas, notebooks o cualquier superficie. Porque los detalles hacen la diferencia.',
-            'Cápsula Argentina': 'Llevá el orgullo argentino a todos lados. Diseños exclusivos inspirados en nuestra cultura y tradición, para que cada producto cuente una historia que nos representa.',
-        };
-        return intros[cat] || '';
+        // Por categoría (usando includes para cubrir variantes con emojis, plurales, etc.)
+        if (cat.includes('cuaderno') && cat.includes('a4')) return 'Tu compañero ideal para la facu, el trabajo o tus proyectos creativos. Con sistema de discos inteligente, podés agregar, quitar y reorganizar hojas cuando quieras. Diseñado para acompañarte en cada idea, cada clase y cada momento de inspiración.';
+        if (cat.includes('cuaderno') && cat.includes('a5')) return 'Compacto y versátil, perfecto para llevar a todos lados. Con sistema de discos inteligente que te permite personalizarlo a tu gusto. Ideal para tomar notas rápidas, hacer listas o dejar volar tu creatividad donde sea que estés.';
+        if (cat.includes('libreta')) return 'Liviana y práctica, tu aliada para el día a día. Perfecta para anotar ideas sueltas, listas de pendientes o esos pensamientos que no querés olvidar. Llevala en la cartera, la mochila o tenela siempre a mano.';
+        if (cat.includes('fichero')) return 'Organizá tus fichas de estudio con estilo. Ideal para resumir materias, repasar antes de un examen o tener tus notas siempre ordenadas. Con sistema de discos inteligente para agregar y reorganizar fichas fácilmente.';
+        if (cat.includes('planner')) return 'Planificá tu semana y tu mes con claridad y tranquilidad. Un planner pensado para ayudarte a organizar tus tiempos, metas y tareas diarias. Interior perpetuo: empezá a usarlo cuando quieras, sin fechas fijas.';
+        if (cat.includes('block')) return 'Hojas sueltas de alta calidad para darle rienda suelta a tu creatividad. Ideales para dibujar, escribir, hacer collages o usarlas como complemento de tus cuadernos y journals.';
+        if (cat.includes('repuesto')) return 'Dale vida nueva a tu cuaderno o fichero con hojas de recambio de alta calidad. Papel suave y resistente que hace que escribir sea un placer. Porque tu cuaderno merece siempre hojas nuevas y frescas.';
+        if (cat.includes('separador')) return 'Mantenelo todo organizado y fácil de encontrar. Los separadores te ayudan a dividir materias, proyectos o secciones de tu cuaderno para que nunca pierdas de vista lo importante.';
+        if (cat.includes('sticker') || cat.includes('varios')) return 'Dale tu toque personal a todo lo que uses. Perfectos para decorar cuadernos, libretas, notebooks o cualquier superficie. Porque los detalles hacen la diferencia.';
+        if (cat.includes('argentina') || cat.includes('cápsula')) return 'Llevá el orgullo argentino a todos lados. Diseños exclusivos inspirados en nuestra cultura y tradición, para que cada producto cuente una historia que nos representa.';
+
+        return '';
     };
 
     const introDescription = getIntroDescription();
