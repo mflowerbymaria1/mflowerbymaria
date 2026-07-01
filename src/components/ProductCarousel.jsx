@@ -14,13 +14,17 @@ export default function ProductCarousel() {
             .from('products')
             .select('*')
             .eq('is_best_seller', true)
-            .limit(6);
+            .limit(10);
         
         if (!error && data) {
-            setFavoritesList(data.map(p => ({
-                ...p,
-                image: p.image_url
-            })));
+            const filtered = data
+                .filter(p => !p.category || !p.category.toLowerCase().includes('planner'))
+                .slice(0, 6)
+                .map(p => ({
+                    ...p,
+                    image: p.image_url
+                }));
+            setFavoritesList(filtered);
         }
         setLoading(false);
     }
