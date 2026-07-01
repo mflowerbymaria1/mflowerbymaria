@@ -76,7 +76,7 @@ export default function ProductCarousel() {
                           src={product.image} 
                           alt={product.name} 
                           loading="lazy" 
-                          style={{ filter: 'blur(5px)', opacity: 0.6 }} 
+                          style={{ filter: 'blur(8px)', opacity: 0.6, mixBlendMode: 'normal' }} 
                         />
                         <div style={{
                           position: 'absolute',

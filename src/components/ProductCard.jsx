@@ -116,7 +116,7 @@ export default function ProductCard({ product }) {
               <img 
                 src={activeImage} 
                 alt={product.name} 
-                style={{ filter: 'blur(5px)', opacity: 0.6 }}
+                style={{ filter: 'blur(8px)', opacity: 0.6, mixBlendMode: 'normal' }}
               />
               <div style={{
                 position: 'absolute',
@@ -160,6 +160,7 @@ export default function ProductCard({ product }) {
       
       {/* Miniaturas de vista previa */}
       {(() => {
+        if (product.category && product.category.toLowerCase().includes('planner')) return null;
         const uniqueImages = Array.from(new Set([product.image, ...(product.gallery || [])].filter(Boolean))).slice(0, 5);
         if (uniqueImages.length <= 1) return null;
         return (
