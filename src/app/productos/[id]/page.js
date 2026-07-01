@@ -193,69 +193,113 @@ export default function ProductDetailPage({ params }) {
                     <div className="product-detail-layout">
                         <div className="product-gallery">
                             {/* Imagen del Producto  con Zoom y Flechas */}
-                            <div className="product-image-container group align-center relative" style={{ overflow: 'hidden' }}>
-                                {imagesToDisplay.length > 0 ? (
-                                    <>
-                                        <div 
-                                            className="zoom-image-wrapper w-full h-full"
-                                            onMouseMove={handleMouseMove}
-                                            onMouseLeave={handleMouseLeave}
-                                            onClick={() => setIsLightboxOpen(true)}
-                                            style={{ cursor: 'zoom-in' }}
-                                        >
-                                            <img
-                                                src={imagesToDisplay[selectedImage]}
-                                                alt={product.name}
-                                                className="product-image"
-                                                style={{ transformOrigin: zoomOrigin }}
-                                            />
+                            {product.category && product.category.toLowerCase().includes('planner') ? (
+                                <div className="product-image-container group align-center relative" style={{ overflow: 'hidden' }}>
+                                    <div 
+                                        className="zoom-image-wrapper w-full h-full"
+                                        style={{ position: 'relative', width: '100%', height: '100%' }}
+                                    >
+                                        <img
+                                            src={product.image_url || product.image}
+                                            alt={product.name}
+                                            className="product-image"
+                                            style={{ filter: 'blur(5px)', opacity: 0.6 }}
+                                        />
+                                        <div style={{
+                                            position: 'absolute',
+                                            top: 0,
+                                            left: 0,
+                                            width: '100%',
+                                            height: '100%',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            backgroundColor: 'rgba(255, 255, 255, 0.4)',
+                                            zIndex: 10
+                                        }}>
+                                            <span style={{
+                                                backgroundColor: '#D47792',
+                                                color: 'white',
+                                                fontWeight: '800',
+                                                fontSize: '1rem',
+                                                padding: '10px 20px',
+                                                borderRadius: '20px',
+                                                textTransform: 'uppercase',
+                                                letterSpacing: '1px',
+                                                boxShadow: '0 4px 12px rgba(212,119,146,0.3)'
+                                            }}>
+                                                Próximamente
+                                            </span>
                                         </div>
-                                        {/* Flechas de navegación */}
-                                        {imagesToDisplay.length > 1 && (
-                                            <>
-                                                <button
-                                                    className="gallery-arrow left-arrow"
-                                                    onClick={(e) => {
-                                                        e.preventDefault();
-                                                        setSelectedImage(prev => prev === 0 ? imagesToDisplay.length - 1 : prev - 1);
-                                                    }}
-                                                    aria-label="Imagen anterior"
-                                                >
-                                                    ❮
-                                                </button>
-                                                <button
-                                                    className="gallery-arrow right-arrow"
-                                                    onClick={(e) => {
-                                                        e.preventDefault();
-                                                        setSelectedImage(prev => prev === imagesToDisplay.length - 1 ? 0 : prev + 1);
-                                                    }}
-                                                    aria-label="Siguiente imagen"
-                                                >
-                                                    ❯
-                                                </button>
-                                            </>
-                                        )}
-                                    </>
-                                ) : (
-                                    <div className="product-image-placeholder bg-green">
-                                        <Logo size="large" color="#4A8C55" />
                                     </div>
-                                )}
-                            </div>
-
-                            {/* Miniaturas */}
-                            {imagesToDisplay.length > 1 && (
-                                <div className="gallery-thumbnails">
-                                    {imagesToDisplay.map((img, idx) => (
-                                        <button
-                                            key={idx}
-                                            className={`thumbnail-btn ${selectedImage === idx ? 'active' : ''}`}
-                                            onClick={() => setSelectedImage(idx)}
-                                        >
-                                            <img src={img} alt={`${product.name} miniatura ${idx + 1}`} />
-                                        </button>
-                                    ))}
                                 </div>
+                            ) : (
+                                <>
+                                    <div className="product-image-container group align-center relative" style={{ overflow: 'hidden' }}>
+                                        {imagesToDisplay.length > 0 ? (
+                                            <>
+                                                <div 
+                                                    className="zoom-image-wrapper w-full h-full"
+                                                    onMouseMove={handleMouseMove}
+                                                    onMouseLeave={handleMouseLeave}
+                                                    onClick={() => setIsLightboxOpen(true)}
+                                                    style={{ cursor: 'zoom-in' }}
+                                                >
+                                                    <img
+                                                        src={imagesToDisplay[selectedImage]}
+                                                        alt={product.name}
+                                                        className="product-image"
+                                                        style={{ transformOrigin: zoomOrigin }}
+                                                    />
+                                                </div>
+                                                {/* Flechas de navegación */}
+                                                {imagesToDisplay.length > 1 && (
+                                                    <>
+                                                        <button
+                                                            className="gallery-arrow left-arrow"
+                                                            onClick={(e) => {
+                                                                e.preventDefault();
+                                                                setSelectedImage(prev => prev === 0 ? imagesToDisplay.length - 1 : prev - 1);
+                                                            }}
+                                                            aria-label="Imagen anterior"
+                                                        >
+                                                            ❮
+                                                        </button>
+                                                        <button
+                                                            className="gallery-arrow right-arrow"
+                                                            onClick={(e) => {
+                                                                e.preventDefault();
+                                                                setSelectedImage(prev => prev === imagesToDisplay.length - 1 ? 0 : prev + 1);
+                                                            }}
+                                                            aria-label="Siguiente imagen"
+                                                        >
+                                                            ❯
+                                                        </button>
+                                                    </>
+                                                )}
+                                            </>
+                                        ) : (
+                                            <div className="product-image-placeholder bg-green">
+                                                <Logo size="large" color="#4A8C55" />
+                                            </div>
+                                        )}
+                                    </div>
+
+                                    {/* Miniaturas */}
+                                    {imagesToDisplay.length > 1 && (
+                                        <div className="gallery-thumbnails">
+                                            {imagesToDisplay.map((img, idx) => (
+                                                <button
+                                                    key={idx}
+                                                    className={`thumbnail-btn ${selectedImage === idx ? 'active' : ''}`}
+                                                    onClick={() => setSelectedImage(idx)}
+                                                >
+                                                    <img src={img} alt={`${product.name} miniatura ${idx + 1}`} />
+                                                </button>
+                                            ))}
+                                        </div>
+                                    )}
+                                </>
                             )}
                         </div>
 
