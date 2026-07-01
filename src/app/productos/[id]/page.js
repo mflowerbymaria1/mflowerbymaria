@@ -203,7 +203,7 @@ export default function ProductDetailPage({ params }) {
                                             src={product.image_url || product.image}
                                             alt={product.name}
                                             className="product-image"
-                                            style={{ filter: 'blur(5px)', opacity: 0.6 }}
+                                            style={{ filter: 'blur(8px)', opacity: 0.6, mixBlendMode: 'normal' }}
                                         />
                                         <div style={{
                                             position: 'absolute',
