@@ -111,7 +111,43 @@ export default function ProductCard({ product }) {
           </svg>
         </button>
         {activeImage ? (
-          <img src={activeImage} alt={product.name} />
+          product.category && product.category.toLowerCase().includes('planner') ? (
+            <div className="relative w-full h-full" style={{ position: 'relative', width: '100%', height: '100%' }}>
+              <img 
+                src={activeImage} 
+                alt={product.name} 
+                style={{ filter: 'blur(5px)', opacity: 0.6 }}
+              />
+              <div style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: '100%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                backgroundColor: 'rgba(255, 255, 255, 0.4)',
+                zIndex: 10
+              }}>
+                <span style={{
+                  backgroundColor: '#D47792',
+                  color: 'white',
+                  fontWeight: '800',
+                  fontSize: '0.9rem',
+                  padding: '8px 16px',
+                  borderRadius: '20px',
+                  textTransform: 'uppercase',
+                  letterSpacing: '1px',
+                  boxShadow: '0 4px 12px rgba(212,119,146,0.3)'
+                }}>
+                  Próximamente
+                </span>
+              </div>
+            </div>
+          ) : (
+            <img src={activeImage} alt={product.name} />
+          )
         ) : (
           <div className="product-image-placeholder bg-green h-full w-full relative z-0">
             <Logo size="medium" color="#4A8C55" />
