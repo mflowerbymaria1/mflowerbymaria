@@ -46,6 +46,7 @@ export default function Footer() {
           <h5>Contacto</h5>
           <ul>
             <li><a href="https://www.instagram.com/mflowerbymaria/" target="_blank" rel="noopener noreferrer">Instagram</a></li>
+            <li><a href="https://www.tiktok.com/@mflowerbymaria" target="_blank" rel="noopener noreferrer">TikTok</a></li>
             <li><a href="https://www.facebook.com/p/Mflower-by-Maria-100084824422779/" target="_blank" rel="noopener noreferrer">Facebook</a></li>
             <li><a href="https://wa.me/541141817424?text=Hola!%20Vengo%20de%20la%20tienda%20online%20y%20tengo%20una%20consulta." target="_blank" rel="noopener noreferrer">WhatsApp</a></li>
           </ul>
