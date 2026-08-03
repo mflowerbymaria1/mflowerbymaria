@@ -470,7 +470,7 @@ export default function ProductDetailPage({ params }) {
                                         <circle cx="12" cy="12" r="10"></circle>
                                         <polyline points="12 6 12 12 16 14"></polyline>
                                     </svg>
-                                    {isFichero ? (
+                                    {isFichero || product.name.toLowerCase().includes('pack') ? (
                                         <span><strong>Plazo de despacho:</strong> Dentro de las 72 hs hábiles (adicional al tiempo del correo).</span>
                                     ) : (
                                         <span><strong>Plazo de fabricación/despacho:</strong> De 7 a 14 días según disponibilidad de stock (adicional al tiempo del correo).</span>
