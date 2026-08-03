@@ -346,7 +346,20 @@ export default function ProductDetailPage({ params }) {
                                                 <h4 className="font-quicksand font-bold mb-2 text-gray-800" style={{ fontSize: '0.95rem' }}>Elegí tu segunda Libreta A5:</h4>
                                                 <select 
                                                     value={design2} 
-                                                    onChange={(e) => setDesign2(e.target.value)} 
+                                                    onChange={(e) => {
+                                                        const val = e.target.value;
+                                                        setDesign2(val);
+                                                        const designsList = [
+                                                            'Breakfast 1', 'Breakfast 2', 'Breakfast 3', 
+                                                            'Libreta Black', 'Libreta Pink', 'Libreta Flower', 
+                                                            'Libreta Garabato', 'Libreta Waves Red', 
+                                                            'Libreta Yellow Grid'
+                                                        ];
+                                                        const idx = designsList.indexOf(val);
+                                                        if (idx !== -1 && idx < imagesToDisplay.length) {
+                                                            setSelectedImage(idx);
+                                                        }
+                                                    }} 
                                                     style={{ width: '100%', padding: '10px', borderRadius: '12px', border: '1px solid #ddd', fontFamily: 'Montserrat, sans-serif', fontSize: '0.9rem', outline: 'none', background: '#fff' }}
                                                 >
                                                     <option value="Breakfast 1">Breakfast 1</option>
