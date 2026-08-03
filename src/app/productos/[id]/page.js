@@ -269,12 +269,12 @@ export default function ProductDetailPage({ params }) {
                                                             ];
                                                             
                                                             const isPack = product.name.toLowerCase().includes('pack');
-                                                            if (isPack && imagesToDisplay.length > 1) {
-                                                                // Como la primera foto (índice 0) muestra las 3 libretas juntas de portada,
-                                                                // sumamos 1 al índice para que empiece a buscar desde la segunda foto en adelante (índice 1).
+                                                            if (isPack && imagesToDisplay.length > 0) {
+                                                                // Como no hay foto de portada (empezás directamente con Breakfast 1 como Principal),
+                                                                // mapeamos el índice directamente sin sumarle +1.
                                                                 const index1 = designsList.indexOf(design1);
-                                                                if (index1 !== -1 && imagesToDisplay[index1 + 1]) {
-                                                                    return imagesToDisplay[index1 + 1];
+                                                                if (index1 !== -1 && imagesToDisplay[index1]) {
+                                                                    return imagesToDisplay[index1];
                                                                 }
                                                             }
                                                             return imagesToDisplay[selectedImage];
@@ -546,10 +546,10 @@ export default function ProductDetailPage({ params }) {
                                     'Libreta Yellow Grid'
                                 ];
                                 const isPack = product.name.toLowerCase().includes('pack');
-                                if (isPack && imagesToDisplay.length > 1) {
+                                if (isPack && imagesToDisplay.length > 0) {
                                     const index1 = designsList.indexOf(design1);
-                                    if (index1 !== -1 && imagesToDisplay[index1 + 1]) {
-                                        return imagesToDisplay[index1 + 1];
+                                    if (index1 !== -1 && imagesToDisplay[index1]) {
+                                        return imagesToDisplay[index1];
                                     }
                                 }
                                 return imagesToDisplay[selectedImage];
