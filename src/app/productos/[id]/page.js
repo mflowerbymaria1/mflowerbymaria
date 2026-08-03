@@ -264,16 +264,17 @@ export default function ProductDetailPage({ params }) {
                                                             const designsList = [
                                                                 'Breakfast 1', 'Breakfast 2', 'Breakfast 3', 
                                                                 'Libreta Black', 'Libreta Pink', 'Libreta Flower', 
-                                                                'Libreta Garabato', 'Libreta Waves Red', 'Libreta Flowers', 
+                                                                'Libreta Garabato', 'Libreta Waves Red', 
                                                                 'Libreta Yellow Grid'
                                                             ];
                                                             
                                                             const isPack = product.name.toLowerCase().includes('pack');
                                                             if (isPack && imagesToDisplay.length > 1) {
-                                                                // Intentamos buscar una imagen de la galería cuyo índice coincida con el del diseño seleccionado en design1
+                                                                // Como la primera foto (índice 0) muestra las 3 libretas juntas de portada,
+                                                                // sumamos 1 al índice para que empiece a buscar desde la segunda foto en adelante (índice 1).
                                                                 const index1 = designsList.indexOf(design1);
-                                                                if (index1 !== -1 && imagesToDisplay[index1]) {
-                                                                    return imagesToDisplay[index1];
+                                                                if (index1 !== -1 && imagesToDisplay[index1 + 1]) {
+                                                                    return imagesToDisplay[index1 + 1];
                                                                 }
                                                             }
                                                             return imagesToDisplay[selectedImage];
@@ -378,7 +379,6 @@ export default function ProductDetailPage({ params }) {
                                                 <option value="Libreta Flower">Libreta Flower</option>
                                                 <option value="Libreta Garabato">Libreta Garabato</option>
                                                 <option value="Libreta Waves Red">Libreta Waves Red</option>
-                                                <option value="Libreta Flowers">Libreta Flowers</option>
                                                 <option value="Libreta Yellow Grid">Libreta Yellow Grid</option>
                                             </select>
                                         </div>
@@ -397,7 +397,6 @@ export default function ProductDetailPage({ params }) {
                                                 <option value="Libreta Flower">Libreta Flower</option>
                                                 <option value="Libreta Garabato">Libreta Garabato</option>
                                                 <option value="Libreta Waves Red">Libreta Waves Red</option>
-                                                <option value="Libreta Flowers">Libreta Flowers</option>
                                                 <option value="Libreta Yellow Grid">Libreta Yellow Grid</option>
                                             </select>
                                         </div>
@@ -543,14 +542,14 @@ export default function ProductDetailPage({ params }) {
                                 const designsList = [
                                     'Breakfast 1', 'Breakfast 2', 'Breakfast 3', 
                                     'Libreta Black', 'Libreta Pink', 'Libreta Flower', 
-                                    'Libreta Garabato', 'Libreta Waves Red', 'Libreta Flowers', 
+                                    'Libreta Garabato', 'Libreta Waves Red', 
                                     'Libreta Yellow Grid'
                                 ];
                                 const isPack = product.name.toLowerCase().includes('pack');
                                 if (isPack && imagesToDisplay.length > 1) {
                                     const index1 = designsList.indexOf(design1);
-                                    if (index1 !== -1 && imagesToDisplay[index1]) {
-                                        return imagesToDisplay[index1];
+                                    if (index1 !== -1 && imagesToDisplay[index1 + 1]) {
+                                        return imagesToDisplay[index1 + 1];
                                     }
                                 }
                                 return imagesToDisplay[selectedImage];
