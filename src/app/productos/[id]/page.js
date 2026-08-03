@@ -254,31 +254,8 @@ export default function ProductDetailPage({ params }) {
                                                     onClick={() => setIsLightboxOpen(true)}
                                                     style={{ cursor: 'zoom-in' }}
                                                 >
-                                                                                    <img
-                                                        src={(() => {
-                                                            // Si hay múltiples imágenes en la galería, buscamos si alguna coincide con el diseño seleccionado en el primer desplegable (design1).
-                                                            // Las imágenes las vas a subir en el administrador. Si el nombre del archivo contiene palabras clave del diseño,
-                                                            // o simplemente por el orden en el que las subas, el cliente podrá ver el diseño seleccionado.
-                                                            // Como ayuda inteligente: si el usuario cambió el design1 y hay suficientes imágenes,
-                                                            // vinculamos cada índice de imagen a la selección.
-                                                            const designsList = [
-                                                                'Breakfast 1', 'Breakfast 2', 'Breakfast 3', 
-                                                                'Libreta Black', 'Libreta Pink', 'Libreta Flower', 
-                                                                'Libreta Garabato', 'Libreta Waves Red', 
-                                                                'Libreta Yellow Grid'
-                                                            ];
-                                                            
-                                                            const isPack = product.name.toLowerCase().includes('pack');
-                                                            if (isPack && imagesToDisplay.length > 0) {
-                                                                // Como no hay foto de portada (empezás directamente con Breakfast 1 como Principal),
-                                                                // mapeamos el índice directamente sin sumarle +1.
-                                                                const index1 = designsList.indexOf(design1);
-                                                                if (index1 !== -1 && imagesToDisplay[index1]) {
-                                                                    return imagesToDisplay[index1];
-                                                                }
-                                                            }
-                                                            return imagesToDisplay[selectedImage];
-                                                        })()}
+                                                    <img
+                                                        src={imagesToDisplay[selectedImage]}
                                                         alt={product.name}
                                                         className="product-image"
                                                         style={{ transformOrigin: zoomOrigin }}
@@ -379,6 +356,7 @@ export default function ProductDetailPage({ params }) {
                                                 <option value="Libreta Flower">Libreta Flower</option>
                                                 <option value="Libreta Garabato">Libreta Garabato</option>
                                                 <option value="Libreta Waves Red">Libreta Waves Red</option>
+                                                <option value="Libreta Flowers">Libreta Flowers</option>
                                                 <option value="Libreta Yellow Grid">Libreta Yellow Grid</option>
                                             </select>
                                         </div>
@@ -397,6 +375,7 @@ export default function ProductDetailPage({ params }) {
                                                 <option value="Libreta Flower">Libreta Flower</option>
                                                 <option value="Libreta Garabato">Libreta Garabato</option>
                                                 <option value="Libreta Waves Red">Libreta Waves Red</option>
+                                                <option value="Libreta Flowers">Libreta Flowers</option>
                                                 <option value="Libreta Yellow Grid">Libreta Yellow Grid</option>
                                             </select>
                                         </div>
@@ -465,10 +444,8 @@ export default function ProductDetailPage({ params }) {
                                         <circle cx="12" cy="12" r="10"></circle>
                                         <polyline points="12 6 12 12 16 14"></polyline>
                                     </svg>
-                                    {isLibreta ? (
-                                        <span><strong>Plazo de fabricación/despacho:</strong> De 3 a 5 días hábiles según disponibilidad de stock (adicional al tiempo del correo).</span>
-                                    ) : isFichero ? (
-                                        <span><strong>Plazo de despacho:</strong> De 3 a 5 días hábiles (adicional al tiempo del correo).</span>
+                                    {isFichero ? (
+                                        <span><strong>Plazo de despacho:</strong> Dentro de las 72 hs hábiles (adicional al tiempo del correo).</span>
                                     ) : (
                                         <span><strong>Plazo de fabricación/despacho:</strong> De 7 a 14 días según disponibilidad de stock (adicional al tiempo del correo).</span>
                                     )}
@@ -538,22 +515,7 @@ export default function ProductDetailPage({ params }) {
                     <button className="lightbox-close" onClick={() => setIsLightboxOpen(false)}>×</button>
                     <div className="lightbox-content" onClick={e => e.stopPropagation()}>
                         <img 
-                            src={(() => {
-                                const designsList = [
-                                    'Breakfast 1', 'Breakfast 2', 'Breakfast 3', 
-                                    'Libreta Black', 'Libreta Pink', 'Libreta Flower', 
-                                    'Libreta Garabato', 'Libreta Waves Red', 
-                                    'Libreta Yellow Grid'
-                                ];
-                                const isPack = product.name.toLowerCase().includes('pack');
-                                if (isPack && imagesToDisplay.length > 0) {
-                                    const index1 = designsList.indexOf(design1);
-                                    if (index1 !== -1 && imagesToDisplay[index1]) {
-                                        return imagesToDisplay[index1];
-                                    }
-                                }
-                                return imagesToDisplay[selectedImage];
-                            })()} 
+                            src={imagesToDisplay[selectedImage]} 
                             alt={product.name} 
                             className="lightbox-image" 
                         />
