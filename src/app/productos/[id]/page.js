@@ -308,6 +308,60 @@ export default function ProductDetailPage({ params }) {
                                             ))}
                                         </div>
                                     )}
+                                    {/* Selector de diseños debajo de las imágenes para el Pack */}
+                                    {product.name.toLowerCase().includes('pack') && (
+                                        <div className="pack-selectors-under-gallery" style={{ marginTop: '1rem', background: '#fafafa', padding: '1.2rem', borderRadius: '14px', border: '1px solid #eee' }}>
+                                            <div className="sheet-selector-box" style={{ marginBottom: '12px' }}>
+                                                <h4 className="font-quicksand font-bold mb-2 text-gray-800" style={{ fontSize: '0.95rem' }}>Elegí tu primera Libreta A5:</h4>
+                                                <select 
+                                                    value={design1} 
+                                                    onChange={(e) => {
+                                                        const val = e.target.value;
+                                                        setDesign1(val);
+                                                        const designsList = [
+                                                            'Breakfast 1', 'Breakfast 2', 'Breakfast 3', 
+                                                            'Libreta Black', 'Libreta Pink', 'Libreta Flower', 
+                                                            'Libreta Garabato', 'Libreta Waves Red', 
+                                                            'Libreta Yellow Grid'
+                                                        ];
+                                                        const idx = designsList.indexOf(val);
+                                                        if (idx !== -1 && idx < imagesToDisplay.length) {
+                                                            setSelectedImage(idx);
+                                                        }
+                                                    }} 
+                                                    style={{ width: '100%', padding: '10px', borderRadius: '12px', border: '1px solid #ddd', fontFamily: 'Montserrat, sans-serif', fontSize: '0.9rem', outline: 'none', background: '#fff' }}
+                                                >
+                                                    <option value="Breakfast 1">Breakfast 1</option>
+                                                    <option value="Breakfast 2">Breakfast 2</option>
+                                                    <option value="Breakfast 3">Breakfast 3</option>
+                                                    <option value="Libreta Black">Libreta Black</option>
+                                                    <option value="Libreta Pink">Libreta Pink</option>
+                                                    <option value="Libreta Flower">Libreta Flower</option>
+                                                    <option value="Libreta Garabato">Libreta Garabato</option>
+                                                    <option value="Libreta Waves Red">Libreta Waves Red</option>
+                                                    <option value="Libreta Yellow Grid">Libreta Yellow Grid</option>
+                                                </select>
+                                            </div>
+                                            <div className="sheet-selector-box">
+                                                <h4 className="font-quicksand font-bold mb-2 text-gray-800" style={{ fontSize: '0.95rem' }}>Elegí tu segunda Libreta A5:</h4>
+                                                <select 
+                                                    value={design2} 
+                                                    onChange={(e) => setDesign2(e.target.value)} 
+                                                    style={{ width: '100%', padding: '10px', borderRadius: '12px', border: '1px solid #ddd', fontFamily: 'Montserrat, sans-serif', fontSize: '0.9rem', outline: 'none', background: '#fff' }}
+                                                >
+                                                    <option value="Breakfast 1">Breakfast 1</option>
+                                                    <option value="Breakfast 2">Breakfast 2</option>
+                                                    <option value="Breakfast 3">Breakfast 3</option>
+                                                    <option value="Libreta Black">Libreta Black</option>
+                                                    <option value="Libreta Pink">Libreta Pink</option>
+                                                    <option value="Libreta Flower">Libreta Flower</option>
+                                                    <option value="Libreta Garabato">Libreta Garabato</option>
+                                                    <option value="Libreta Waves Red">Libreta Waves Red</option>
+                                                    <option value="Libreta Yellow Grid">Libreta Yellow Grid</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    )}
                                 </>
                             )}
                         </div>
@@ -339,48 +393,7 @@ export default function ProductDetailPage({ params }) {
                             </div>
 
                             <div className="actions-box">
-                                {product.name.toLowerCase().includes('pack') ? (
-                                    <>
-                                        <div className="sheet-selector-box" style={{ marginBottom: '16px' }}>
-                                            <h4 className="font-quicksand font-bold mb-2 text-gray-800">Elegí tu primera Libreta A5:</h4>
-                                            <select 
-                                                value={design1} 
-                                                onChange={(e) => setDesign1(e.target.value)} 
-                                                style={{ width: '100%', padding: '10px', borderRadius: '12px', border: '1px solid #ddd', fontFamily: 'Montserrat, sans-serif', fontSize: '0.9rem', outline: 'none' }}
-                                            >
-                                                <option value="Breakfast 1">Breakfast 1</option>
-                                                <option value="Breakfast 2">Breakfast 2</option>
-                                                <option value="Breakfast 3">Breakfast 3</option>
-                                                <option value="Libreta Black">Libreta Black</option>
-                                                <option value="Libreta Pink">Libreta Pink</option>
-                                                <option value="Libreta Flower">Libreta Flower</option>
-                                                <option value="Libreta Garabato">Libreta Garabato</option>
-                                                <option value="Libreta Waves Red">Libreta Waves Red</option>
-                                                <option value="Libreta Flowers">Libreta Flowers</option>
-                                                <option value="Libreta Yellow Grid">Libreta Yellow Grid</option>
-                                            </select>
-                                        </div>
-                                        <div className="sheet-selector-box" style={{ marginBottom: '24px' }}>
-                                            <h4 className="font-quicksand font-bold mb-2 text-gray-800">Elegí tu segunda Libreta A5:</h4>
-                                            <select 
-                                                value={design2} 
-                                                onChange={(e) => setDesign2(e.target.value)} 
-                                                style={{ width: '100%', padding: '10px', borderRadius: '12px', border: '1px solid #ddd', fontFamily: 'Montserrat, sans-serif', fontSize: '0.9rem', outline: 'none' }}
-                                            >
-                                                <option value="Breakfast 1">Breakfast 1</option>
-                                                <option value="Breakfast 2">Breakfast 2</option>
-                                                <option value="Breakfast 3">Breakfast 3</option>
-                                                <option value="Libreta Black">Libreta Black</option>
-                                                <option value="Libreta Pink">Libreta Pink</option>
-                                                <option value="Libreta Flower">Libreta Flower</option>
-                                                <option value="Libreta Garabato">Libreta Garabato</option>
-                                                <option value="Libreta Waves Red">Libreta Waves Red</option>
-                                                <option value="Libreta Flowers">Libreta Flowers</option>
-                                                <option value="Libreta Yellow Grid">Libreta Yellow Grid</option>
-                                            </select>
-                                        </div>
-                                    </>
-                                ) : (
+                                {product.name.toLowerCase().includes('pack') ? null : (
                                     <>
                                         {needsNotebookOptions && (
                                             <div className="sheet-selector-box">
@@ -557,6 +570,14 @@ export default function ProductDetailPage({ params }) {
                     border-radius: 20px;
                     box-shadow: 0 10px 30px rgba(0,0,0,0.03);
                 }
+                ${product.name.toLowerCase().includes('pack') ? `
+                @media (min-width: 901px) {
+                    .product-detail-layout {
+                        grid-template-columns: 0.85fr 1.15fr;
+                        gap: 2.5rem;
+                    }
+                }
+                ` : ''}
                 .product-gallery {
                     display: flex;
                     flex-direction: column;
