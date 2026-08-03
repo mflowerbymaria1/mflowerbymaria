@@ -573,8 +573,9 @@ export default function ProductDetailPage({ params }) {
                 ${product.name.toLowerCase().includes('pack') ? `
                 @media (min-width: 901px) {
                     .product-detail-layout {
-                        grid-template-columns: 0.85fr 1.15fr;
-                        gap: 2.5rem;
+                        grid-template-columns: 0.75fr 1.25fr;
+                        gap: 2rem;
+                        padding: 2.5rem 2rem;
                     }
                 }
                 ` : ''}
