@@ -569,23 +569,37 @@ export default function ProductDetailPage({ params }) {
                     padding: 3rem;
                     border-radius: 20px;
                     box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+                    box-sizing: border-box;
+                    max-width: 100%;
+                    overflow: hidden;
+                }
+
+                .product-info-container {
+                    display: flex;
+                    flex-direction: column;
+                    min-width: 0; /* Prevents flex/grid children from overflowing */
+                }
+
+                .price-box, .intro-desc-text, .actions-box {
+                    max-width: 100%;
+                    box-sizing: border-box;
                 }
 
                 ${product.name.toLowerCase().includes('pack') ? `
                 @media (min-width: 901px) {
                     .product-detail-layout {
-                        grid-template-columns: 0.9fr 1.1fr !important;
-                        gap: 2.5rem !important;
+                        grid-template-columns: 0.8fr 1.2fr !important;
+                        gap: 2rem !important;
+                        padding: 3rem 2.5rem !important;
                     }
                     .product-gallery .gallery-thumbnails {
-                        display: grid !important;
-                        grid-template-columns: repeat(9, 1fr) !important;
-                        gap: 4px !important;
-                        overflow-x: visible !important;
+                        display: flex !important;
+                        flex-wrap: wrap !important;
+                        gap: 6px !important;
                     }
                     .product-gallery .thumbnail-btn {
-                        width: 100% !important;
-                        height: 48px !important;
+                        width: 52px !important;
+                        height: 52px !important;
                     }
                 }
                 ` : ''}
