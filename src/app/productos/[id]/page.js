@@ -570,18 +570,7 @@ export default function ProductDetailPage({ params }) {
                     border-radius: 20px;
                     box-shadow: 0 10px 30px rgba(0,0,0,0.03);
                 }
-                ${product.name.toLowerCase().includes('pack') ? `
-                @media (min-width: 901px) {
-                    .product-detail-layout {
-                        grid-template-columns: 0.72fr 1.28fr;
-                        gap: 2.5rem;
-                        padding: 3rem 2.5rem;
-                    }
-                    .product-info-container {
-                        padding-right: 1.5rem;
-                    }
-                }
-                ` : ''}
+
                 .product-gallery {
                     display: flex;
                     flex-direction: column;
