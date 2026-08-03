@@ -571,6 +571,25 @@ export default function ProductDetailPage({ params }) {
                     box-shadow: 0 10px 30px rgba(0,0,0,0.03);
                 }
 
+                ${product.name.toLowerCase().includes('pack') ? `
+                @media (min-width: 901px) {
+                    .product-detail-layout {
+                        grid-template-columns: 0.9fr 1.1fr !important;
+                        gap: 2.5rem !important;
+                    }
+                    .product-gallery .gallery-thumbnails {
+                        display: grid !important;
+                        grid-template-columns: repeat(9, 1fr) !important;
+                        gap: 4px !important;
+                        overflow-x: visible !important;
+                    }
+                    .product-gallery .thumbnail-btn {
+                        width: 100% !important;
+                        height: 48px !important;
+                    }
+                }
+                ` : ''}
+
                 .product-gallery {
                     display: flex;
                     flex-direction: column;
