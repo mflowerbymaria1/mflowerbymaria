@@ -254,8 +254,30 @@ export default function ProductDetailPage({ params }) {
                                                     onClick={() => setIsLightboxOpen(true)}
                                                     style={{ cursor: 'zoom-in' }}
                                                 >
-                                                    <img
-                                                        src={imagesToDisplay[selectedImage]}
+                                                                                    <img
+                                                        src={(() => {
+                                                            // Si hay múltiples imágenes en la galería, buscamos si alguna coincide con el diseño seleccionado en el primer desplegable (design1).
+                                                            // Las imágenes las vas a subir en el administrador. Si el nombre del archivo contiene palabras clave del diseño,
+                                                            // o simplemente por el orden en el que las subas, el cliente podrá ver el diseño seleccionado.
+                                                            // Como ayuda inteligente: si el usuario cambió el design1 y hay suficientes imágenes,
+                                                            // vinculamos cada índice de imagen a la selección.
+                                                            const designsList = [
+                                                                'Breakfast 1', 'Breakfast 2', 'Breakfast 3', 
+                                                                'Libreta Black', 'Libreta Pink', 'Libreta Flower', 
+                                                                'Libreta Garabato', 'Libreta Waves Red', 'Libreta Flowers', 
+                                                                'Libreta Yellow Grid'
+                                                            ];
+                                                            
+                                                            const isPack = product.name.toLowerCase().includes('pack');
+                                                            if (isPack && imagesToDisplay.length > 1) {
+                                                                // Intentamos buscar una imagen de la galería cuyo índice coincida con el del diseño seleccionado en design1
+                                                                const index1 = designsList.indexOf(design1);
+                                                                if (index1 !== -1 && imagesToDisplay[index1]) {
+                                                                    return imagesToDisplay[index1];
+                                                                }
+                                                            }
+                                                            return imagesToDisplay[selectedImage];
+                                                        })()}
                                                         alt={product.name}
                                                         className="product-image"
                                                         style={{ transformOrigin: zoomOrigin }}
@@ -515,7 +537,22 @@ export default function ProductDetailPage({ params }) {
                     <button className="lightbox-close" onClick={() => setIsLightboxOpen(false)}>×</button>
                     <div className="lightbox-content" onClick={e => e.stopPropagation()}>
                         <img 
-                            src={imagesToDisplay[selectedImage]} 
+                            src={(() => {
+                                const designsList = [
+                                    'Breakfast 1', 'Breakfast 2', 'Breakfast 3', 
+                                    'Libreta Black', 'Libreta Pink', 'Libreta Flower', 
+                                    'Libreta Garabato', 'Libreta Waves Red', 'Libreta Flowers', 
+                                    'Libreta Yellow Grid'
+                                ];
+                                const isPack = product.name.toLowerCase().includes('pack');
+                                if (isPack && imagesToDisplay.length > 1) {
+                                    const index1 = designsList.indexOf(design1);
+                                    if (index1 !== -1 && imagesToDisplay[index1]) {
+                                        return imagesToDisplay[index1];
+                                    }
+                                }
+                                return imagesToDisplay[selectedImage];
+                            })()} 
                             alt={product.name} 
                             className="lightbox-image" 
                         />
