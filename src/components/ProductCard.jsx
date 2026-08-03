@@ -53,7 +53,10 @@ export default function ProductCard({ product }) {
   const handleAddToCartClick = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    if (needsOptions) {
+    const isPack = product.name.toLowerCase().includes('pack');
+    if (isPack) {
+      router.push(`/productos/${product.id}`);
+    } else if (needsOptions) {
       setShowOptionsModal(true);
     } else {
       performAddToCart(product);

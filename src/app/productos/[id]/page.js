@@ -23,6 +23,8 @@ export default function ProductDetailPage({ params }) {
     const [zoomOrigin, setZoomOrigin] = useState('center center');
     const [isLightboxOpen, setIsLightboxOpen] = useState(false);
     const [relatedProducts, setRelatedProducts] = useState([]);
+    const [design1, setDesign1] = useState('Breakfast 1');
+    const [design2, setDesign2] = useState('Breakfast 2');
 
     useEffect(() => {
         async function fetchProduct() {
@@ -129,7 +131,14 @@ export default function ProductDetailPage({ params }) {
 
     const handleAddToCart = () => {
         let productToAdd = { ...product, product_id: product.id };
-        if (needsNotebookOptions) {
+        const isPack = product.name.toLowerCase().includes('pack');
+        if (isPack) {
+            productToAdd = {
+                ...productToAdd,
+                id: `${product.id}-${design1.replace(/\s+/g, '-')}-${design2.replace(/\s+/g, '-')}`,
+                name: `${product.name} (${design1} + ${design2})`
+            };
+        } else if (needsNotebookOptions) {
             productToAdd = {
                 ...productToAdd,
                 id: `${product.id}-${sheetType}-${paperType.replace(/\s+/g, '-')}`,
@@ -330,33 +339,78 @@ export default function ProductDetailPage({ params }) {
                             </div>
 
                             <div className="actions-box">
-                                {needsNotebookOptions && (
-                                    <div className="sheet-selector-box">
-                                        <h4 className="font-quicksand font-bold mb-2 text-gray-800">Tipo de hojas</h4>
-                                        <div className="flex gap-3 flex-wrap">
-                                            {isLibreta ? (
-                                                <button className="sheet-btn active">Lisas</button>
-                                            ) : (
-                                                <>
-                                                    <button className={`sheet-btn ${sheetType === 'rayadas' ? 'active' : ''}`} onClick={() => setSheetType('rayadas')}>Rayadas</button>
-                                                    <button className={`sheet-btn ${sheetType === 'lisas' ? 'active' : ''}`} onClick={() => setSheetType('lisas')}>Lisas</button>
-                                                    <button className={`sheet-btn ${sheetType === 'cuadriculadas' ? 'active' : ''}`} onClick={() => setSheetType('cuadriculadas')}>Cuadriculadas</button>
-                                                    <button className={`sheet-btn ${sheetType === 'punteadas' ? 'active' : ''}`} onClick={() => setSheetType('punteadas')}>Punteadas</button>
-                                                </>
-                                            )}
+                                {product.name.toLowerCase().includes('pack') ? (
+                                    <>
+                                        <div className="sheet-selector-box" style={{ marginBottom: '16px' }}>
+                                            <h4 className="font-quicksand font-bold mb-2 text-gray-800">Elegí tu primera Libreta A5:</h4>
+                                            <select 
+                                                value={design1} 
+                                                onChange={(e) => setDesign1(e.target.value)} 
+                                                style={{ width: '100%', padding: '10px', borderRadius: '12px', border: '1px solid #ddd', fontFamily: 'Montserrat, sans-serif', fontSize: '0.9rem', outline: 'none' }}
+                                            >
+                                                <option value="Breakfast 1">Breakfast 1</option>
+                                                <option value="Breakfast 2">Breakfast 2</option>
+                                                <option value="Breakfast 3">Breakfast 3</option>
+                                                <option value="Libreta Black">Libreta Black</option>
+                                                <option value="Libreta Pink">Libreta Pink</option>
+                                                <option value="Libreta Flower">Libreta Flower</option>
+                                                <option value="Libreta Garabato">Libreta Garabato</option>
+                                                <option value="Libreta Waves Red">Libreta Waves Red</option>
+                                                <option value="Libreta Flowers">Libreta Flowers</option>
+                                                <option value="Libreta Yellow Grid">Libreta Yellow Grid</option>
+                                            </select>
                                         </div>
-                                    </div>
-                                )}
-                                {(needsNotebookOptions || needsFicheroOptions) && (
-                                    <div className="sheet-selector-box">
-                                        <h4 className="font-quicksand font-bold mb-2 text-gray-800">Tipo de papel</h4>
-                                        <div className="flex gap-3">
-                                            {isNotebook && !isLibreta && (
-                                                <button className={`sheet-btn ${paperType === 'natural' ? 'active' : ''}`} onClick={() => setPaperType('natural')}>Natural</button>
-                                            )}
-                                            <button className={`sheet-btn ${paperType === 'blanco' ? 'active' : ''}`} onClick={() => { setPaperType('blanco'); }}>Blanco</button>
+                                        <div className="sheet-selector-box" style={{ marginBottom: '24px' }}>
+                                            <h4 className="font-quicksand font-bold mb-2 text-gray-800">Elegí tu segunda Libreta A5:</h4>
+                                            <select 
+                                                value={design2} 
+                                                onChange={(e) => setDesign2(e.target.value)} 
+                                                style={{ width: '100%', padding: '10px', borderRadius: '12px', border: '1px solid #ddd', fontFamily: 'Montserrat, sans-serif', fontSize: '0.9rem', outline: 'none' }}
+                                            >
+                                                <option value="Breakfast 1">Breakfast 1</option>
+                                                <option value="Breakfast 2">Breakfast 2</option>
+                                                <option value="Breakfast 3">Breakfast 3</option>
+                                                <option value="Libreta Black">Libreta Black</option>
+                                                <option value="Libreta Pink">Libreta Pink</option>
+                                                <option value="Libreta Flower">Libreta Flower</option>
+                                                <option value="Libreta Garabato">Libreta Garabato</option>
+                                                <option value="Libreta Waves Red">Libreta Waves Red</option>
+                                                <option value="Libreta Flowers">Libreta Flowers</option>
+                                                <option value="Libreta Yellow Grid">Libreta Yellow Grid</option>
+                                            </select>
                                         </div>
-                                    </div>
+                                    </>
+                                ) : (
+                                    <>
+                                        {needsNotebookOptions && (
+                                            <div className="sheet-selector-box">
+                                                <h4 className="font-quicksand font-bold mb-2 text-gray-800">Tipo de hojas</h4>
+                                                <div className="flex gap-3 flex-wrap">
+                                                    {isLibreta ? (
+                                                        <button className="sheet-btn active">Lisas</button>
+                                                    ) : (
+                                                        <>
+                                                            <button className={`sheet-btn ${sheetType === 'rayadas' ? 'active' : ''}`} onClick={() => setSheetType('rayadas')}>Rayadas</button>
+                                                            <button className={`sheet-btn ${sheetType === 'lisas' ? 'active' : ''}`} onClick={() => setSheetType('lisas')}>Lisas</button>
+                                                            <button className={`sheet-btn ${sheetType === 'cuadriculadas' ? 'active' : ''}`} onClick={() => setSheetType('cuadriculadas')}>Cuadriculadas</button>
+                                                            <button className={`sheet-btn ${sheetType === 'punteadas' ? 'active' : ''}`} onClick={() => setSheetType('punteadas')}>Punteadas</button>
+                                                        </>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        )}
+                                        {(needsNotebookOptions || needsFicheroOptions) && (
+                                            <div className="sheet-selector-box">
+                                                <h4 className="font-quicksand font-bold mb-2 text-gray-800">Tipo de papel</h4>
+                                                <div className="flex gap-3">
+                                                    {isNotebook && !isLibreta && (
+                                                        <button className={`sheet-btn ${paperType === 'natural' ? 'active' : ''}`} onClick={() => setPaperType('natural')}>Natural</button>
+                                                    )}
+                                                    <button className={`sheet-btn ${paperType === 'blanco' ? 'active' : ''}`} onClick={() => { setPaperType('blanco'); }}>Blanco</button>
+                                                </div>
+                                            </div>
+                                        )}
+                                    </>
                                 )}
                                 <div className="quantity-selector">
                                     <button className="qty-btn" onClick={decreaseQty} aria-label="Disminuir cantidad" disabled={product.stock <= 0}>-</button>
