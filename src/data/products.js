@@ -357,5 +357,35 @@ export const products = [
         price: "10.900",
         image: "/images/repuestos_svg/fichas_blanco_rayadas.svg",
         images: ["/images/repuestos_svg/fichas_blanco_rayadas.svg", "/images/repuestos_svg/fichas_natural_rayadas.svg"]
+    },
+    {
+        id: 108,
+        name: "MIDI Block",
+        category: "Block de papeles",
+        shortDescription: "Block de notas A5, 40 hojas arrancables.",
+        description: "Práctico y versátil, el tamaño justo para acompañarte todos los días en tu escritorio o en la cartera. Perfecto para listas de tareas, notas rápidas y organizar tus ideas.\n\nContiene: 40 hojas arrancables en papel de 80 gr. Tamaño A5 (15 x 21 cm aprox).",
+        price: "18.500",
+        image: "/images/block_midi_a5.jpg",
+        images: ["/images/block_midi_a5.jpg"]
+    },
+    {
+        id: 109,
+        name: "BABY Block",
+        category: "Block de papeles",
+        shortDescription: "Block de notas A6 mini, 40 hojas arrancables.",
+        description: "Adorable y súper compacto. El tamaño mini ideal para llevar siempre a mano en cualquier bolsillo o riñonera para anotar recordatorios al instante.\n\nContiene: 40 hojas arrancables en papel de 80 gr. Tamaño A6 (10 x 15 cm aprox).",
+        price: "14.500",
+        image: "/images/block_baby_a6.jpg",
+        images: ["/images/block_baby_a6.jpg"]
+    },
+    {
+        id: 110,
+        name: "MEGA Block",
+        category: "Block de papeles",
+        shortDescription: "Block de notas A4 extra grande, 50 hojas arrancables.",
+        description: "Espacio de sobra para planificar en grande. Tu mejor aliado de escritorio para brainstormings, esquemas, bocetos y listas infinitas de proyectos.\n\nContiene: 50 hojas arrancables en papel de 80 gr. Tamaño A4 (21 x 29.7 cm aprox).",
+        price: "24.000",
+        image: "/images/block_mega_a4.jpg",
+        images: ["/images/block_mega_a4.jpg"]
     }
 ];
