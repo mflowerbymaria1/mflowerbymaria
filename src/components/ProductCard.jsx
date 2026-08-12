@@ -155,7 +155,8 @@ export default function ProductCard({ product }) {
               style={
                 product.name.toLowerCase().includes('midi block') ||
                 product.name.toLowerCase().includes('baby block') ||
-                product.name.toLowerCase().includes('mega block')
+                product.name.toLowerCase().includes('mega block') ||
+                product.name.toLowerCase().includes('croissant')
                   ? { transform: 'scale(1.35)', padding: 0, objectFit: 'contain', objectPosition: 'center' }
                   : {}
               }
