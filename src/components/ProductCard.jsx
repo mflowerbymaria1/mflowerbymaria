@@ -156,7 +156,7 @@ export default function ProductCard({ product }) {
                 product.name.toLowerCase().includes('midi block') ||
                 product.name.toLowerCase().includes('baby block') ||
                 product.name.toLowerCase().includes('mega block')
-                  ? { transform: 'scale(1.35)', padding: 0 }
+                  ? { transform: 'scale(1.35)', padding: 0, objectFit: 'contain', objectPosition: 'center' }
                   : {}
               }
             />

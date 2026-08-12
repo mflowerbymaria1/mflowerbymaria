@@ -263,7 +263,7 @@ export default function ProductDetailPage({ params }) {
                                                           ...(product.name.toLowerCase().includes('midi block') ||
                                                              product.name.toLowerCase().includes('baby block') ||
                                                              product.name.toLowerCase().includes('mega block')
-                                                               ? { transform: 'scale(1.3)' }
+                                                               ? { transform: 'scale(1.3)', objectFit: 'contain', objectPosition: 'center' }
                                                                : {})
                                                         }}
                                                     />
