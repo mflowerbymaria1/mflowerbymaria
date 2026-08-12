@@ -258,12 +258,14 @@ export default function ProductDetailPage({ params }) {
                                                         className="product-image"
                                                         style={{ 
                                                           transformOrigin: zoomOrigin,
-                                                          ...(product.name.toLowerCase().includes('midi block') ||
-                                                             product.name.toLowerCase().includes('baby block') ||
-                                                             product.name.toLowerCase().includes('mega block') ||
-                                                             product.name.toLowerCase().includes('croissant')
-                                                               ? { transform: 'scale(1.3)', objectFit: 'contain', objectPosition: 'center' }
-                                                               : {})
+                                                          ...(selectedImage === 0 && (
+                                                              product.name.toLowerCase().includes('midi block') ||
+                                                              product.name.toLowerCase().includes('baby block') ||
+                                                              product.name.toLowerCase().includes('mega block') ||
+                                                              product.name.toLowerCase().includes('croissant')
+                                                          )
+                                                                ? { transform: 'scale(1.3)', objectFit: 'contain', objectPosition: 'center' }
+                                                                : {})
                                                         }}
                                                     />
                                                 </div>
