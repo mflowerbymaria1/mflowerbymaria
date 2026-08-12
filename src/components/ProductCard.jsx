@@ -149,7 +149,17 @@ export default function ProductCard({ product }) {
               </div>
             </div>
           ) : (
-            <img src={activeImage} alt={product.name} />
+            <img 
+              src={activeImage} 
+              alt={product.name} 
+              style={
+                product.name.toLowerCase().includes('midi block') ||
+                product.name.toLowerCase().includes('baby block') ||
+                product.name.toLowerCase().includes('mega block')
+                  ? { transform: 'scale(1.35)', padding: 0 }
+                  : {}
+              }
+            />
           )
         ) : (
           <div className="product-image-placeholder bg-green h-full w-full relative z-0">

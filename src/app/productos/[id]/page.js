@@ -258,7 +258,14 @@ export default function ProductDetailPage({ params }) {
                                                         src={imagesToDisplay[selectedImage]}
                                                         alt={product.name}
                                                         className="product-image"
-                                                        style={{ transformOrigin: zoomOrigin }}
+                                                        style={{ 
+                                                          transformOrigin: zoomOrigin,
+                                                          ...(product.name.toLowerCase().includes('midi block') ||
+                                                             product.name.toLowerCase().includes('baby block') ||
+                                                             product.name.toLowerCase().includes('mega block')
+                                                               ? { transform: 'scale(1.3)' }
+                                                               : {})
+                                                        }}
                                                     />
                                                 </div>
                                                 {/* Flechas de navegación */}
