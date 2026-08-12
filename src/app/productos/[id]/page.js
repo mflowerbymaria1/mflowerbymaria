@@ -103,7 +103,7 @@ export default function ProductDetailPage({ params }) {
 
         if (name.includes('MIDI Block')) return 'Práctico y versátil en tamaño A5. Tu aliado para el escritorio o la cartera, con secciones pensadas para organizar cada día al máximo.';
         if (name.includes('BABY Block')) return 'Súper compacto en tamaño A6 mini. Ideal para tener a mano y anotar recordatorios o ideas de manera rápida e instantánea.';
-        if (name.includes('MEGA Block')) return 'Espacio extra grande en tamaño A4 con renglones. Tu compañero de escritorio para mantener al día materias, tareas y proyectos.';
+        if (name.includes('MEGA Block')) return 'Espacio extra grande en tamaño A4. Tu compañero de escritorio para mantener al día materias, tareas y proyectos.';
 
         // Por categoría (usando includes para cubrir variantes con emojis, plurales, etc.)
         if (cat.includes('cuaderno') && cat.includes('a4')) return 'Tu compañero ideal para la facu, el trabajo o tus proyectos creativos. Con sistema de discos inteligente, podés agregar, quitar y reorganizar hojas cuando quieras. Diseñado para acompañarte en cada idea, cada clase y cada momento de inspiración.';
