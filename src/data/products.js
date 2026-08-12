@@ -171,7 +171,7 @@ export const products = [
         name: "Cuaderno A4 Sol de Mayo sistema de discos",
         category: "capsula-argentina",
         shortDescription: "A4, 90 hojas, diseño Sol de Mayo.",
-        description: "Edición Limitada. Diseño exclusivo Sol de Mayo. Contiene: Interior 90 hojas A4, 3 separadores internos, calendario 2026, 6 temarios de exámen, anillado inteligente, discos.",
+        description: "Edición Limitada. Diseño exclusivo Sol de Mayo. Contiene: Interior 90 hojas A4, 2 separadores internos, calendario 2026, 6 temarios de exámen, anillado inteligente, discos.",
         price: "31.900",
         image: "/images/mockup_sol_de_mayo_front.jpg",
         images: [
@@ -188,7 +188,7 @@ export const products = [
         name: "Cuaderno A4 Pinky Jirafa sistema de discos",
         category: "Cuadernos A4",
         shortDescription: "A4, 90 hojas, diseño Pinky Jirafa.",
-        description: "Diseño exclusivo Pinky Jirafa. Contiene: Interior 90 hojas A4, 3 separadores internos, calendario 2026, 6 temarios de exámen, anillado inteligente, discos de colores.",
+        description: "Diseño exclusivo Pinky Jirafa. Contiene: Interior 90 hojas A4, 2 separadores internos, calendario 2026, 6 temarios de exámen, anillado inteligente, discos de colores.",
         price: "31.900",
         image: "/images/mockup_jirafa_back.jpg",
         images: [
@@ -218,7 +218,7 @@ export const products = [
         name: "Cuaderno A4 Croissant sistema de discos",
         category: "Cuadernos A4",
         shortDescription: "A4, 90 hojas, diseño Croissant.",
-        description: "Diseño exclusivo Croissant. Contiene: Interior 90 hojas A4, 3 separadores internos, calendario 2026, 6 temarios de exámen, anillado inteligente, discos de colores.",
+        description: "Diseño exclusivo Croissant. Contiene: Interior 90 hojas A4, 2 separadores internos, calendario 2026, 6 temarios de exámen, anillado inteligente, discos de colores.",
         price: "31.900",
         image: "/images/mockup_croissant_back.jpg",
         images: [
@@ -248,7 +248,7 @@ export const products = [
         name: "Cuaderno A4 Amelie sistema de discos",
         category: "Cuadernos A4",
         shortDescription: "A4, 90 hojas, diseño Amelie.",
-        description: "Diseño exclusivo Amelie. Contiene: Interior 90 hojas A4, 3 separadores internos, calendario 2026, 6 temarios de exámen, anillado inteligente, discos de colores.",
+        description: "Diseño exclusivo Amelie. Contiene: Interior 90 hojas A4, 2 separadores internos, calendario 2026, 6 temarios de exámen, anillado inteligente, discos de colores.",
         price: "31.900",
         image: "/images/mockup_amelie_front.jpg",
         images: [
@@ -265,7 +265,7 @@ export const products = [
         name: "Cuaderno A5 Pretty Girls sistema de discos",
         category: "Cuadernos A5",
         shortDescription: "A5, 90 hojas, diseño Pretty Girls.",
-        description: "Diseño exclusivo Pretty Girls. Contiene: Interior 90 hojas A5, 3 separadores internos, calendario 2026, 6 temarios de exámen, anillado inteligente, discos de colores.",
+        description: "Diseño exclusivo Pretty Girls. Contiene: Interior 90 hojas A5, 2 separadores internos, calendario 2026, 6 temarios de exámen, anillado inteligente, discos de colores.",
         price: "26.500",
         image: "/images/mockup_pretty_girls_front.jpg",
         images: [
@@ -282,7 +282,7 @@ export const products = [
         name: "Cuaderno A4 Coffee Time sistema de discos",
         category: "Cuadernos A4",
         shortDescription: "A4, 90 hojas, diseño Coffee Time.",
-        description: "Diseño exclusivo Coffee Time. Contiene: Interior 90 hojas A4, 3 separadores internos, calendario 2026, 6 temarios de exámen, anillado inteligente, discos de colores.",
+        description: "Diseño exclusivo Coffee Time. Contiene: Interior 90 hojas A4, 2 separadores internos, calendario 2026, 6 temarios de exámen, anillado inteligente, discos de colores.",
         price: "31.900",
         image: "/images/mockup_coffee_time_front.jpg",
         images: [
@@ -298,7 +298,7 @@ export const products = [
         name: "Cuaderno A4 Yendo sistema de discos",
         category: "Cuadernos A4",
         shortDescription: "A4, 90 hojas, diseño Yendo.",
-        description: "Diseño exclusivo Yendo. Contiene: Interior 90 hojas A4, 3 separadores internos, calendario 2026, 6 temarios de exámen, anillado inteligente, discos de colores.",
+        description: "Diseño exclusivo Yendo. Contiene: Interior 90 hojas A4, 2 separadores internos, calendario 2026, 6 temarios de exámen, anillado inteligente, discos de colores.",
         price: "31.900",
         image: "/images/mockup_yendo_front.jpg",
         images: [
@@ -315,7 +315,7 @@ export const products = [
         name: "Cuaderno A5 Candy sistema de discos",
         category: "Cuadernos A5",
         shortDescription: "A5, 90 hojas, diseño Candy.",
-        description: "Diseño exclusivo Candy. Contiene: Interior 90 hojas A5, 3 separadores internos, calendario 2026, 6 temarios de exámen, anillado inteligente, discos de colores.",
+        description: "Diseño exclusivo Candy. Contiene: Interior 90 hojas A5, 2 separadores internos, calendario 2026, 6 temarios de exámen, anillado inteligente, discos de colores.",
         price: "26.500",
         image: "/images/mockup_candy_front.jpg",
         images: [
