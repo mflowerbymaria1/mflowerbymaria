@@ -153,12 +153,13 @@ export default function ProductCard({ product }) {
               src={activeImage} 
               alt={product.name} 
               style={
-                product.name.toLowerCase().includes('midi block') ||
-                product.name.toLowerCase().includes('baby block') ||
-                product.name.toLowerCase().includes('mega block') ||
                 product.name.toLowerCase().includes('croissant')
-                  ? { transform: 'scale(1.35)', padding: 0, objectFit: 'contain', objectPosition: 'center' }
-                  : {}
+                  ? { transform: 'scale(1.6)', padding: 0, objectFit: 'contain', objectPosition: 'center' }
+                  : (product.name.toLowerCase().includes('midi block') ||
+                     product.name.toLowerCase().includes('baby block') ||
+                     product.name.toLowerCase().includes('mega block')
+                      ? { transform: 'scale(1.35)', padding: 0, objectFit: 'contain', objectPosition: 'center' }
+                      : {})
               }
             />
           )
