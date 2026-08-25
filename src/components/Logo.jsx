@@ -3,12 +3,12 @@ import Link from 'next/link';
 
 export default function Logo({ size = 'medium', color = '#000', className = '', link = false }) {
     const heights = {
-        small: '42px',
-        medium: '56px',
-        large: '78px'
+        small: '32px',
+        medium: '42px',
+        large: '60px'
     };
 
-    const currentHeight = heights[size] || heights.medium;
+    const currentHeight = heights[size] || heights.small;
 
     const content = (
         <div className={`logo-container ${className}`} style={{

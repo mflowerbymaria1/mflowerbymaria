@@ -142,10 +142,10 @@ export default function Header() {
       )}
 
       {/* Main Header */}
-      <div className="main-header container" style={{ display: 'grid', gridTemplateColumns: 'auto 1fr auto', alignItems: 'center', gap: '24px', padding: '12px 1rem' }}>
-        {/* Extremo Izquierdo: Logo y bandera */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-          <Logo size="medium" link={true} />
+      <div className="main-header" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 2rem', width: '100%' }}>
+        {/* Extremo Izquierdo: Logo corrido bien a la izquierda y bandera */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <Logo size="small" link={true} />
           <span className="country-flag" title="Argentina">🇦🇷</span>
         </div>
 
