@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Key, Plus, Trash2, CheckCircle, Copy, UserCheck, Search, Sparkles, RefreshCw } from 'lucide-react';
+import { supabase } from '@/lib/supabase';
 
 const ROSE = '#D47792';
 const ROSE_LIGHT = '#FFF0F3';
@@ -22,16 +23,26 @@ export default function MayoristasAdminPage() {
   async function fetchCodes() {
     setLoading(true);
     try {
-      const saved = localStorage.getItem('mflower_wholesale_codes');
-      if (saved) {
-        setCodes(JSON.parse(saved));
+      const { data, error } = await supabase.from('categories').select('*').like('name', 'WHOLESALE_CODE:%');
+      if (!error && data && data.length > 0) {
+        const parsed = data.map(item => {
+          let extra = {};
+          try { extra = JSON.parse(item.description || '{}'); } catch(e) {}
+          return {
+            id: item.id,
+            name: extra.name || 'Cliente Mayorista',
+            code: item.slug ? item.slug.replace('wholesale-code-', '').toUpperCase() : 'MAY-CODE',
+            status: extra.status || 'active',
+            created_at: item.created_at
+          };
+        });
+        setCodes(parsed);
       } else {
         const initial = [
           { id: '1', name: 'Cliente Ejemplo 1', code: 'MAY-MARIA-2026', created_at: new Date().toISOString(), status: 'active' },
           { id: '2', name: 'Revendedor N°2', code: 'FLOWER-MAYOR-88', created_at: new Date().toISOString(), status: 'active' }
         ];
         setCodes(initial);
-        localStorage.setItem('mflower_wholesale_codes', JSON.stringify(initial));
       }
     } catch(e) {
       console.error('Error fetching wholesale codes:', e);
@@ -40,46 +51,51 @@ export default function MayoristasAdminPage() {
     }
   }
 
-  function saveCodes(newCodes) {
-    setCodes(newCodes);
-    localStorage.setItem('mflower_wholesale_codes', JSON.stringify(newCodes));
-  }
-
   function generateRandomCode() {
     const randomNum = Math.floor(1000 + Math.random() * 9000);
     const prefix = newCodeName ? newCodeName.trim().slice(0, 4).toUpperCase() : 'MAY';
-    setNewCodeVal(`${prefix}-${randomNum}-2026`);
+    setNewCodeVal(prefix + '-' + randomNum + '-2026');
   }
 
-  function handleCreateCode(e) {
+  async function handleCreateCode(e) {
     e.preventDefault();
     if (!newCodeVal.trim()) return alert('Por favor ingresá o generá un código de acceso.');
     
-    const newItem = {
-      id: Date.now().toString(),
-      name: newCodeName.trim() || 'Cliente Sin Nombre',
-      code: newCodeVal.trim().toUpperCase(),
-      created_at: new Date().toISOString(),
-      status: 'active'
-    };
+    const codeClean = newCodeVal.trim().toUpperCase();
+    const clientName = newCodeName.trim() || 'Cliente Sin Nombre';
 
-    const updated = [newItem, ...codes];
-    saveCodes(updated);
+    const { error } = await supabase.from('categories').insert([{
+      name: 'WHOLESALE_CODE:' + codeClean,
+      slug: 'wholesale-code-' + codeClean.toLowerCase(),
+      description: JSON.stringify({ name: clientName, status: 'active' })
+    }]);
+
+    if (error) {
+      alert('Error al guardar código: ' + error.message);
+      return;
+    }
+
+    fetchCodes();
     setNewCodeName('');
     setNewCodeVal('');
-    alert('¡Código Mayorista creado exitosamente!');
+    alert('¡Código Mayorista creado exitosamente y sincronizado en la nube!');
   }
 
-  function handleDeleteCode(id) {
+  async function handleDeleteCode(id) {
     if (confirm('¿Estás segura de eliminar este código de acceso mayorista?')) {
-      const updated = codes.filter(c => c.id !== id);
-      saveCodes(updated);
+      await supabase.from('categories').delete().eq('id', id);
+      fetchCodes();
     }
   }
 
-  function toggleStatus(id) {
-    const updated = codes.map(c => c.id === id ? { ...c, status: c.status === 'active' ? 'paused' : 'active' } : c);
-    saveCodes(updated);
+  async function toggleStatus(id) {
+    const item = codes.find(c => c.id === id);
+    if (!item) return;
+    const newStatus = item.status === 'active' ? 'paused' : 'active';
+    await supabase.from('categories').update({
+      description: JSON.stringify({ name: item.name, status: newStatus })
+    }).eq('id', id);
+    fetchCodes();
   }
 
   function copyToClipboard(text, id) {
@@ -95,7 +111,7 @@ export default function MayoristasAdminPage() {
 
   return (
     <div style={{ fontFamily: 'Montserrat, Arial, sans-serif', maxWidth: 1100, margin: '0 auto' }}>
-      <div style={{ background: '#fff', padding: 24, borderRadius: 20, border: `2px solid ${ROSE_BORDER}`, marginBottom: 24, boxShadow: '0 10px 25px rgba(0,0,0,0.03)' }}>
+      <div style={{ background: '#fff', padding: 24, borderRadius: 20, border: '2px solid ' + ROSE_BORDER, marginBottom: 24, boxShadow: '0 10px 25px rgba(0,0,0,0.03)' }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 16 }}>
           <div>
             <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: ROSE_LIGHT, color: ROSE, padding: '4px 12px', borderRadius: 20, fontSize: 12, fontWeight: 800, textTransform: 'uppercase', marginBottom: 8 }}>
@@ -116,7 +132,7 @@ export default function MayoristasAdminPage() {
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: 24 }}>
-        <div style={{ background: '#fff', padding: 24, borderRadius: 20, border: `2px solid ${ROSE_BORDER}`, height: 'fit-content' }}>
+        <div style={{ background: '#fff', padding: 24, borderRadius: 20, border: '2px solid ' + ROSE_BORDER, height: 'fit-content' }}>
           <h3 style={{ fontSize: 16, fontWeight: 800, color: '#1a1a1a', marginBottom: 16, display: 'flex', alignItems: 'center', gap: 8 }}>
             <Plus size={18} style={{ color: ROSE }} /> Crear Nuevo Código
           </h3>
@@ -141,13 +157,13 @@ export default function MayoristasAdminPage() {
                   placeholder="Ej: MAY-STELMO-2026"
                   value={newCodeVal}
                   onChange={e => setNewCodeVal(e.target.value.toUpperCase())}
-                  style={{ flex: 1, padding: '10px 14px', borderRadius: 10, border: `2px solid ${ROSE_BORDER}`, fontSize: 13, fontWeight: 800, color: ROSE, outline: 'none' }}
+                  style={{ flex: 1, padding: '10px 14px', borderRadius: 10, border: '2px solid ' + ROSE_BORDER, fontSize: 13, fontWeight: 800, color: ROSE, outline: 'none' }}
                   required
                 />
                 <button 
                   type="button" 
                   onClick={generateRandomCode}
-                  style={{ background: ROSE_LIGHT, border: `1px solid ${ROSE_BORDER}`, color: ROSE, padding: '0 12px', borderRadius: 10, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                  style={{ background: ROSE_LIGHT, border: '1px solid ' + ROSE_BORDER, color: ROSE, padding: '0 12px', borderRadius: 10, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
                   title="Generar al azar"
                 >
                   <RefreshCw size={16} />
@@ -164,7 +180,7 @@ export default function MayoristasAdminPage() {
           </form>
         </div>
 
-        <div style={{ background: '#fff', padding: 24, borderRadius: 20, border: `2px solid ${ROSE_BORDER}` }}>
+        <div style={{ background: '#fff', padding: 24, borderRadius: 20, border: '2px solid ' + ROSE_BORDER }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
             <h3 style={{ fontSize: 16, fontWeight: 800, color: '#1a1a1a', margin: 0 }}>Códigos de Acceso Activos ({codes.length})</h3>
             
@@ -188,11 +204,11 @@ export default function MayoristasAdminPage() {
           ) : (
             <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
               {filteredCodes.map(item => (
-                <div key={item.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: 14, borderRadius: 14, border: `1px solid ${ROSE_BORDER}`, background: item.status === 'active' ? '#fff' : '#fafafa', opacity: item.status === 'active' ? 1 : 0.6 }}>
+                <div key={item.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: 14, borderRadius: 14, border: '1px solid ' + ROSE_BORDER, background: item.status === 'active' ? '#fff' : '#fafafa', opacity: item.status === 'active' ? 1 : 0.6 }}>
                   <div>
                     <div style={{ fontWeight: 800, fontSize: 14, color: '#1a1a1a' }}>{item.name}</div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 4 }}>
-                      <span style={{ fontFamily: 'monospace', fontWeight: 900, background: ROSE_LIGHT, color: ROSE, padding: '2px 8px', borderRadius: 6, fontSize: 13, border: `1px solid ${ROSE_BORDER}` }}>
+                      <span style={{ fontFamily: 'monospace', fontWeight: 900, background: ROSE_LIGHT, color: ROSE, padding: '2px 8px', borderRadius: 6, fontSize: 13, border: '1px solid ' + ROSE_BORDER }}>
                         {item.code}
                       </span>
                       <button 

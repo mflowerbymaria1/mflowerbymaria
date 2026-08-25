@@ -6,7 +6,8 @@ import { useRouter } from 'next/navigation';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import Logo from '@/components/Logo';
-import { Key, ShieldCheck, ArrowRight, FileText, Lock } from 'lucide-react';
+import { Key, ArrowRight, FileText, Lock } from 'lucide-react';
+import { supabase } from '@/lib/supabase';
 
 const ROSE = '#D47792';
 const ROSE_LIGHT = '#FFF0F3';
@@ -20,7 +21,7 @@ export default function MayoristaLoginPage() {
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
     setErrorMsg('');
 
@@ -31,16 +32,33 @@ export default function MayoristaLoginPage() {
 
     setLoading(true);
 
-    // Verificar código mayorista en localStorage o predeterminados
     try {
-      const savedCodes = JSON.parse(localStorage.getItem('mflower_wholesale_codes') || '[]');
-      const defaultCodes = [
-        { code: 'MAY-MARIA-2026', status: 'active' },
-        { code: 'FLOWER-MAYOR-88', status: 'active' }
-      ];
-      
-      const allCodes = [...savedCodes, ...defaultCodes];
-      const found = allCodes.find(c => c.code.toUpperCase() === code.trim().toUpperCase());
+      const inputCode = code.trim().toUpperCase();
+      const { data, error } = await supabase.from('categories').select('*').like('name', 'WHOLESALE_CODE:%');
+
+      let found = null;
+      if (!error && data) {
+        for (const item of data) {
+          const itemCode = item.slug ? item.slug.replace('wholesale-code-', '').toUpperCase() : '';
+          if (itemCode === inputCode) {
+            let extra = {};
+            try { extra = JSON.parse(item.description || '{}'); } catch(e) {}
+            found = {
+              code: itemCode,
+              status: extra.status || 'active'
+            };
+            break;
+          }
+        }
+      }
+
+      if (!found) {
+        const defaultCodes = [
+          { code: 'MAY-MARIA-2026', status: 'active' },
+          { code: 'FLOWER-MAYOR-88', status: 'active' }
+        ];
+        found = defaultCodes.find(c => c.code === inputCode);
+      }
 
       if (!found) {
         setErrorMsg('El código de acceso mayorista ingresado no es válido o expiró.');
@@ -54,7 +72,6 @@ export default function MayoristaLoginPage() {
         return;
       }
 
-      // Guardar sesión mayorista activa
       const sessionData = {
         email: email || 'mayorista@mflowerbymaria.com',
         code: found.code,
@@ -62,7 +79,6 @@ export default function MayoristaLoginPage() {
       };
       localStorage.setItem('mflower_wholesale_session', JSON.stringify(sessionData));
 
-      // Redirigir a productos mayoristas o catálogo
       router.push('/productos');
     } catch(err) {
       console.error(err);
