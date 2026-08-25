@@ -23,6 +23,7 @@ export default function Logo({ size = 'medium', color = '#000', className = '', 
                 style={{
                     height: currentHeight,
                     width: 'auto',
+                    maxWidth: '100%',
                     objectFit: 'contain',
                     display: 'block'
                 }}

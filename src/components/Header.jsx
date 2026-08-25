@@ -535,10 +535,12 @@ export default function Header() {
             align-items: center;
           }
           .header-logo-wrapper {
-            margin-left: 0;
-            margin-right: 0;
+            margin-left: 0 !important;
+            margin-right: 0 !important;
             justify-content: center;
-            margin-bottom: 8px;
+            width: 100%;
+            display: flex;
+            margin-bottom: 6px;
           }
           .header-right {
             order: 3;
