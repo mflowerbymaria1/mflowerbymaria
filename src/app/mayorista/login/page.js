@@ -45,6 +45,7 @@ export default function MayoristaLoginPage() {
             try { extra = JSON.parse(item.description || '{}'); } catch(e) {}
             found = {
               code: itemCode,
+              name: extra.name || 'Cliente Mayorista',
               status: extra.status || 'active'
             };
             break;
@@ -74,6 +75,7 @@ export default function MayoristaLoginPage() {
 
       const sessionData = {
         email: email || 'mayorista@mflowerbymaria.com',
+        clientName: found.name || 'Cliente Mayorista',
         code: found.code,
         logged_at: new Date().toISOString()
       };
