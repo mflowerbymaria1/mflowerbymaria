@@ -239,18 +239,7 @@ export default function Header() {
           {isWholesale && (
             <button 
               onClick={handleWholesaleLogout}
-              style={{ 
-                background: '#FEE2E2', 
-                border: '1px solid #FCA5A5', 
-                color: '#DC2626', 
-                padding: '4px 10px', 
-                borderRadius: 12, 
-                fontSize: 11, 
-                fontWeight: 800, 
-                cursor: 'pointer',
-                whiteSpace: 'nowrap',
-                marginLeft: 8
-              }}
+              className="cerrar-sesion-btn"
               title="Cerrar Sesión Mayorista"
             >
               Cerrar Sesión
@@ -515,6 +504,20 @@ export default function Header() {
           align-items: center;
         }
 
+        .cerrar-sesion-btn {
+          background: #FEE2E2;
+          border: 1px solid #FCA5A5;
+          color: #DC2626;
+          padding: 4px 10px;
+          border-radius: 12px;
+          font-size: 11px;
+          font-weight: 800;
+          cursor: pointer;
+          white-space: nowrap;
+          margin-left: 8px;
+          font-family: inherit;
+        }
+
         @media (max-width: 768px) {
           .announcement-bar {
             font-size: 0.75rem;
@@ -558,6 +561,16 @@ export default function Header() {
           }
           .country-flag {
             display: none;
+          }
+          .cerrar-sesion-btn {
+            margin-left: 0;
+            margin-top: 10px;
+            font-size: 13px;
+            padding: 8px 18px;
+            border-radius: 14px;
+            width: auto;
+            display: block;
+            box-shadow: 0 2px 8px rgba(220,38,38,0.15);
           }
         }
       `}</style>
