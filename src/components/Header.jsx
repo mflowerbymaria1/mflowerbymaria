@@ -147,6 +147,7 @@ export default function Header() {
               </div>
             </div>
             <Link href="/productos?categoria=repuestos" className="nav-link">Repuestos</Link>
+            <Link href="/mayorista/login" className="nav-link font-bold text-pink-600" style={{ color: '#D47792', fontWeight: 800 }}>MAYORISTA 👑</Link>
           </nav>
         </div>
 

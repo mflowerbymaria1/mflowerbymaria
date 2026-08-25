@@ -42,6 +42,7 @@ export default function AdminLayout({ children }) {
     { name: 'Categorías', icon: Tag, href: '/admin/categorias' },
     { name: 'Ventas', icon: ShoppingCart, href: '/admin/ventas' },
     { name: 'Cupones', icon: Ticket, href: '/admin/cupones' },
+    { name: 'Mayoristas', icon: User, href: '/admin/mayoristas' },
     { name: 'Logística', icon: Truck, href: '/admin/logistica' },
     { name: 'Marketing', icon: Mail, href: '/admin/marketing' },
   ];

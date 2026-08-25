@@ -159,7 +159,14 @@ export default function VentasPage() {
                       </div>
                     </td>
                     <td style={tdBase}>
-                      <div style={{ fontWeight: 700, color: '#1a1a1a', fontSize: 14 }}>{order.customer_name || 'Desconocido'}</div>
+                      <div style={{ fontWeight: 700, color: '#1a1a1a', fontSize: 14 }}>
+                        {order.customer_name || 'Desconocido'}
+                        {(order.is_wholesale || (order.notes && order.notes.includes('[PEDIDO MAYORISTA]'))) && (
+                          <span style={{ marginLeft: 6, padding: '2px 8px', borderRadius: 12, fontSize: 10, fontWeight: 900, background: '#FEF3C7', color: '#D97706', border: '1px solid #FCD34D', textTransform: 'uppercase', letterSpacing: '0.05em', display: 'inline-block' }}>
+                            👑 MAYORISTA
+                          </span>
+                        )}
+                      </div>
                       <div style={{ fontSize: 12, color: '#888', marginTop: 2 }}>{order.customer_phone || ''}</div>
                     </td>
                     <td style={tdBase}>
