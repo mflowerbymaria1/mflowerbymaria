@@ -268,18 +268,21 @@ export default function Header() {
           color: #5C4B51;
           overflow: hidden;
           white-space: nowrap;
-          display: flex;
-          align-items: center;
+          display: block;
+          width: 100%;
         }
 
         .announcement-text-wrapper {
-          display: inline-flex;
-          animation: marquee 10s linear infinite;
+          display: flex;
+          width: max-content;
+          animation: marquee 18s linear infinite;
+          flex-shrink: 0;
         }
 
         .announcement-text-wrapper span {
-          padding: 0 40px; /* Space between the repeating texts */
+          padding: 0 60px;
           white-space: nowrap;
+          flex-shrink: 0;
         }
 
         @keyframes marquee {
@@ -287,7 +290,7 @@ export default function Header() {
             transform: translateX(0);
           }
           100% {
-            transform: translateX(-25%); /* Perfect seamless loop for 4 elements */
+            transform: translateX(-50%); /* moves exactly half: seamless with 4 identical spans */
           }
         }
         .main-header {
