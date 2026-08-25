@@ -122,31 +122,12 @@ export default function Header() {
     <header className="header-wrapper">
       {/* Announcement Bar Slider */}
       {isWholesale ? (
-        <div className="announcement-bar bg-green" style={{ position: 'relative', overflow: 'hidden' }}>
-          <div className="announcement-text-wrapper" style={{ paddingRight: '130px' }}>
+        <div className="announcement-bar bg-green">
+          <div className="announcement-text-wrapper">
             <span>{wholesaleTickerText}</span>
             <span aria-hidden="true">{wholesaleTickerText}</span>
             <span aria-hidden="true">{wholesaleTickerText}</span>
             <span aria-hidden="true">{wholesaleTickerText}</span>
-          </div>
-          <div style={{ position: 'absolute', right: '12px', top: '50%', transform: 'translateY(-50%)', zIndex: 30 }}>
-            <button 
-              onClick={handleWholesaleLogout}
-              style={{ 
-                background: '#FEE2E2', 
-                border: '1px solid #FCA5A5', 
-                color: '#DC2626', 
-                padding: '4px 12px', 
-                borderRadius: 12, 
-                fontSize: 11, 
-                fontWeight: 800, 
-                cursor: 'pointer',
-                whiteSpace: 'nowrap',
-                boxShadow: '0 2px 6px rgba(0,0,0,0.15)'
-              }}
-            >
-              Cerrar Sesión
-            </button>
           </div>
         </div>
       ) : (
@@ -203,8 +184,8 @@ export default function Header() {
             <Link href="/productos?categoria=repuestos" className="nav-link">Repuestos</Link>
             {isWholesale ? (
               <>
-                <Link href="/" className="nav-link font-bold" style={{ color: '#D47792', fontWeight: 800 }}>MAYORISTA</Link>
-                <Link href="/mayorista/condiciones" className="nav-link font-bold" style={{ color: '#555', fontWeight: 700 }}>CONDICIONES DE VENTA MAYORISTA</Link>
+                <Link href="/" className="nav-link" style={{ color: '#D47792', fontWeight: 'normal' }}>MAYORISTA</Link>
+                <Link href="/mayorista/condiciones" className="nav-link" style={{ fontWeight: 'normal' }}>CONDICIONES DE VENTA</Link>
               </>
             ) : (
               <Link href="/mayorista/login" className="nav-link font-bold" style={{ color: '#D47792', fontWeight: 800 }}>MAYORISTA</Link>
@@ -254,6 +235,26 @@ export default function Header() {
             </svg>
             {cartCount > 0 && <span className="cart-badge">{cartCount}</span>}
           </button>
+          {isWholesale && (
+            <button 
+              onClick={handleWholesaleLogout}
+              style={{ 
+                background: '#FEE2E2', 
+                border: '1px solid #FCA5A5', 
+                color: '#DC2626', 
+                padding: '4px 10px', 
+                borderRadius: 12, 
+                fontSize: 11, 
+                fontWeight: 800, 
+                cursor: 'pointer',
+                whiteSpace: 'nowrap',
+                marginLeft: 8
+              }}
+              title="Cerrar Sesión Mayorista"
+            >
+              Cerrar Sesión
+            </button>
+          )}
           <CartDropdown isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
         </div>
       </div>
