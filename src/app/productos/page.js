@@ -27,7 +27,7 @@ function ProductosContent() {
                 ]);
                 
                 if (!categoriesRes.error && categoriesRes.data) {
-                    setDbCategories(categoriesRes.data);
+                    setDbCategories(categoriesRes.data.filter(c => !c.name?.startsWith('WHOLESALE_CODE:')));
                 }
 
                 if (!productsRes.error && productsRes.data) {

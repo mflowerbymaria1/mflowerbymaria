@@ -68,7 +68,9 @@ export default function Header() {
         .select('*')
         .order('name', { ascending: true });
       if (!error && data) {
-        setCategories(data);
+        // Filter out system entries like WHOLESALE_CODE
+        const productCategories = data.filter(c => !c.name?.startsWith('WHOLESALE_CODE:'));
+        setCategories(productCategories);
       }
     }
     fetchCategories();

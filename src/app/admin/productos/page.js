@@ -40,7 +40,7 @@ export default function ProductosPage() {
 
     // Fetch Categorías Reales
     const { data: cData } = await supabase.from('categories').select('*').order('name', { ascending: true });
-    setDbCategories(cData || []);
+    setDbCategories((cData || []).filter(c => !c.name?.startsWith('WHOLESALE_CODE:')));
 
     setLoading(false);
   }

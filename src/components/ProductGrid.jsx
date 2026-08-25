@@ -49,7 +49,7 @@ export default function ProductGrid() {
             <>
               <h2 className="creative-title" style={{ color: '#D47792' }}>WEB MAYORISTA</h2>
               <p className="creative-subtitle" style={{ color: '#000', fontSize: '1.1rem', fontWeight: '500' }}>
-                Encontrá todo lo que buscas aca
+                Encontrá todo lo que buscas acá
               </p>
             </>
           ) : (
