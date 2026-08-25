@@ -146,7 +146,7 @@ export default function Header() {
       {/* Main Header */}
       <div className="main-header container">
         <div className="header-left">
-          <div style={{ marginRight: '80px', marginLeft: '-100px' }}>
+          <div className="header-logo-wrapper">
             <Logo size="medium" link={true} />
           </div>
           <span className="country-flag" title="Argentina">🇦🇷</span>
@@ -508,6 +508,13 @@ export default function Header() {
           animation: bump 0.3s ease-out;
         }
 
+        .header-logo-wrapper {
+          margin-right: 80px;
+          margin-left: -100px;
+          display: flex;
+          align-items: center;
+        }
+
         @media (max-width: 768px) {
           .announcement-bar {
             font-size: 0.75rem;
@@ -523,10 +530,15 @@ export default function Header() {
             flex: none;
           }
           .header-left {
-            order: 2;
-          }
-          .header-center {
             order: 1;
+            flex-direction: column;
+            align-items: center;
+          }
+          .header-logo-wrapper {
+            margin-left: 0;
+            margin-right: 0;
+            justify-content: center;
+            margin-bottom: 8px;
           }
           .header-right {
             order: 3;
@@ -534,9 +546,10 @@ export default function Header() {
           }
           .main-nav {
             margin-left: 0;
-            gap: 15px;
+            gap: 12px;
             width: 100%;
-            justify-content: space-evenly;
+            justify-content: center;
+            flex-wrap: wrap;
           }
           .main-nav a, .dropdown-item {
             font-size: 0.85rem;
