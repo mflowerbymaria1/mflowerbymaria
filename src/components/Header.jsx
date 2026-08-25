@@ -144,6 +144,7 @@ export default function Header() {
       {/* Main Header */}
       <div className="main-header container">
         <div className="header-left">
+          <Logo size="medium" link={true} />
           <span className="country-flag" title="Argentina">🇦🇷</span>
           <nav className="main-nav">
             <Link href="/">INICIO</Link>
@@ -191,10 +192,6 @@ export default function Header() {
               <Link href="/mayorista/login" className="nav-link font-bold" style={{ color: '#D47792', fontWeight: 800 }}>MAYORISTA</Link>
             )}
           </nav>
-        </div>
-
-        <div className="header-center">
-          <Logo size="small" link={true} />
         </div>
 
         <div className="header-right" style={{ position: 'relative' }} ref={cartRef}>
