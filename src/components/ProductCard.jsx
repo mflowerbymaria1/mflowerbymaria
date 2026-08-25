@@ -210,9 +210,13 @@ export default function ProductCard({ product }) {
         <p className="product-desc">{product.shortDescription}</p>
 
         <div className="price-container">
-          <span className="product-price">${product.price}</span>
-          <span className="installments">💳 3 cuotas sin interés de <strong>${installmentPrice}</strong></span>
-          <span className="discount-price">💸 <strong>${transferPrice}</strong> con transferencia <span className="badge-20">20% OFF</span></span>
+          <span className="product-price">${priceStr}</span>
+          {!isWholesale && (
+            <>
+              <span className="installments">💳 3 cuotas sin interés de <strong>${installmentPrice}</strong></span>
+              <span className="discount-price">💸 <strong>${transferPrice}</strong> con transferencia <span className="badge-20">20% OFF</span></span>
+            </>
+          )}
         </div>
 
         <div className="product-bottom-actions relative z-20">

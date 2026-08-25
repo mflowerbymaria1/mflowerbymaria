@@ -26,6 +26,16 @@ export default function ProductDetailPage({ params }) {
     const [design1, setDesign1] = useState('Breakfast 1');
     const [design2, setDesign2] = useState('Breakfast 2');
 
+    const [isWholesale, setIsWholesale] = useState(false);
+
+    useEffect(() => {
+        try {
+            if (localStorage.getItem('mflower_wholesale_session')) {
+                setIsWholesale(true);
+            }
+        } catch(e) {}
+    }, []);
+
     useEffect(() => {
         async function fetchProduct() {
             setLoading(true);
@@ -38,6 +48,9 @@ export default function ProductDetailPage({ params }) {
                     .maybeSingle();
 
                 if (!error && data) {
+                    const wholesaleActive = !!localStorage.getItem('mflower_wholesale_session');
+                    const chosenPrice = (wholesaleActive && data.wholesale_price) ? data.wholesale_price : data.price;
+
                     setProduct({
                         ...data,
                         image: data.image_url,
@@ -45,9 +58,9 @@ export default function ProductDetailPage({ params }) {
                         shortDescription: data.short_description,
                         isBestSeller: data.is_best_seller,
                         // Format price for display
-                        price: typeof data.price === 'number'
-                            ? data.price.toLocaleString('es-AR', { minimumFractionDigits: 0, maximumFractionDigits: 0 })
-                            : data.price
+                        price: typeof chosenPrice === 'number'
+                            ? chosenPrice.toLocaleString('es-AR', { minimumFractionDigits: 0, maximumFractionDigits: 0 })
+                            : chosenPrice
                     });
                     if (data.name.toLowerCase().includes('libreta')) {
                         setSheetType('lisas');
@@ -393,13 +406,15 @@ export default function ProductDetailPage({ params }) {
 
                             <div className="price-box">
                                 <span className="main-price">${(numericPrice * quantity).toLocaleString('es-AR')}</span>
-                                <div className="payment-methods">
-                                    <p className="installments">💳 Hasta <strong>3 cuotas sin interés</strong> de ${installmentPrice}</p>
-                                    <p className="transfer-discount">💸 <strong>${transferPrice}</strong> con transferencia bancaria <span className="badge-20">20% OFF</span></p>
-                                    <button className="view-payment-btn" onClick={() => setShowPaymentModal(true)}>
-                                        Ver cuotas y medios de pago
-                                    </button>
-                                </div>
+                                {!isWholesale && (
+                                    <div className="payment-methods">
+                                        <p className="installments">💳 Hasta <strong>3 cuotas sin interés</strong> de ${installmentPrice}</p>
+                                        <p className="transfer-discount">💸 <strong>${transferPrice}</strong> con transferencia bancaria <span className="badge-20">20% OFF</span></p>
+                                        <button className="view-payment-btn" onClick={() => setShowPaymentModal(true)}>
+                                            Ver cuotas y medios de pago
+                                        </button>
+                                    </div>
+                                )}
                             </div>
 
                             <div className="description-box">

@@ -94,17 +94,29 @@ export default function Header() {
     }
   };
 
+  const [isWholesale, setIsWholesale] = useState(false);
+
+  useEffect(() => {
+    try {
+      if (localStorage.getItem('mflower_wholesale_session')) {
+        setIsWholesale(true);
+      }
+    } catch(e) {}
+  }, []);
+
   return (
     <header className="header-wrapper">
-      {/* Announcement Bar */}
-      <div className="announcement-bar bg-green">
-        <div className="announcement-text-wrapper">
-          <span>💸 20% OFF Transferencia | 💳 3 CUOTAS SIN INTERÉS</span>
-          <span aria-hidden="true">💸 20% OFF Transferencia | 💳 3 CUOTAS SIN INTERÉS</span>
-          <span aria-hidden="true">💸 20% OFF Transferencia | 💳 3 CUOTAS SIN INTERÉS</span>
-          <span aria-hidden="true">💸 20% OFF Transferencia | 💳 3 CUOTAS SIN INTERÉS</span>
+      {/* Announcement Bar (Only shown for retail users) */}
+      {!isWholesale && (
+        <div className="announcement-bar bg-green">
+          <div className="announcement-text-wrapper">
+            <span>💸 20% OFF Transferencia | 💳 3 CUOTAS SIN INTERÉS</span>
+            <span aria-hidden="true">💸 20% OFF Transferencia | 💳 3 CUOTAS SIN INTERÉS</span>
+            <span aria-hidden="true">💸 20% OFF Transferencia | 💳 3 CUOTAS SIN INTERÉS</span>
+            <span aria-hidden="true">💸 20% OFF Transferencia | 💳 3 CUOTAS SIN INTERÉS</span>
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Main Header */}
       <div className="main-header container">
