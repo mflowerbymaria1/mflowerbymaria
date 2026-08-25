@@ -142,11 +142,16 @@ export default function Header() {
       )}
 
       {/* Main Header */}
-      <div className="main-header container">
-        <div className="header-left" style={{ gap: '20px' }}>
-          <Logo size="small" link={true} />
+      <div className="main-header container" style={{ display: 'grid', gridTemplateColumns: 'auto 1fr auto', alignItems: 'center', gap: '24px', padding: '12px 1rem' }}>
+        {/* Extremo Izquierdo: Logo y bandera */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <Logo size="medium" link={true} />
           <span className="country-flag" title="Argentina">🇦🇷</span>
-          <nav className="main-nav">
+        </div>
+
+        {/* Centro: Menú de Navegación */}
+        <div style={{ display: 'flex', justifyContent: 'center' }}>
+          <nav className="main-nav" style={{ margin: 0 }}>
             <Link href="/">INICIO</Link>
             <div 
               className="nav-item-dropdown"
