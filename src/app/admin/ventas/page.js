@@ -163,7 +163,7 @@ export default function VentasPage() {
                         {order.customer_name || 'Desconocido'}
                         {(order.is_wholesale || (order.notes && order.notes.includes('[PEDIDO MAYORISTA]'))) && (
                           <span style={{ marginLeft: 6, padding: '2px 8px', borderRadius: 12, fontSize: 10, fontWeight: 900, background: '#FEF3C7', color: '#D97706', border: '1px solid #FCD34D', textTransform: 'uppercase', letterSpacing: '0.05em', display: 'inline-block' }}>
-                            👑 MAYORISTA
+                            MAYORISTA
                           </span>
                         )}
                       </div>
