@@ -16,6 +16,7 @@ function ProductosContent() {
     const [allProducts, setAllProducts] = useState([]);
     const [dbCategories, setDbCategories] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [viewMode, setViewMode] = useState('single'); // 'single' = 1 columna, 'grid' = 2 columnas
 
     useEffect(() => {
         async function fetchData() {
@@ -181,6 +182,24 @@ function ProductosContent() {
                         <p className="text-gray-600">
                             {query ? "Encontramos estos productos para vos:" : getCategoryDescription(categoria)}
                         </p>
+
+                        {/* Botones de vista — solo visibles en mobile */}
+                        <div className="view-toggle-bar">
+                            <button
+                                className={`view-toggle-btn ${viewMode === 'single' ? 'active' : ''}`}
+                                onClick={() => setViewMode('single')}
+                                title="Vista lista"
+                            >
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><rect x="3" y="4" width="18" height="5" rx="1"/><rect x="3" y="10" width="18" height="5" rx="1"/><rect x="3" y="16" width="18" height="5" rx="1"/></svg>
+                            </button>
+                            <button
+                                className={`view-toggle-btn ${viewMode === 'grid' ? 'active' : ''}`}
+                                onClick={() => setViewMode('grid')}
+                                title="Vista cuadrícula"
+                            >
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><rect x="3" y="3" width="8" height="8" rx="1"/><rect x="13" y="3" width="8" height="8" rx="1"/><rect x="3" y="13" width="8" height="8" rx="1"/><rect x="13" y="13" width="8" height="8" rx="1"/></svg>
+                            </button>
+                        </div>
                     </div>
 
                     {loading ? (
@@ -194,7 +213,7 @@ function ProductosContent() {
                             <p className="text-gray-500 mb-6">No hay productos que coincidan con tu búsqueda.</p>
                         </div>
                     ) : (
-                        <div className="products-grid">
+                        <div className={`products-grid ${viewMode === 'grid' ? 'mobile-grid-2' : ''}`}>
                             {filteredProducts.map(product => (
                                 <ProductCard key={product.id} product={product} />
                             ))}
@@ -242,12 +261,38 @@ function ProductosContent() {
                 .max-w-2xl { max-width: 42rem; }
                 .mx-auto { margin-left: auto; margin-right: auto; }
                 .block { display: block; }
-                
+
+                /* Botones de vista: solo visibles en mobile */
+                .view-toggle-bar {
+                    display: none;
+                    justify-content: center;
+                    gap: 10px;
+                    margin-top: 14px;
+                }
+                .view-toggle-btn {
+                    background: #f3f4f6;
+                    border: 2px solid transparent;
+                    border-radius: 10px;
+                    padding: 7px 10px;
+                    cursor: pointer;
+                    color: #666;
+                    display: flex;
+                    align-items: center;
+                    transition: all 0.2s;
+                }
+                .view-toggle-btn.active {
+                    background: #fff0f3;
+                    border-color: #D47792;
+                    color: #D47792;
+                }
+
                 @media (max-width: 900px) {
                     .products-grid { grid-template-columns: repeat(2, 1fr); }
                 }
                 @media (max-width: 600px) {
-                    .products-grid { grid-template-columns: 1fr; }
+                    .view-toggle-bar { display: flex; }
+                    .products-grid { grid-template-columns: 1fr; gap: 1rem; }
+                    .products-grid.mobile-grid-2 { grid-template-columns: repeat(2, 1fr); gap: 0.75rem; }
                 }
             `}</style>
         </div>
