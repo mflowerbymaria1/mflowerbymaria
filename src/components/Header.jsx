@@ -142,16 +142,10 @@ export default function Header() {
       )}
 
       {/* Main Header */}
-      <div className="main-header" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 2rem', width: '100%' }}>
-        {/* Extremo Izquierdo: Logo corrido bien a la izquierda y bandera */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-          <Logo size="small" link={true} />
+      <div className="main-header container">
+        <div className="header-left">
           <span className="country-flag" title="Argentina">🇦🇷</span>
-        </div>
-
-        {/* Centro: Menú de Navegación */}
-        <div style={{ display: 'flex', justifyContent: 'center' }}>
-          <nav className="main-nav" style={{ margin: 0 }}>
+          <nav className="main-nav">
             <Link href="/">INICIO</Link>
             <div 
               className="nav-item-dropdown"
@@ -197,6 +191,10 @@ export default function Header() {
               <Link href="/mayorista/login" className="nav-link font-bold" style={{ color: '#D47792', fontWeight: 800 }}>MAYORISTA</Link>
             )}
           </nav>
+        </div>
+
+        <div className="header-center">
+          <Logo size="small" link={true} />
         </div>
 
         <div className="header-right" style={{ position: 'relative' }} ref={cartRef}>
