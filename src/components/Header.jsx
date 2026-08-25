@@ -144,7 +144,7 @@ export default function Header() {
       {/* Main Header */}
       <div className="main-header container">
         <div className="header-left">
-          <div style={{ marginRight: '60px', marginLeft: '-40px' }}>
+          <div style={{ marginRight: '80px', marginLeft: '-100px' }}>
             <Logo size="medium" link={true} />
           </div>
           <span className="country-flag" title="Argentina">🇦🇷</span>
