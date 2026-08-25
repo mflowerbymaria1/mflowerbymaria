@@ -142,9 +142,11 @@ export default function Header() {
       )}
 
       {/* Main Header */}
-      <div className="main-header" style={{ maxWidth: '100%', paddingLeft: '24px', paddingRight: '24px' }}>
+      <div className="main-header container">
         <div className="header-left">
-          <Logo size="medium" link={true} />
+          <div style={{ marginRight: '60px', marginLeft: '-40px' }}>
+            <Logo size="medium" link={true} />
+          </div>
           <span className="country-flag" title="Argentina">🇦🇷</span>
           <nav className="main-nav">
             <Link href="/">INICIO</Link>
