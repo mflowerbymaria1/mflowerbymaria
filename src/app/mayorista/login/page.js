@@ -21,6 +21,14 @@ export default function MayoristaLoginPage() {
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
 
+  React.useEffect(() => {
+    try {
+      if (localStorage.getItem('mflower_wholesale_session')) {
+        router.replace('/');
+      }
+    } catch(e) {}
+  }, [router]);
+
   const handleLogin = async (e) => {
     e.preventDefault();
     setErrorMsg('');

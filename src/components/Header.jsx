@@ -122,31 +122,32 @@ export default function Header() {
     <header className="header-wrapper">
       {/* Announcement Bar Slider */}
       {isWholesale ? (
-        <div className="announcement-bar bg-green" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingRight: '12px' }}>
-          <div className="announcement-text-wrapper">
+        <div className="announcement-bar bg-green" style={{ position: 'relative', overflow: 'hidden' }}>
+          <div className="announcement-text-wrapper" style={{ paddingRight: '130px' }}>
             <span>{wholesaleTickerText}</span>
             <span aria-hidden="true">{wholesaleTickerText}</span>
             <span aria-hidden="true">{wholesaleTickerText}</span>
             <span aria-hidden="true">{wholesaleTickerText}</span>
           </div>
-          <button 
-            onClick={handleWholesaleLogout}
-            style={{ 
-              zIndex: 20, 
-              background: '#FEE2E2', 
-              border: '1px solid #FCA5A5', 
-              color: '#DC2626', 
-              padding: '3px 12px', 
-              borderRadius: 12, 
-              fontSize: 11, 
-              fontWeight: 800, 
-              cursor: 'pointer',
-              whiteSpace: 'nowrap',
-              marginLeft: 10
-            }}
-          >
-            Cerrar Sesión
-          </button>
+          <div style={{ position: 'absolute', right: '12px', top: '50%', transform: 'translateY(-50%)', zIndex: 30 }}>
+            <button 
+              onClick={handleWholesaleLogout}
+              style={{ 
+                background: '#FEE2E2', 
+                border: '1px solid #FCA5A5', 
+                color: '#DC2626', 
+                padding: '4px 12px', 
+                borderRadius: 12, 
+                fontSize: 11, 
+                fontWeight: 800, 
+                cursor: 'pointer',
+                whiteSpace: 'nowrap',
+                boxShadow: '0 2px 6px rgba(0,0,0,0.15)'
+              }}
+            >
+              Cerrar Sesión
+            </button>
+          </div>
         </div>
       ) : (
         <div className="announcement-bar bg-green">
@@ -200,7 +201,14 @@ export default function Header() {
               </div>
             </div>
             <Link href="/productos?categoria=repuestos" className="nav-link">Repuestos</Link>
-            <Link href="/mayorista/login" className="nav-link font-bold text-pink-600" style={{ color: '#D47792', fontWeight: 800 }}>MAYORISTA</Link>
+            {isWholesale ? (
+              <>
+                <Link href="/" className="nav-link font-bold" style={{ color: '#D47792', fontWeight: 800 }}>MAYORISTA</Link>
+                <Link href="/mayorista/condiciones" className="nav-link font-bold" style={{ color: '#555', fontWeight: 700 }}>CONDICIONES DE VENTA MAYORISTA</Link>
+              </>
+            ) : (
+              <Link href="/mayorista/login" className="nav-link font-bold" style={{ color: '#D47792', fontWeight: 800 }}>MAYORISTA</Link>
+            )}
           </nav>
         </div>
 
