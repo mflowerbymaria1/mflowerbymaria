@@ -95,19 +95,60 @@ export default function Header() {
   };
 
   const [isWholesale, setIsWholesale] = useState(false);
+  const [wholesaleName, setWholesaleName] = useState('');
 
   useEffect(() => {
     try {
-      if (localStorage.getItem('mflower_wholesale_session')) {
+      const session = localStorage.getItem('mflower_wholesale_session');
+      if (session) {
         setIsWholesale(true);
+        const parsed = JSON.parse(session);
+        if (parsed && parsed.clientName) {
+          setWholesaleName(parsed.clientName);
+        }
       }
     } catch(e) {}
   }, []);
 
+  const handleWholesaleLogout = () => {
+    localStorage.removeItem('mflower_wholesale_session');
+    setIsWholesale(false);
+    window.location.reload();
+  };
+
+  const wholesaleTickerText = `¡Bienvenido/a ${wholesaleName ? wholesaleName : ''}! — MODO MAYORISTA ACTIVO | Precios Exclusivos Mayoristas | Mínimo $200.000`;
+
   return (
     <header className="header-wrapper">
-      {/* Announcement Bar (Only shown for retail users) */}
-      {!isWholesale && (
+      {/* Announcement Bar Slider */}
+      {isWholesale ? (
+        <div className="announcement-bar bg-green" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingRight: '12px' }}>
+          <div className="announcement-text-wrapper">
+            <span>{wholesaleTickerText}</span>
+            <span aria-hidden="true">{wholesaleTickerText}</span>
+            <span aria-hidden="true">{wholesaleTickerText}</span>
+            <span aria-hidden="true">{wholesaleTickerText}</span>
+          </div>
+          <button 
+            onClick={handleWholesaleLogout}
+            style={{ 
+              zIndex: 20, 
+              background: '#FEE2E2', 
+              border: '1px solid #FCA5A5', 
+              color: '#DC2626', 
+              padding: '3px 12px', 
+              borderRadius: 12, 
+              fontSize: 11, 
+              fontWeight: 800, 
+              cursor: 'pointer',
+              whiteSpace: 'nowrap',
+              marginLeft: 10
+            }}
+          >
+            Cerrar Sesión
+          </button>
+        </div>
+      ) : (
         <div className="announcement-bar bg-green">
           <div className="announcement-text-wrapper">
             <span>💸 20% OFF Transferencia | 💳 3 CUOTAS SIN INTERÉS</span>

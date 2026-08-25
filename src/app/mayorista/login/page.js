@@ -81,7 +81,7 @@ export default function MayoristaLoginPage() {
       };
       localStorage.setItem('mflower_wholesale_session', JSON.stringify(sessionData));
 
-      router.push('/productos');
+      router.push('/');
     } catch(err) {
       console.error(err);
       setErrorMsg('Ocurrió un error al verificar el acceso mayorista.');

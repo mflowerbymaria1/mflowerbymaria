@@ -31,14 +31,35 @@ export default function ProductGrid() {
     fetchProducts();
   }, []);
 
+  const [isWholesale, setIsWholesale] = useState(false);
+
+  useEffect(() => {
+    try {
+      if (localStorage.getItem('mflower_wholesale_session')) {
+        setIsWholesale(true);
+      }
+    } catch(e) {}
+  }, []);
+
   return (
     <section className="product-grid-section">
       <div className="container">
         <div className="creative-space-header">
-          <h2 className="creative-title">Tu espacio creativo empieza acá.</h2>
-          <p className="creative-subtitle">
-            En M•flower by Maria vas a encontrar herramientas pensadas con amor para organizar tu mundo y hacerlo un poquito mas lindo, para que tus ideas tengan el lugar que se merecen.
-          </p>
+          {isWholesale ? (
+            <>
+              <h2 className="creative-title" style={{ color: '#D47792' }}>WEB MAYORISTA</h2>
+              <p className="creative-subtitle" style={{ color: '#000', fontSize: '1.1rem', fontWeight: '500' }}>
+                Encontrá todo lo que buscas aca
+              </p>
+            </>
+          ) : (
+            <>
+              <h2 className="creative-title">Tu espacio creativo empieza acá.</h2>
+              <p className="creative-subtitle">
+                En M•flower by Maria vas a encontrar herramientas pensadas con amor para organizar tu mundo y hacerlo un poquito mas lindo, para que tus ideas tengan el lugar que se merecen.
+              </p>
+            </>
+          )}
         </div>
 
         {loading ? (

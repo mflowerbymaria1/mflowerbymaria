@@ -165,19 +165,6 @@ function ProductosContent() {
     return (
         <div className="flex flex-col min-h-screen">
             <Header />
-            {isWholesale && (
-                <div style={{ background: '#FEF3C7', borderBottom: '2px solid #FCD34D', padding: '12px 20px', textAlign: 'center', fontFamily: 'Montserrat, sans-serif' }}>
-                    <span style={{ fontSize: '13px', fontWeight: '800', color: '#B45309' }}>
-                        ¡Bienvenido/a {wholesaleName ? wholesaleName : ''}! — MODO MAYORISTA ACTIVO | Precios Exclusivos Mayoristas | Mínimo $200.000
-                    </span>
-                    <button 
-                        onClick={() => { localStorage.removeItem('mflower_wholesale_session'); setIsWholesale(false); window.location.reload(); }}
-                        style={{ marginLeft: 16, background: '#FEE2E2', border: '1px solid #FCA5A5', color: '#DC2626', padding: '4px 10px', borderRadius: 12, fontSize: 11, fontWeight: 800, cursor: 'pointer' }}
-                    >
-                        Salir de Modo Mayorista
-                    </button>
-                </div>
-            )}
             <main className="flex-grow bg-background py-16">
                 <div className="container">
                     <div className="text-center mb-12">
