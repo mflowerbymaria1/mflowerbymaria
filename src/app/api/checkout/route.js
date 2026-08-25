@@ -10,9 +10,12 @@ const client = new MercadoPagoConfig({
 export async function POST(request) {
     try {
         const body = await request.json();
-        const { items, payer, shippingCost, shippingType, finalTotal, couponCode } = body;
+        const { items, payer, shippingCost, shippingType, finalTotal, couponCode, isWholesale } = body;
 
         let finalNotes = payer.notas || '';
+        if (isWholesale) {
+            finalNotes = finalNotes ? `${finalNotes}\n\n[PEDIDO MAYORISTA]` : '[PEDIDO MAYORISTA]';
+        }
         let actualShippingCost = shippingCost;
         let cartTotal = items.reduce((acc, item) => acc + (item.price * item.quantity), 0);
 

@@ -36,8 +36,20 @@ export default function ProductCard({ product }) {
   const needsFicheroOptions = isFichero;
   const needsOptions = needsNotebookOptions || needsFicheroOptions;
 
-  // Format price helper (assuming price string like "18.500")
-  const priceStr = product.price ? String(product.price) : "0";
+  const [isWholesale, setIsWholesale] = useState(false);
+
+  useEffect(() => {
+    try {
+      const wholesaleSession = localStorage.getItem('mflower_wholesale_session');
+      if (wholesaleSession) {
+        setIsWholesale(true);
+      }
+    } catch(e) {}
+  }, []);
+
+  // Format price helper (display wholesale price if wholesale session active)
+  const effectivePrice = (isWholesale && product.wholesale_price) ? product.wholesale_price : product.price;
+  const priceStr = effectivePrice ? String(effectivePrice) : "0";
   const numericPrice = parseFloat(priceStr.replace(/\./g, '')) || 0;
   const installmentPrice = (numericPrice / 3).toLocaleString('es-AR', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
   const transferPrice = (numericPrice * 0.8).toLocaleString('es-AR', { minimumFractionDigits: 0, maximumFractionDigits: 0 });

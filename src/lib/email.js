@@ -13,10 +13,19 @@ export async function sendOrderNotificationAdmin(orderData) {
             </tr>
         `).join('');
 
-        const subject = `¡Nueva Venta! 🌸 Pedido #${String(id).slice(0, 8)} por $${Number(total_amount).toLocaleString('es-AR')}`;
+        const isWholesale = notes && notes.includes('[PEDIDO MAYORISTA]');
+        const subject = isWholesale
+            ? `¡NUEVA VENTA MAYORISTA! 🌸 Pedido #${String(id).slice(0, 8)} por $${Number(total_amount).toLocaleString('es-AR')}`
+            : `¡Nueva Venta! 🌸 Pedido #${String(id).slice(0, 8)} por $${Number(total_amount).toLocaleString('es-AR')}`;
 
         const htmlContent = `
             <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #eaeaea; border-radius: 10px;">
+                ${isWholesale ? `
+                <div style="background-color: #FEF3C7; border: 2px solid #FCD34D; border-radius: 8px; padding: 12px; text-align: center; margin-bottom: 15px;">
+                    <h2 style="color: #B45309; margin: 0; font-size: 18px;">✨ ¡PEDIDO MAYORISTA NUEVO!</h2>
+                    <p style="color: #92400E; margin: 5px 0 0 0; font-size: 13px; font-weight: bold;">Plazo de preparación estimado: 5 a 10 días hábiles.</p>
+                </div>
+                ` : ''}
                 <h1 style="color: #D47792; text-align: center;">¡Felicidades, tenés una nueva venta! 🎉</h1>
                 <p style="font-size: 16px; color: #555;">Acaba de ingresar un nuevo pedido en tu tienda online.</p>
                 
@@ -100,13 +109,21 @@ export async function sendOrderNotificationCustomer(orderData) {
 
         const isTransfer = payment_status === 'pending' || orderData.shipping_method === 'transferencia'; // Check context if needed.
 
-        const subject = `¡Gracias por tu compra en Mflower! 🌸 Pedido #${String(id).slice(0, 8)}`;
+        const isWholesale = orderData.notes && orderData.notes.includes('[PEDIDO MAYORISTA]');
+        const subject = isWholesale
+            ? `¡Confirmación de Pedido Mayorista! 🌸 Mflower #${String(id).slice(0, 8)}`
+            : `¡Gracias por tu compra en Mflower! 🌸 Pedido #${String(id).slice(0, 8)}`;
 
         const htmlContent = `
             <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #eaeaea; border-radius: 10px;">
                 <div style="text-align: center; margin-bottom: 20px;">
                     <h1 style="color: #D47792; margin-bottom: 5px;">¡Gracias por tu compra, ${customer_name.split(' ')[0]}! 🛍️</h1>
                     <p style="font-size: 16px; color: #555;">Recibimos tu pedido y ya estamos trabajando en él.</p>
+                    ${isWholesale ? `
+                    <div style="background-color: #FEF3C7; border: 1px solid #FCD34D; border-radius: 8px; padding: 10px; margin-top: 10px; font-size: 13px; color: #92400E; font-weight: bold;">
+                        📦 Pedido Mayorista registrado — Tiempo estimado de preparación: 5 a 10 días hábiles.
+                    </div>
+                    ` : ''}
                 </div>
                 
                 <div style="background-color: #f9f9f9; padding: 15px; border-radius: 8px; margin-top: 20px;">

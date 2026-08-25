@@ -5,9 +5,12 @@ import { sendOrderNotificationAdmin, sendOrderNotificationCustomer } from '@/lib
 export async function POST(request) {
     try {
         const body = await request.json();
-        const { items, payer, shippingCost, shippingType, finalTotal, couponCode } = body;
+        const { items, payer, shippingCost, shippingType, finalTotal, couponCode, isWholesale } = body;
 
         let finalNotes = payer.notas || '';
+        if (isWholesale) {
+            finalNotes = finalNotes ? `${finalNotes}\n\n[PEDIDO MAYORISTA]` : '[PEDIDO MAYORISTA]';
+        }
 
         // Validate and apply coupon in backend to ensure security
         let appliedCoupon = null;

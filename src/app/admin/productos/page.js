@@ -203,9 +203,15 @@ export default function ProductosPage() {
                       {/* Recuadro de Datos */}
                       <div className="data-box">
                           <div className="data-item">
-                              <span className="label">Precio</span>
+                              <span className="label">Precio Minorista</span>
                               <span className="value">${Number(product.price).toLocaleString('es-AR')}</span>
                           </div>
+                          {product.wholesale_price && (
+                            <div className="data-item border-left">
+                                <span className="label" style={{ color: '#D97706' }}>Mayorista</span>
+                                <span className="value" style={{ color: '#B45309' }}>${Number(product.wholesale_price).toLocaleString('es-AR')}</span>
+                            </div>
+                          )}
                           <div className="data-item border-left">
                               <span className="label">Stock</span>
                               <span className={`value ${product.stock < 3 ? 'text-red' : ''}`}>{product.stock} <small>u.</small></span>
@@ -253,12 +259,21 @@ export default function ProductosPage() {
                               />
                           </div>
                           <div className="form-group">
-                              <label>Precio ($)</label>
+                              <label>Precio Minorista ($)</label>
                               <input 
                                 type="number" 
                                 value={editingProduct.price}
                                 onChange={(e) => setEditingProduct({...editingProduct, price: parseFloat(e.target.value)})}
                                 required
+                              />
+                          </div>
+                          <div className="form-group">
+                              <label>Precio Mayorista ($)</label>
+                              <input 
+                                type="number" 
+                                placeholder="Ej: 15000"
+                                value={editingProduct.wholesale_price || ''}
+                                onChange={(e) => setEditingProduct({...editingProduct, wholesale_price: e.target.value ? parseFloat(e.target.value) : null})}
                               />
                           </div>
                           <div className="form-group">

@@ -154,6 +154,15 @@ export default function CheckoutPage() {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
+        // Validar monto mínimo mayorista si la sesión mayorista está activa
+        try {
+            const wholesaleSession = localStorage.getItem('mflower_wholesale_session');
+            if (wholesaleSession && rawSubtotal < 200000) {
+                alert(`⚠️ Atención Mayorista: El monto mínimo para compras mayoristas es de $200.000 (Surtido Libre). Tu subtotal actual es de $${rawSubtotal.toLocaleString('es-AR')}.`);
+                return;
+            }
+        } catch(err) {}
+
         if (shippingType === 'envio' && !selectedShipping) {
             alert("Por favor calculá y seleccioná una opción de envío antes de continuar.");
             return;
@@ -162,6 +171,8 @@ export default function CheckoutPage() {
         setIsProcessing(true);
 
         try {
+            const isWholesaleActive = !!localStorage.getItem('mflower_wholesale_session');
+
             if (paymentMethod === 'transferencia') {
                 // Transfer workflow
                 const res = await fetch('/api/checkout-transfer', {
@@ -173,7 +184,8 @@ export default function CheckoutPage() {
                         shippingCost: shippingCost,
                         shippingType: shippingType,
                         finalTotal: finalTotal,
-                        couponCode: appliedCoupon?.name || null
+                        couponCode: appliedCoupon?.name || null,
+                        isWholesale: isWholesaleActive
                     })
                 });
                 const data = await res.json();
@@ -202,7 +214,8 @@ export default function CheckoutPage() {
                     shippingCost: shippingCost,
                     shippingType: shippingType,
                     finalTotal: finalTotal,
-                    couponCode: appliedCoupon?.name || null
+                    couponCode: appliedCoupon?.name || null,
+                    isWholesale: isWholesaleActive
                 })
             });
 
