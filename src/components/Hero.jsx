@@ -24,7 +24,7 @@ export default function Hero() {
     {
       image: "/images/banner_maestro.png",
       subtitle: "",
-      link: "/productos",
+      link: "/productos?categoria=sets-dia-del-maestro",
       buttonText: "APROVECHAR",
     },
   ];
@@ -50,7 +50,7 @@ export default function Hero() {
               style={{ backgroundImage: `url(${slide.image})` }}
             >
               <div className="overlay"></div>
-              <div className="hero-content">
+              <div className={`hero-content content-slide-${index}`}>
                 {slide.subtitle && <p className="hero-subtitle">{slide.subtitle}</p>}
                 <Link href={slide.link} className="cta-button">
                   {slide.buttonText}
@@ -136,6 +136,11 @@ export default function Hero() {
           align-items: center;
           gap: 20px;
           padding: 0 20px;
+        }
+
+        /* En el segundo slide levantamos el botón para que no tape los productos */
+        .content-slide-1 {
+          margin-bottom: 70px;
         }
 
         .hero-subtitle {
