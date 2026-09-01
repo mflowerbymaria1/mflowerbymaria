@@ -152,25 +152,31 @@ export default function Hero() {
         }
 
         .cta-button {
-          margin-top: 15px;
+          margin-top: 10px;
           background-color: var(--pastel-pink);
           color: #fff;
           border: none;
-          padding: 15px 40px;
-          font-size: 1rem;
-          border-radius: 50px;
-          font-weight: bold;
+          padding: 11px 28px;
+          font-size: 0.88rem;
+          border-radius: 30px;
+          font-weight: 700;
           cursor: pointer;
-          letter-spacing: 1px;
-          transition: all 0.3s ease;
+          letter-spacing: 0.8px;
+          transition: all 0.2s ease;
           text-decoration: none;
           display: inline-block;
+          white-space: nowrap;
+          box-shadow: 0 4px 14px rgba(212, 119, 146, 0.35);
+          -webkit-font-smoothing: antialiased;
+          -moz-osx-font-smoothing: grayscale;
+          text-rendering: optimizeLegibility;
         }
 
         .cta-button:hover {
           background-color: var(--pastel-pink-hover);
           transform: translateY(-2px);
           color: white;
+          box-shadow: 0 6px 18px rgba(212, 119, 146, 0.45);
         }
 
         .swiper-pagination-bullet {
