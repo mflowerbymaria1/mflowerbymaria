@@ -140,7 +140,7 @@ export default function Hero() {
 
         /* En el segundo slide levantamos el botón para que no tape los productos */
         .content-slide-1 {
-          margin-bottom: 70px;
+          margin-bottom: 130px;
         }
 
         .hero-subtitle {
