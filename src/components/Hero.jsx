@@ -34,9 +34,9 @@ export default function Hero() {
       <Swiper
         modules={[Autoplay, EffectFade, Pagination]}
         effect="fade"
-        speed={1000}
+        speed={800}
         autoplay={{
-          delay: 4000,
+          delay: 3000,
           disableOnInteraction: false,
         }}
         pagination={{ clickable: true }}
@@ -46,7 +46,7 @@ export default function Hero() {
         {slides.map((slide, index) => (
           <SwiperSlide key={index}>
             <div 
-              className={`hero-slide-bg ${index === 0 ? "first-slide" : "banner-slide"}`} 
+              className={`hero-slide-bg slide-${index}`} 
               style={{ backgroundImage: `url(${slide.image})` }}
             >
               <div className="overlay"></div>
@@ -85,13 +85,13 @@ export default function Hero() {
           overflow: hidden;
         }
 
-        /* Primer slide: exactamente como estaba antes */
-        .hero-slide-bg.first-slide {
+        /* Primer slide: exactamente como estaba antes (cover) */
+        .hero-slide-bg.slide-0 {
           background-size: cover;
           background-position: center;
         }
 
-        .hero-slide-bg.first-slide::after {
+        .hero-slide-bg.slide-0::after {
           content: '';
           position: absolute;
           bottom: 0;
@@ -102,8 +102,16 @@ export default function Hero() {
           z-index: 5;
         }
 
-        /* Los otros 2 banners: centrados y ajustados */
-        .hero-slide-bg.banner-slide {
+        /* Segundo slide (Cápsula Argentina): se adapta sin cortarse */
+        .hero-slide-bg.slide-1 {
+          background-size: contain;
+          background-position: center center;
+          background-repeat: no-repeat;
+          background-color: #E2D7CC;
+        }
+
+        /* Tercer slide (Día del Maestro) */
+        .hero-slide-bg.slide-2 {
           background-size: cover;
           background-position: center center;
           background-repeat: no-repeat;
