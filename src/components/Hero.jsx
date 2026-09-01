@@ -187,10 +187,15 @@ export default function Hero() {
 
         @media (max-width: 768px) {
           .hero-slider {
-            min-height: 360px;
-            height: 52vh;
+            min-height: 220px;
+            height: 48vw; /* Proporción panorámica para que los banners encajen perfecto en celular */
+            max-height: 320px;
           }
           .hero-slide-bg {
+            background-size: cover;
+            background-position: center center;
+          }
+          .hero-slide-bg.slide-0 {
             background-size: cover;
             background-position: center center;
           }
@@ -201,24 +206,33 @@ export default function Hero() {
             background-color: #E2D7CC;
           }
           .hero-slide-bg.slide-2 {
-            background-size: cover;
+            background-size: contain;
             background-position: center center;
+            background-repeat: no-repeat;
+            background-color: #F8C3D2; /* Color de fondo rosa de los costados del banner maestro */
           }
-          .content-slide-1 {
+          .content-slide-1, .content-slide-2 {
             margin-bottom: 0;
+            margin-top: auto;
+            padding-bottom: 16px;
           }
           .hero-subtitle {
-            font-size: 1.4rem;
-            margin-bottom: 5px;
+            font-size: 1.1rem;
+            margin-bottom: 2px;
           }
           .cta-button {
-            padding: 10px 24px;
-            font-size: 0.85rem;
-            margin-top: 10px;
+            padding: 7px 18px;
+            font-size: 0.75rem;
+            margin-top: 4px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
           }
           .hero-content {
-            padding: 0 15px;
-            gap: 12px;
+            padding: 0 10px;
+            gap: 8px;
+          }
+          .swiper-pagination-bullet {
+            width: 7px;
+            height: 7px;
           }
         }
       `}</style>
