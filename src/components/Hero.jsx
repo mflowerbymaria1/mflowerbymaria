@@ -46,7 +46,7 @@ export default function Hero() {
         {slides.map((slide, index) => (
           <SwiperSlide key={index}>
             <div 
-              className="hero-slide-bg" 
+              className={`hero-slide-bg ${index === 0 ? "first-slide" : "banner-slide"}`} 
               style={{ backgroundImage: `url(${slide.image})` }}
             >
               <div className="overlay"></div>
@@ -77,15 +77,36 @@ export default function Hero() {
         .hero-slide-bg {
           width: 100%;
           height: 100%;
-          background-size: contain;
-          background-position: center;
-          background-repeat: no-repeat;
-          background-color: #F8F1EB; /* Fallback background color */
           display: flex;
           align-items: center;
           justify-content: center;
           text-align: center;
           position: relative;
+          overflow: hidden;
+        }
+
+        /* Primer slide: exactamente como estaba antes */
+        .hero-slide-bg.first-slide {
+          background-size: cover;
+          background-position: center;
+        }
+
+        .hero-slide-bg.first-slide::after {
+          content: '';
+          position: absolute;
+          bottom: 0;
+          right: 0;
+          width: 160px;
+          height: 40px;
+          background: linear-gradient(to right, transparent, #f5f0eb 30%);
+          z-index: 5;
+        }
+
+        /* Los otros 2 banners: centrados y ajustados */
+        .hero-slide-bg.banner-slide {
+          background-size: cover;
+          background-position: center center;
+          background-repeat: no-repeat;
         }
 
         .overlay {
@@ -94,7 +115,7 @@ export default function Hero() {
           left: 0;
           width: 100%;
           height: 100%;
-          background: rgba(0, 0, 0, 0.1); 
+          background: rgba(255, 255, 255, 0); 
           z-index: 1;
         }
 
@@ -155,6 +176,9 @@ export default function Hero() {
           .hero-slider {
             min-height: 400px;
             height: 60vh;
+          }
+          .hero-slide-bg.banner-slide {
+            background-position: center center;
           }
           .hero-subtitle {
             font-size: 1.6rem;
