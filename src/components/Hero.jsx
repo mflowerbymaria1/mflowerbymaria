@@ -77,8 +77,10 @@ export default function Hero() {
         .hero-slide-bg {
           width: 100%;
           height: 100%;
-          background-size: cover;
+          background-size: contain;
           background-position: center;
+          background-repeat: no-repeat;
+          background-color: #F8F1EB; /* Fallback background color */
           display: flex;
           align-items: center;
           justify-content: center;
