@@ -129,7 +129,7 @@ export default function ProductDetailPage({ params }) {
         if (cat.includes('separador')) return 'Mantenelo todo organizado y fácil de encontrar. Los separadores te ayudan a dividir materias, proyectos o secciones de tu cuaderno para que nunca pierdas de vista lo importante.';
         if (cat.includes('sticker') || cat.includes('varios')) return 'Dale tu toque personal a todo lo que uses. Perfectos para decorar cuadernos, libretas, notebooks o cualquier superficie. Porque los detalles hacen la diferencia.';
         if (cat.includes('argentina') || cat.includes('cápsula')) return 'Llevá el orgullo argentino a todos lados. Diseños exclusivos inspirados en nuestra cultura y tradición, para que cada producto cuente una historia que nos representa.';
-        if (cat.includes('maestro') || cat.includes('sets')) return 'Ideas pensadas con amor para regalar y homenajear a quienes nos enseñan con tanta dedicación y cariño todos los días. 🍎✨';
+        if (cat.includes('maestro') || cat.includes('sets')) return 'Ideas pensadas con amor para regalar y homenajear a quienes nos enseñan con tanta dedicación y cariño todos los días.';
 
         return '';
     };

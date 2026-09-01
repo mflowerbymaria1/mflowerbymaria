@@ -187,18 +187,38 @@ export default function Hero() {
 
         @media (max-width: 768px) {
           .hero-slider {
-            min-height: 400px;
-            height: 60vh;
+            min-height: 360px;
+            height: 52vh;
           }
-          .hero-slide-bg.banner-slide {
+          .hero-slide-bg {
+            background-size: cover;
             background-position: center center;
           }
+          .hero-slide-bg.slide-1 {
+            background-size: contain;
+            background-position: center center;
+            background-repeat: no-repeat;
+            background-color: #E2D7CC;
+          }
+          .hero-slide-bg.slide-2 {
+            background-size: cover;
+            background-position: center center;
+          }
+          .content-slide-1 {
+            margin-bottom: 0;
+          }
           .hero-subtitle {
-            font-size: 1.6rem;
+            font-size: 1.4rem;
+            margin-bottom: 5px;
           }
           .cta-button {
-            padding: 12px 30px;
-            font-size: 0.9rem;
+            padding: 10px 24px;
+            font-size: 0.85rem;
+            margin-top: 10px;
+          }
+          .hero-content {
+            padding: 0 15px;
+            gap: 12px;
           }
         }
       `}</style>
