@@ -1,49 +1,101 @@
+"use client";
 import Link from "next/link";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Autoplay, EffectFade, Pagination } from "swiper/modules";
+
+import "swiper/css";
+import "swiper/css/effect-fade";
+import "swiper/css/pagination";
 
 export default function Hero() {
-  return (
-    <section className="hero-static">
-      <div className="overlay"></div>
-      <div className="hero-content">
-        <p className="hero-subtitle">Todo lo que tu lado girly necesita.</p>
-        <Link href="/productos" className="cta-button">EXPLORAR COLECCIÓN</Link>
-      </div>
+  const slides = [
+    {
+      image: "/images/mflower_hero_desk_new.jpg",
+      subtitle: "Todo lo que tu lado girly necesita.",
+      link: "/productos",
+      buttonText: "EXPLORAR COLECCIÓN",
+    },
+    {
+      image: "/images/banner_capsula.png",
+      subtitle: "",
+      link: "/productos?categoria=capsula-argentina",
+      buttonText: "VER CÁPSULA",
+    },
+    {
+      image: "/images/banner_maestro.png",
+      subtitle: "",
+      link: "/productos",
+      buttonText: "APROVECHAR",
+    },
+  ];
 
-      <style>{`
-        .hero-static {
+  return (
+    <section className="hero-slider">
+      <Swiper
+        modules={[Autoplay, EffectFade, Pagination]}
+        effect="fade"
+        speed={1000}
+        autoplay={{
+          delay: 4000,
+          disableOnInteraction: false,
+        }}
+        pagination={{ clickable: true }}
+        loop={true}
+        className="hero-swiper"
+      >
+        {slides.map((slide, index) => (
+          <SwiperSlide key={index}>
+            <div 
+              className="hero-slide-bg" 
+              style={{ backgroundImage: `url(${slide.image})` }}
+            >
+              <div className="overlay"></div>
+              <div className="hero-content">
+                {slide.subtitle && <p className="hero-subtitle">{slide.subtitle}</p>}
+                <Link href={slide.link} className="cta-button">
+                  {slide.buttonText}
+                </Link>
+              </div>
+            </div>
+          </SwiperSlide>
+        ))}
+      </Swiper>
+
+      <style jsx global>{`
+        .hero-slider {
           position: relative;
           width: 100vw;
           height: 85vh;
           min-height: 600px;
-          background-image: url('/images/mflower_hero_desk_new.jpg');
+        }
+
+        .hero-swiper {
+          width: 100%;
+          height: 100%;
+        }
+
+        .hero-slide-bg {
+          width: 100%;
+          height: 100%;
           background-size: cover;
           background-position: center;
           display: flex;
           align-items: center;
           justify-content: center;
           text-align: center;
-          overflow: hidden;
+          position: relative;
         }
-        /* Tapamos el logo de Gemini que está abajo a la derecha */
-        .hero-static::after {
-          content: '';
-          position: absolute;
-          bottom: 0;
-          right: 0;
-          width: 160px;
-          height: 40px;
-          background: linear-gradient(to right, transparent, #f5f0eb 30%);
-          z-index: 5;
-        }
+
         .overlay {
           position: absolute;
           top: 0;
           left: 0;
           width: 100%;
           height: 100%;
-          background: rgba(255, 255, 255, 0); /* Removed the white filter */
+          background: rgba(0, 0, 0, 0.1); 
           z-index: 1;
         }
+
         .hero-content {
           position: relative;
           z-index: 10;
@@ -52,14 +104,17 @@ export default function Hero() {
           flex-direction: column;
           align-items: center;
           gap: 20px;
+          padding: 0 20px;
         }
+
         .hero-subtitle {
           font-size: 2.2rem;
           color: #333;
           font-weight: 700;
-          text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.9); /* Subdued shadow for legibility only */
+          text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.9);
           margin-bottom: 10px;
         }
+
         .cta-button {
           margin-top: 15px;
           background-color: var(--pastel-pink);
@@ -75,21 +130,32 @@ export default function Hero() {
           text-decoration: none;
           display: inline-block;
         }
+
         .cta-button:hover {
           background-color: var(--pastel-pink-hover);
           transform: translateY(-2px);
           color: white;
         }
 
+        .swiper-pagination-bullet {
+          background: #fff;
+          opacity: 0.7;
+          width: 10px;
+          height: 10px;
+        }
+
+        .swiper-pagination-bullet-active {
+          background: var(--pastel-pink);
+          opacity: 1;
+        }
+
         @media (max-width: 768px) {
-          .hero-static {
+          .hero-slider {
             min-height: 400px;
             height: 60vh;
-            background-position: center;
           }
           .hero-subtitle {
             font-size: 1.6rem;
-            padding: 0 15px;
           }
           .cta-button {
             padding: 12px 30px;
