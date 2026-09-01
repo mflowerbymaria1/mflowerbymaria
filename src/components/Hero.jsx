@@ -215,30 +215,62 @@ export default function Hero() {
             background-size: contain;
             background-position: center center;
             background-repeat: no-repeat;
-            background-color: #F8C3D2; /* Color de fondo rosa de los costados del banner maestro */
+            background-color: #F8C3D2;
           }
-          .content-slide-1, .content-slide-2 {
-            margin-bottom: 0;
-            margin-top: auto;
-            padding-bottom: 16px;
+
+          /* Slide 1 (Cápsula Argentina): botón bien nítido, chiquito y ubicado justo debajo de '20% Off transferencia' */
+          .content-slide-1 {
+            margin-top: 0 !important;
+            margin-bottom: 0 !important;
+            padding-bottom: 0 !important;
+            position: absolute;
+            top: 48%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%;
           }
+
+          /* Slide 2 (Día del Maestro): botón bien nítido, chiquito y ubicado más arriba */
+          .content-slide-2 {
+            margin-top: 0 !important;
+            margin-bottom: 0 !important;
+            padding-bottom: 0 !important;
+            position: absolute;
+            top: 76%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%;
+          }
+
           .hero-subtitle {
             font-size: 1.1rem;
             margin-bottom: 2px;
           }
-          .cta-button {
-            padding: 7px 18px;
-            font-size: 0.75rem;
-            margin-top: 4px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+
+          /* Botones para celulares: bien chicos, súper nítidos y sin sombras borrosas */
+          .content-slide-1 .cta-button,
+          .content-slide-2 .cta-button {
+            padding: 4px 12px !important;
+            font-size: 0.65rem !important;
+            letter-spacing: 0.5px !important;
+            font-weight: 800 !important;
+            border-radius: 16px !important;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.2) !important;
+            margin: 0 !important;
           }
+
+          .content-slide-0 .cta-button {
+            padding: 8px 20px;
+            font-size: 0.8rem;
+          }
+
           .hero-content {
             padding: 0 10px;
-            gap: 8px;
+            gap: 6px;
           }
           .swiper-pagination-bullet {
-            width: 7px;
-            height: 7px;
+            width: 6px;
+            height: 6px;
           }
         }
       `}</style>
