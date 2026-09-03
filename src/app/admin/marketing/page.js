@@ -1,11 +1,12 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { 
   Mail, Users, Send, ShoppingBag, Clock, CheckCircle2, Plus, Star, 
   Loader2, TrendingUp, MessageCircle, Sparkles, Brain, ArrowUpRight, 
   ExternalLink, Eye, Flame, MousePointerClick, ShieldCheck, Zap,
-  AlertCircle, RefreshCw, DollarSign, Target, Gift, HelpCircle
+  AlertCircle, RefreshCw, DollarSign, Target, Gift, HelpCircle,
+  Bot, User, CornerDownLeft, Copy, Check
 } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 
@@ -20,6 +21,13 @@ const AMBER_BG = '#FEF3C7';
 const GREEN = '#059669';
 const GREEN_BG = '#D1FAE5';
 
+const QUICK_PROMPTS = [
+  "🌸 Ideas de promos para este finde",
+  "📸 Copys para Instagram de Sets Día del Maestro",
+  "💡 ¿Cómo subo el ticket promedio?",
+  "🛒 Mensaje para carrito de más de $30.000"
+];
+
 export default function MarketingPage() {
   const [abandonedCarts, setAbandonedCarts] = useState([]);
   const [orders, setOrders] = useState([]);
@@ -30,9 +38,29 @@ export default function MarketingPage() {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [aiAnalysisDate, setAiAnalysisDate] = useState(new Date().toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' }));
 
+  // Chat State
+  const [chatMessages, setChatMessages] = useState([
+    {
+      id: 'welcome',
+      role: 'assistant',
+      text: '¡Hola Flor! 🌸 Soy tu Asesor Estratégico de Inteligencia Artificial potenciado por Gemini. Tengo acceso en tiempo real a tus pedidos, ticket promedio y carritos abandonados. ¿En qué estrategia o copy te gustaría que trabajemos hoy?',
+      time: new Date().toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' })
+    }
+  ]);
+  const [inputMessage, setInputMessage] = useState('');
+  const [isAiGenerating, setIsAiGenerating] = useState(false);
+  const [copiedId, setCopiedId] = useState(null);
+  const chatBottomRef = useRef(null);
+
   useEffect(() => {
     fetchData();
   }, []);
+
+  useEffect(() => {
+    if (activeTab === 'ai_advisor') {
+      chatBottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [chatMessages, isAiGenerating, activeTab]);
 
   async function fetchData() {
     setLoading(true);
@@ -90,6 +118,74 @@ export default function MarketingPage() {
   if (abandonedCarts.length > 5) healthScore -= 5;
   healthScore = Math.min(Math.max(healthScore, 50), 98);
 
+  // Send message to Gemini Advisor API
+  const handleSendMessage = async (customText = null) => {
+    const textToSend = typeof customText === 'string' ? customText : inputMessage;
+    if (!textToSend.trim() || isAiGenerating) return;
+
+    const userMsg = {
+      id: Date.now().toString(),
+      role: 'user',
+      text: textToSend.trim(),
+      time: new Date().toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' })
+    };
+
+    setChatMessages(prev => [...prev, userMsg]);
+    setInputMessage('');
+    setIsAiGenerating(true);
+
+    try {
+      const storeData = {
+        ordersCount: orders.length,
+        totalRevenue,
+        avgTicket,
+        abandonedCount: abandonedCarts.length,
+        conversionRate,
+        productsCount: products.length
+      };
+
+      const res = await fetch('/api/ai/advisor', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          message: userMsg.text,
+          storeData
+        })
+      });
+
+      const data = await res.json();
+      const aiReply = data?.reply || '🌸 Lo siento, hubo un detalle al conectar con Gemini. ¡Por favor intentá de nuevo!';
+
+      const assistantMsg = {
+        id: (Date.now() + 1).toString(),
+        role: 'assistant',
+        text: aiReply,
+        time: new Date().toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' })
+      };
+
+      setChatMessages(prev => [...prev, assistantMsg]);
+    } catch (err) {
+      console.error('Error contacting AI Advisor:', err);
+      setChatMessages(prev => [
+        ...prev,
+        {
+          id: (Date.now() + 1).toString(),
+          role: 'assistant',
+          text: '🌸 Hubo un pequeño inconveniente de red. Te sugiero intentar nuevamente en unos instantes.',
+          time: new Date().toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' })
+        }
+      ]);
+    } finally {
+      setIsAiGenerating(false);
+    }
+  };
+
+  const handleCopyText = (id, text) => {
+    navigator.clipboard.writeText(text);
+    setCopiedId(id);
+    setTimeout(() => setCopiedId(null), 2000);
+  };
+
   const tabButtonStyle = (isActive) => ({
     padding: '12px 24px',
     borderRadius: 14,
@@ -131,7 +227,7 @@ export default function MarketingPage() {
             height: 64, 
             borderRadius: 20, 
             background: 'linear-gradient(135deg, rgba(212, 119, 146, 0.4) 0%, rgba(255, 255, 255, 0.15) 100%)', 
-            border: '1px solid rgba(255,255,255,0.2)',
+            border: '1px solid rgba(255,255,255,0.2)', 
             display: 'flex', 
             alignItems: 'center', 
             justifyContent: 'center', 
@@ -141,7 +237,7 @@ export default function MarketingPage() {
             <Brain size={32} style={{ color: '#F472B6' }} />
           </div>
           <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
               <h2 style={{ fontSize: 28, fontWeight: 900, color: '#fff', margin: 0 }}>Centro de Conversión & Asesor IA</h2>
               <span style={{ background: 'rgba(244, 114, 182, 0.25)', border: '1px solid rgba(244, 114, 182, 0.5)', color: '#FBCFE8', fontSize: 11, fontWeight: 800, padding: '3px 10px', borderRadius: 20, textTransform: 'uppercase' }}>
                 Gemini Pro Active
@@ -174,7 +270,7 @@ export default function MarketingPage() {
               backdropFilter: 'blur(10px)'
             }}>
             <RefreshCw size={16} className={isAnalyzing ? 'animate-spin' : ''} />
-            {isAnalyzing ? 'Analizando...' : 'Actualizar IA'}
+            {isAnalyzing ? 'Analizando...' : 'Actualizar Métricas'}
           </button>
         </div>
 
@@ -241,7 +337,7 @@ export default function MarketingPage() {
       {/* Navigation Tabs */}
       <div style={{ display: 'flex', gap: 10, marginBottom: 24, background: '#fff', padding: 8, borderRadius: 18, border: '1px solid #E5E7EB', width: 'fit-content', flexWrap: 'wrap' }}>
         <button onClick={() => setActiveTab('ai_advisor')} style={tabButtonStyle(activeTab === 'ai_advisor')}>
-          <Sparkles size={16} style={{ color: activeTab === 'ai_advisor' ? '#F472B6' : '#888' }} /> Asesor IA (Recomendaciones)
+          <Sparkles size={16} style={{ color: activeTab === 'ai_advisor' ? '#F472B6' : '#888' }} /> Asesor IA & Chat Estratégico
         </button>
         <button onClick={() => setActiveTab('tools')} style={tabButtonStyle(activeTab === 'tools')}>
           <Flame size={16} style={{ color: activeTab === 'tools' ? '#F59E0B' : '#888' }} /> Zonas Calientes & Google
@@ -251,9 +347,11 @@ export default function MarketingPage() {
         </button>
       </div>
 
-      {/* TAB 1: AI ADVISOR */}
+      {/* TAB 1: AI ADVISOR & INTERACTIVE CHAT */}
       {activeTab === 'ai_advisor' && (
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 24 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 28 }}>
+          
+          {/* Diagnostic Cards */}
           <div style={{ background: '#fff', borderRadius: 24, border: '1px solid #E5E7EB', padding: 32, boxShadow: '0 4px 20px rgba(0,0,0,0.03)' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 24, flexWrap: 'wrap', gap: 12 }}>
               <div>
@@ -268,8 +366,7 @@ export default function MarketingPage() {
               </span>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: 20 }}>
-              
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 20 }}>
               <div style={{ background: ROSE_LIGHT, border: `2px solid ${ROSE_BORDER}`, borderRadius: 20, padding: 24 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
                   <div style={{ width: 34, height: 34, borderRadius: 10, background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', color: ROSE }}>
@@ -284,7 +381,7 @@ export default function MarketingPage() {
                   Muchos usuarios que arman carritos superiores a $20.000 dudan en el costo de envío. Ofrecer un <strong>cupón automático de regalo sorpresa</strong> (ej: mini resaltador o sticker pack) en compras sobre ese monto incrementará un 25% la conversión.
                 </p>
                 <div style={{ background: '#fff', padding: '10px 14px', borderRadius: 12, fontSize: 12, color: '#666', border: `1px dashed ${ROSE_BORDER}` }}>
-                  💡 <strong>Tip de implementación:</strong> Creá el cupón <code style={{ color: ROSE, fontWeight: 800 }}>REGALOMARIA</code> en la pestaña Cupones.
+                  💡 <strong>Tip:</strong> Creá el cupón <code style={{ color: ROSE, fontWeight: 800 }}>REGALOMARIA</code> en la pestaña Cupones.
                 </div>
               </div>
 
@@ -299,10 +396,10 @@ export default function MarketingPage() {
                   </div>
                 </div>
                 <p style={{ fontSize: 13, color: '#444', lineHeight: 1.5, marginBottom: 16 }}>
-                  Los sets completos (Set Organízate, Cherry y Bloom) tienen un ticket promedio más alto que productos individuales. Sugerí en la descripción que vienen <strong>listos para regalar en sobre PVC con tarjeta</strong> para cerrar ventas corporativas y de colegios.
+                  Los sets completos (Set Organízate, Cherry y Bloom) tienen un ticket promedio más alto que productos individuales. Sugerí en la descripción que vienen <strong>listos para regalar en sobre PVC con tarjeta</strong> para cerrar ventas.
                 </p>
                 <div style={{ background: '#fff', padding: '10px 14px', borderRadius: 12, fontSize: 12, color: '#666', border: '1px dashed #C7D2FE' }}>
-                  🎯 <strong>Acción sugerida:</strong> Mantené el slide 3 del banner activo durante las próximas dos semanas.
+                  🎯 <strong>Acción:</strong> Mantené el slide 3 del banner activo durante las próximas semanas.
                 </div>
               </div>
 
@@ -320,12 +417,357 @@ export default function MarketingPage() {
                   El público de papelería responde muy bien a mensajes afectuosos y personalizados. Enviar el recordatorio con tono <em>girly</em> dentro de las primeras 3 horas de abandono recupera hasta 6 de cada 10 pedidos.
                 </p>
                 <div style={{ background: '#fff', padding: '10px 14px', borderRadius: 12, fontSize: 12, color: '#666', border: '1px dashed #A7F3D0' }}>
-                  📱 <strong>Acción con 1 Clic:</strong> Usá el botón "WhatsApp" en la lista de carritos abandonados.
+                  📱 <strong>Acción:</strong> Usá el botón "WhatsApp" en la pestaña Recuperación de Carritos.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Interactive Gemini AI Chat Section */}
+          <div style={{ 
+            background: '#fff', 
+            borderRadius: 24, 
+            border: '1px solid #E5E7EB', 
+            overflow: 'hidden',
+            boxShadow: '0 10px 30px rgba(0,0,0,0.04)',
+            display: 'flex',
+            flexDirection: 'column'
+          }}>
+            {/* Chat Top Header */}
+            <div style={{ 
+              background: 'linear-gradient(135deg, #0F172A 0%, #1E1B4B 100%)', 
+              padding: '20px 28px', 
+              display: 'flex', 
+              justifyContent: 'space-between', 
+              alignItems: 'center',
+              color: '#fff',
+              flexWrap: 'wrap',
+              gap: 12
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+                <div style={{ 
+                  width: 44, 
+                  height: 44, 
+                  borderRadius: 14, 
+                  background: 'linear-gradient(135deg, #EC4899 0%, #8B5CF6 100%)', 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  justifyContent: 'center',
+                  boxShadow: '0 4px 14px rgba(236, 72, 153, 0.4)'
+                }}>
+                  <Sparkles size={22} color="#fff" />
+                </div>
+                <div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                    <h3 style={{ fontSize: 17, fontWeight: 900, margin: 0, color: '#fff' }}>Consultor Gemini AI en Vivo</h3>
+                    <span style={{ 
+                      fontSize: 10, 
+                      fontWeight: 800, 
+                      padding: '2px 8px', 
+                      borderRadius: 12, 
+                      background: 'rgba(34, 197, 94, 0.2)', 
+                      color: '#4ADE80',
+                      border: '1px solid rgba(74, 222, 128, 0.3)'
+                    }}>
+                      ● EN LÍNEA
+                    </span>
+                  </div>
+                  <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.65)', margin: '2px 0 0' }}>
+                    Sincronizado con: {orders.length} pedidos · ${avgTicket.toLocaleString('es-AR')} ticket prom. · {abandonedCarts.length} carritos
+                  </p>
                 </div>
               </div>
 
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <button 
+                  onClick={() => setChatMessages([{
+                    id: 'welcome_reset',
+                    role: 'assistant',
+                    text: '¡Conversación reiniciada! 🌸 ¿Qué otra consulta estratégica, copy o promoción querés optimizar?',
+                    time: new Date().toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' })
+                  }])}
+                  style={{
+                    background: 'rgba(255,255,255,0.1)',
+                    border: '1px solid rgba(255,255,255,0.15)',
+                    color: '#E2E8F0',
+                    padding: '8px 14px',
+                    borderRadius: 10,
+                    fontSize: 11,
+                    fontWeight: 700,
+                    cursor: 'pointer',
+                    transition: 'all 0.2s'
+                  }}
+                >
+                  Limpiar Chat
+                </button>
+              </div>
+            </div>
+
+            {/* Quick Prompt Pills */}
+            <div style={{ 
+              background: '#F8FAFC', 
+              padding: '14px 24px', 
+              borderBottom: '1px solid #E2E8F0',
+              display: 'flex',
+              alignItems: 'center',
+              gap: 10,
+              overflowX: 'auto',
+              whiteSpace: 'nowrap'
+            }}>
+              <span style={{ fontSize: 11, fontWeight: 800, color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                Sugerencias:
+              </span>
+              <div style={{ display: 'flex', gap: 8, flexWrap: 'nowrap' }}>
+                {QUICK_PROMPTS.map((prompt, index) => (
+                  <button
+                    key={index}
+                    onClick={() => handleSendMessage(prompt)}
+                    disabled={isAiGenerating}
+                    style={{
+                      background: '#fff',
+                      border: '1px solid #CBD5E1',
+                      borderRadius: 20,
+                      padding: '6px 14px',
+                      fontSize: 12,
+                      fontWeight: 700,
+                      color: '#334155',
+                      cursor: 'pointer',
+                      transition: 'all 0.2s',
+                      boxShadow: '0 1px 3px rgba(0,0,0,0.03)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 6
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.borderColor = ROSE;
+                      e.currentTarget.style.color = ROSE;
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.borderColor = '#CBD5E1';
+                      e.currentTarget.style.color = '#334155';
+                    }}
+                  >
+                    {prompt}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Chat Messages List */}
+            <div style={{ 
+              padding: '24px', 
+              height: 440, 
+              overflowY: 'auto', 
+              background: '#FAFAF9',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 18
+            }}>
+              {chatMessages.map((msg) => {
+                const isAssistant = msg.role === 'assistant';
+                return (
+                  <div 
+                    key={msg.id} 
+                    style={{ 
+                      display: 'flex', 
+                      flexDirection: 'column',
+                      alignItems: isAssistant ? 'flex-start' : 'flex-end',
+                      width: '100%'
+                    }}
+                  >
+                    <div style={{ 
+                      display: 'flex', 
+                      alignItems: 'flex-end', 
+                      gap: 10, 
+                      maxWidth: '85%',
+                      flexDirection: isAssistant ? 'row' : 'row-reverse'
+                    }}>
+                      {/* Avatar */}
+                      <div style={{ 
+                        width: 34, 
+                        height: 34, 
+                        borderRadius: 12, 
+                        background: isAssistant ? 'linear-gradient(135deg, #EC4899, #8B5CF6)' : '#1E293B',
+                        color: '#fff',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        flexShrink: 0,
+                        fontSize: 12,
+                        fontWeight: 900
+                      }}>
+                        {isAssistant ? <Sparkles size={16} /> : <User size={16} />}
+                      </div>
+
+                      {/* Bubble */}
+                      <div style={{
+                        background: isAssistant ? '#fff' : '#1E1B4B',
+                        color: isAssistant ? '#1E293B' : '#fff',
+                        padding: '16px 20px',
+                        borderRadius: isAssistant ? '18px 18px 18px 4px' : '18px 18px 4px 18px',
+                        border: isAssistant ? '1px solid #E2E8F0' : 'none',
+                        boxShadow: '0 2px 10px rgba(0,0,0,0.04)',
+                        fontSize: 14,
+                        lineHeight: 1.6,
+                        whiteSpace: 'pre-wrap',
+                        position: 'relative'
+                      }}>
+                        {msg.text}
+
+                        {isAssistant && (
+                          <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 8, paddingTop: 6, borderTop: '1px solid #F1F5F9' }}>
+                            <button
+                              onClick={() => handleCopyText(msg.id, msg.text)}
+                              style={{
+                                background: 'transparent',
+                                border: 'none',
+                                color: '#94A3B8',
+                                cursor: 'pointer',
+                                fontSize: 11,
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: 4,
+                                padding: 0
+                              }}
+                            >
+                              {copiedId === msg.id ? (
+                                <>
+                                  <Check size={12} color="#10B981" />
+                                  <span style={{ color: '#10B981', fontWeight: 700 }}>Copiado</span>
+                                </>
+                              ) : (
+                                <>
+                                  <Copy size={12} />
+                                  <span>Copiar</span>
+                                </>
+                              )}
+                            </button>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    <span style={{ 
+                      fontSize: 10, 
+                      color: '#94A3B8', 
+                      marginTop: 4,
+                      marginLeft: isAssistant ? 44 : 0,
+                      marginRight: !isAssistant ? 44 : 0
+                    }}>
+                      {isAssistant ? 'Gemini AI Advisor' : 'Flor (M•flower)'} · {msg.time}
+                    </span>
+                  </div>
+                );
+              })}
+
+              {/* Generating Loading State */}
+              {isAiGenerating && (
+                <div style={{ display: 'flex', alignItems: 'flex-end', gap: 10, maxWidth: '80%' }}>
+                  <div style={{ 
+                    width: 34, 
+                    height: 34, 
+                    borderRadius: 12, 
+                    background: 'linear-gradient(135deg, #EC4899, #8B5CF6)', 
+                    color: '#fff',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    flexShrink: 0
+                  }}>
+                    <Loader2 size={16} className="animate-spin" />
+                  </div>
+                  <div style={{
+                    background: '#fff',
+                    padding: '14px 20px',
+                    borderRadius: '18px 18px 18px 4px',
+                    border: '1px solid #E2E8F0',
+                    boxShadow: '0 2px 10px rgba(0,0,0,0.04)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 8,
+                    color: '#64748B',
+                    fontSize: 13,
+                    fontWeight: 600
+                  }}>
+                    <Sparkles size={14} style={{ color: '#EC4899' }} className="animate-spin" />
+                    <span>Gemini está formulando la mejor estrategia...</span>
+                  </div>
+                </div>
+              )}
+
+              <div ref={chatBottomRef} />
+            </div>
+
+            {/* Input Form */}
+            <div style={{ 
+              padding: '16px 24px', 
+              background: '#fff', 
+              borderTop: '1px solid #E2E8F0',
+              display: 'flex',
+              gap: 12,
+              alignItems: 'center'
+            }}>
+              <input
+                type="text"
+                placeholder="Escribí una consulta para Gemini (ej: 'Redactame un post para promocionar el Set Cherry con envío gratis')..."
+                value={inputMessage}
+                onChange={(e) => setInputMessage(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    handleSendMessage();
+                  }
+                }}
+                disabled={isAiGenerating}
+                style={{
+                  flex: 1,
+                  padding: '14px 18px',
+                  borderRadius: 14,
+                  border: '1.5px solid #E2E8F0',
+                  fontSize: 14,
+                  outline: 'none',
+                  transition: 'border-color 0.2s',
+                  fontFamily: 'inherit'
+                }}
+                onFocus={(e) => e.target.style.borderColor = INDIGO}
+                onBlur={(e) => e.target.style.borderColor = '#E2E8F0'}
+              />
+
+              <button
+                onClick={() => handleSendMessage()}
+                disabled={!inputMessage.trim() || isAiGenerating}
+                style={{
+                  background: inputMessage.trim() && !isAiGenerating 
+                    ? 'linear-gradient(135deg, #4338CA 0%, #312E81 100%)' 
+                    : '#E2E8F0',
+                  color: inputMessage.trim() && !isAiGenerating ? '#fff' : '#94A3B8',
+                  border: 'none',
+                  borderRadius: 14,
+                  padding: '14px 24px',
+                  fontWeight: 800,
+                  fontSize: 13,
+                  cursor: inputMessage.trim() && !isAiGenerating ? 'pointer' : 'not-allowed',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 8,
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.05em',
+                  boxShadow: inputMessage.trim() && !isAiGenerating ? '0 4px 14px rgba(67, 56, 202, 0.3)' : 'none',
+                  transition: 'all 0.2s'
+                }}
+              >
+                {isAiGenerating ? (
+                  <Loader2 size={16} className="animate-spin" />
+                ) : (
+                  <>
+                    <span>Enviar</span>
+                    <Send size={15} />
+                  </>
+                )}
+              </button>
             </div>
           </div>
+
         </div>
       )}
 
@@ -531,7 +973,7 @@ export default function MarketingPage() {
                         <td style={{ padding: '14px 12px', borderRadius: '0 12px 12px 0', border: `1px solid ${hoursAgo < 3 ? ROSE_BORDER : '#eee'}`, borderLeft: 'none', textAlign: 'center' }}>
                           <button 
                             onClick={() => handleSendReminder(cart)} 
-                            style={{
+                            style={{ 
                               padding: '10px 18px', 
                               background: '#25D366', 
                               color: '#fff', 
