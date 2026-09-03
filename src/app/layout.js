@@ -18,6 +18,9 @@ const quicksand = Quicksand({
 export const metadata = {
   title: "M•flower by Maria | Tienda Online",
   description: "✨ Todo lo que tu lado girly necesita. Tu espacio creativo empieza acá.",
+  verification: {
+    google: "fad3db796ce65ceb",
+  },
 };
 
 export default function RootLayout({ children }) {
