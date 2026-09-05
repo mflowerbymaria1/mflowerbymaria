@@ -17,14 +17,13 @@ export default function ProductCarousel() {
             .limit(10);
         
         if (!error && data) {
-            const filtered = data
-                .filter(p => !p.category || !p.category.toLowerCase().includes('planner'))
-                .slice(0, 6)
+            const favorites = data
+                .slice(0, 8)
                 .map(p => ({
                     ...p,
                     image: p.image_url
                 }));
-            setFavoritesList(filtered);
+            setFavoritesList(favorites);
         }
         setLoading(false);
     }
@@ -74,44 +73,7 @@ export default function ProductCarousel() {
                         <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
                       </svg>
                     </button>
-                    {product.category && product.category.toLowerCase().includes('planner') ? (
-                      <div className="relative w-full h-full" style={{ position: 'relative', width: '100%', height: '100%' }}>
-                        <img 
-                          src={product.image} 
-                          alt={product.name} 
-                          loading="lazy" 
-                          style={{ filter: 'blur(8px)', opacity: 0.6, mixBlendMode: 'normal' }} 
-                        />
-                        <div style={{
-                          position: 'absolute',
-                          top: 0,
-                          left: 0,
-                          width: '100%',
-                          height: '100%',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          backgroundColor: 'rgba(255, 255, 255, 0.4)',
-                          zIndex: 10
-                        }}>
-                          <span style={{
-                            backgroundColor: '#D47792',
-                            color: 'white',
-                            fontWeight: '800',
-                            fontSize: '0.8rem',
-                            padding: '6px 12px',
-                            borderRadius: '20px',
-                            textTransform: 'uppercase',
-                            letterSpacing: '1px',
-                            boxShadow: '0 4px 10px rgba(212,119,146,0.3)'
-                          }}>
-                            Próximamente
-                          </span>
-                        </div>
-                      </div>
-                    ) : (
-                      <img src={product.image} alt={product.name} loading="lazy" />
-                    )}
+                    <img src={product.image} alt={product.name} loading="lazy" />
                   </div>
                   <div className="product-info-aesthetic">
                     <h3 className="product-title-aesthetic">{product.name}</h3>

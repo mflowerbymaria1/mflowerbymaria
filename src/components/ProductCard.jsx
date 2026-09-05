@@ -126,55 +126,19 @@ export default function ProductCard({ product }) {
           </svg>
         </button>
         {activeImage ? (
-          product.category && product.category.toLowerCase().includes('planner') ? (
-            <div className="relative w-full h-full" style={{ position: 'relative', width: '100%', height: '100%' }}>
-              <img 
-                src={activeImage} 
-                alt={product.name} 
-                style={{ filter: 'blur(8px)', opacity: 0.6, mixBlendMode: 'normal' }}
-              />
-              <div style={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                width: '100%',
-                height: '100%',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                backgroundColor: 'rgba(255, 255, 255, 0.4)',
-                zIndex: 10
-              }}>
-                <span style={{
-                  backgroundColor: '#D47792',
-                  color: 'white',
-                  fontWeight: '800',
-                  fontSize: '0.9rem',
-                  padding: '8px 16px',
-                  borderRadius: '20px',
-                  textTransform: 'uppercase',
-                  letterSpacing: '1px',
-                  boxShadow: '0 4px 12px rgba(212,119,146,0.3)'
-                }}>
-                  Próximamente
-                </span>
-              </div>
-            </div>
-          ) : (
-            <img 
-              src={activeImage} 
-              alt={product.name} 
-              style={
-                (product.name.toLowerCase().includes('croissant') && activeImage === product.image)
-                  ? { transform: 'scale(1.3)', padding: 0, objectFit: 'contain', objectPosition: 'center' }
-                  : (product.name.toLowerCase().includes('midi block') ||
-                     product.name.toLowerCase().includes('baby block') ||
-                     product.name.toLowerCase().includes('mega block')
-                      ? { transform: 'scale(1.35)', padding: 0, objectFit: 'contain', objectPosition: 'center' }
-                      : {})
-              }
-            />
-          )
+          <img 
+            src={activeImage} 
+            alt={product.name} 
+            style={
+              (product.name.toLowerCase().includes('croissant') && activeImage === product.image)
+                ? { transform: 'scale(1.3)', padding: 0, objectFit: 'contain', objectPosition: 'center' }
+                : (product.name.toLowerCase().includes('midi block') ||
+                   product.name.toLowerCase().includes('baby block') ||
+                   product.name.toLowerCase().includes('mega block')
+                    ? { transform: 'scale(1.35)', padding: 0, objectFit: 'contain', objectPosition: 'center' }
+                    : {})
+            }
+          />
         ) : (
           <div className="product-image-placeholder bg-green h-full w-full relative z-0">
             <Logo size="medium" color="#4A8C55" />
@@ -187,7 +151,6 @@ export default function ProductCard({ product }) {
       
       {/* Miniaturas de vista previa */}
       {(() => {
-        if (product.category && product.category.toLowerCase().includes('planner')) return null;
         const uniqueImages = Array.from(new Set([product.image, ...(product.gallery || [])].filter(Boolean))).slice(0, 5);
         if (uniqueImages.length <= 1) return null;
         return (
