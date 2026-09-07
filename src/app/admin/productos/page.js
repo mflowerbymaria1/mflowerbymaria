@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { 
   Plus, 
   Search, 
@@ -26,13 +26,14 @@ export default function ProductosPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState(null);
   const [saving, setSaving] = useState(false);
+  const scrollPosRef = useRef(0);
 
   useEffect(() => {
     fetchData();
   }, []);
 
-  async function fetchData() {
-    setLoading(true);
+  async function fetchData(isSilent = false) {
+    if (!isSilent) setLoading(true);
     
     // Fetch Productos
     const { data: pData } = await supabase.from('products').select('*').order('created_at', { ascending: false });
@@ -53,7 +54,7 @@ export default function ProductosPage() {
     const { data: cData } = await supabase.from('categories').select('*').order('name', { ascending: true });
     setDbCategories((cData || []).filter(c => !c.name?.startsWith('WHOLESALE_CODE:')));
 
-    setLoading(false);
+    if (!isSilent) setLoading(false);
   }
 
   const fetchProducts = fetchData; // Mantener alias para compatibilidad
@@ -90,6 +91,7 @@ export default function ProductosPage() {
   };
 
   const handleOpenEdit = (product = null) => {
+    scrollPosRef.current = window.scrollY;
     if (product) {
       let cleanDesc = (product.description || '').replace(/\[WHOLESALE:\s*\d+(\.\d+)?\]/g, '').trim();
       let wp = product.wholesale_price;
@@ -108,10 +110,21 @@ export default function ProductosPage() {
     setIsModalOpen(true);
   };
 
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    const targetY = scrollPosRef.current;
+    setTimeout(() => {
+      window.scrollTo({ top: targetY, behavior: 'instant' });
+    }, 50);
+  };
+
   const handleSave = async (e) => {
     e.preventDefault();
     setSaving(true);
     
+    const targetY = scrollPosRef.current || window.scrollY;
+    const editedId = editingProduct.id;
+
     const isNew = !editingProduct.id;
     let payload = { ...editingProduct };
 
@@ -138,7 +151,16 @@ export default function ProductosPage() {
         alert('Error al guardar: ' + res.error.message);
     } else {
         setIsModalOpen(false);
-        fetchProducts();
+        await fetchData(true); // Silent reload so grid doesn't reset scroll
+        setTimeout(() => {
+          window.scrollTo({ top: targetY, behavior: 'instant' });
+          if (editedId) {
+            const cardEl = document.getElementById(`product-card-${editedId}`);
+            if (cardEl) {
+              cardEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
+          }
+        }, 80);
     }
     setSaving(false);
   };
@@ -147,7 +169,7 @@ export default function ProductosPage() {
       if (!confirm('¿Estás segura de eliminar este producto?')) return;
       const { error } = await supabase.from('products').delete().eq('id', id);
       if (error) alert('Error: ' + error.message);
-      else fetchProducts();
+      else fetchProducts(true);
   };
 
   const categories = ['Todos', ...dbCategories.map(c => c.name)];
@@ -213,7 +235,7 @@ export default function ProductosPage() {
         ) : (
             <div className="products-grid">
               {filteredProducts.map((product) => (
-                <div key={product.id} className="product-card">
+                <div key={product.id} id={`product-card-${product.id}`} className="product-card">
                   {/* Imagen */}
                   <div 
                     className="product-image cursor-pointer"
@@ -233,8 +255,9 @@ export default function ProductosPage() {
                           <div>
                             <span className="category-label">{product.category || 'Varios'}</span>
                             <h3 
-                              className="product-name cursor-pointer hover:text-pink-500 transition-colors"
-                              onClick={() => window.open(`/productos/${product.id}`, '_blank')}
+                              className="product-title" 
+                              onClick={() => handleOpenEdit(product)}
+                              title="Click para editar"
                             >
                               {product.name}
                             </h3>
@@ -286,7 +309,7 @@ export default function ProductosPage() {
               <div className="modal-content animate-in zoom-in duration-300">
                   <div className="modal-header">
                       <h3 className="text-xl font-black text-gray-900">{editingProduct.id ? 'Editar Producto' : 'Nuevo Producto'}</h3>
-                      <button onClick={() => setIsModalOpen(false)} className="close-btn">&times;</button>
+                      <button onClick={handleCloseModal} className="close-btn">&times;</button>
                   </div>
                   
                   <form onSubmit={handleSave} className="modal-body">
@@ -452,7 +475,7 @@ export default function ProductosPage() {
                       </div>
 
                       <div className="modal-footer">
-                          <button type="button" onClick={() => setIsModalOpen(false)} className="btn-link">Cancelar</button>
+                          <button type="button" onClick={handleCloseModal} className="btn-link">Cancelar</button>
                           <button type="submit" disabled={saving} className="primary-btn">
                               {saving ? <Loader2 className="animate-spin" size={18} /> : (editingProduct.id ? 'Guardar Cambios' : 'Crear Producto')}
                           </button>
