@@ -10,6 +10,7 @@ CREATE TABLE IF NOT EXISTS products (
     description TEXT,
     category TEXT,
     price DECIMAL(10, 2) NOT NULL,
+    wholesale_price DECIMAL(10, 2) DEFAULT NULL,
     stock INTEGER DEFAULT 0,
     low_stock_threshold INTEGER DEFAULT 3,
     image_url TEXT,
