@@ -48,7 +48,12 @@ export default function ProductCard({ product }) {
   }, []);
 
   // Format price helper (display wholesale price if wholesale session active)
-  const effectivePrice = (isWholesale && product.wholesale_price) ? product.wholesale_price : product.price;
+  let effectiveWholesalePrice = product.wholesale_price;
+  if (!effectiveWholesalePrice && product.description) {
+    const match = product.description.match(/\[WHOLESALE:\s*(\d+(\.\d+)?)\]/);
+    if (match) effectiveWholesalePrice = parseFloat(match[1]);
+  }
+  const effectivePrice = (isWholesale && effectiveWholesalePrice) ? effectiveWholesalePrice : product.price;
   const priceStr = effectivePrice ? String(effectivePrice) : "0";
   const numericPrice = parseFloat(priceStr.replace(/\./g, '')) || 0;
   const installmentPrice = (numericPrice / 3).toLocaleString('es-AR', { minimumFractionDigits: 0, maximumFractionDigits: 0 });

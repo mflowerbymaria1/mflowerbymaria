@@ -49,10 +49,18 @@ export default function ProductDetailPage({ params }) {
 
                 if (!error && data) {
                     const wholesaleActive = !!localStorage.getItem('mflower_wholesale_session');
-                    const chosenPrice = (wholesaleActive && data.wholesale_price) ? data.wholesale_price : data.price;
+                    let wp = data.wholesale_price;
+                    if (!wp && data.description) {
+                        const match = data.description.match(/\[WHOLESALE:\s*(\d+(\.\d+)?)\]/);
+                        if (match) wp = parseFloat(match[1]);
+                    }
+                    const chosenPrice = (wholesaleActive && wp) ? wp : data.price;
+                    const cleanDescription = (data.description || '').replace(/\[WHOLESALE:\s*\d+(\.\d+)?\]/g, '').trim();
 
                     setProduct({
                         ...data,
+                        description: cleanDescription,
+                        wholesale_price: wp,
                         image: data.image_url,
                         images: data.image_url ? [data.image_url, ...(data.gallery || [])] : (data.gallery || []),
                         shortDescription: data.short_description,

@@ -36,7 +36,18 @@ export default function ProductosPage() {
     
     // Fetch Productos
     const { data: pData } = await supabase.from('products').select('*').order('created_at', { ascending: false });
-    setProducts(pData || []);
+    const parsedProducts = (pData || []).map(p => {
+      let wp = p.wholesale_price;
+      if (!wp && p.description) {
+        const match = p.description.match(/\[WHOLESALE:\s*(\d+(\.\d+)?)\]/);
+        if (match) wp = parseFloat(match[1]);
+      }
+      return {
+        ...p,
+        wholesale_price: wp
+      };
+    });
+    setProducts(parsedProducts);
 
     // Fetch Categorías Reales
     const { data: cData } = await supabase.from('categories').select('*').order('name', { ascending: true });
@@ -79,7 +90,21 @@ export default function ProductosPage() {
   };
 
   const handleOpenEdit = (product = null) => {
-    setEditingProduct(product || { name: '', price: 0, stock: 0, category: '', image_url: '', description: '' });
+    if (product) {
+      let cleanDesc = (product.description || '').replace(/\[WHOLESALE:\s*\d+(\.\d+)?\]/g, '').trim();
+      let wp = product.wholesale_price;
+      if (!wp && product.description) {
+        const match = product.description.match(/\[WHOLESALE:\s*(\d+(\.\d+)?)\]/);
+        if (match) wp = parseFloat(match[1]);
+      }
+      setEditingProduct({
+        ...product,
+        description: cleanDesc,
+        wholesale_price: wp
+      });
+    } else {
+      setEditingProduct({ name: '', price: 0, wholesale_price: null, stock: 0, category: '', image_url: '', description: '' });
+    }
     setIsModalOpen(true);
   };
 
@@ -88,12 +113,29 @@ export default function ProductosPage() {
     setSaving(true);
     
     const isNew = !editingProduct.id;
-    const { data, error } = isNew 
-        ? await supabase.from('products').insert([editingProduct])
-        : await supabase.from('products').update(editingProduct).eq('id', editingProduct.id);
+    let payload = { ...editingProduct };
 
-    if (error) {
-        alert('Error al guardar: ' + error.message);
+    // Try direct save first
+    let res = isNew 
+        ? await supabase.from('products').insert([payload])
+        : await supabase.from('products').update(payload).eq('id', payload.id);
+
+    // If wholesale_price column does not exist in schema cache, fallback to metadata in description
+    if (res.error && (res.error.message.includes('wholesale_price') || res.error.message.includes('schema cache'))) {
+        delete payload.wholesale_price;
+        let cleanDesc = (payload.description || '').replace(/\[WHOLESALE:\s*\d+(\.\d+)?\]/g, '').trim();
+        if (editingProduct.wholesale_price) {
+            cleanDesc = cleanDesc ? `${cleanDesc} [WHOLESALE:${editingProduct.wholesale_price}]` : `[WHOLESALE:${editingProduct.wholesale_price}]`;
+        }
+        payload.description = cleanDesc;
+
+        res = isNew
+            ? await supabase.from('products').insert([payload])
+            : await supabase.from('products').update(payload).eq('id', payload.id);
+    }
+
+    if (res.error) {
+        alert('Error al guardar: ' + res.error.message);
     } else {
         setIsModalOpen(false);
         fetchProducts();
