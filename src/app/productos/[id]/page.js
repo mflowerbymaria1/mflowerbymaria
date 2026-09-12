@@ -120,11 +120,10 @@ export default function ProductDetailPage({ params }) {
     // Descripción introductoria cálida según categoría/producto
     const getIntroDescription = () => {
         const name = product.name || '';
-        const cat = (product.category || '').toLowerCase();
-
-        if (name.includes('MIDI Block')) return 'Práctico y versátil en tamaño A5. Tu aliado para el escritorio o la cartera, con secciones pensadas para organizar cada día al máximo.';
-        if (name.includes('BABY Block')) return 'Súper compacto en tamaño A6 mini. Ideal para tener a mano y anotar recordatorios o ideas de manera rápida e instantánea.';
-        if (name.includes('MEGA Block')) return 'Espacio extra grande en tamaño A4. Tu compañero de escritorio para mantener al día materias, tareas y proyectos.';
+        const nameLower = (product.name || '').toLowerCase();
+        if (nameLower.includes('midi block') || nameLower.includes('midi')) return 'Práctico y versátil en tamaño A5. Tu aliado para el escritorio o la cartera, con secciones pensadas para organizar cada día al máximo.';
+        if (nameLower.includes('baby block') || nameLower.includes('baby')) return 'Súper compacto en tamaño A6 mini. Ideal para tener a mano y anotar recordatorios o ideas de manera rápida e instantánea.';
+        if (nameLower.includes('mega block') || nameLower.includes('mega')) return 'Espacio extra grande en tamaño A4. Tu compañero de escritorio para mantener al día materias, tareas y proyectos.';
 
         // Por categoría (usando includes para cubrir variantes con emojis, plurales, etc.)
         if (cat.includes('cuaderno') && cat.includes('a4')) return 'Tu compañero ideal para la facu, el trabajo o tus proyectos creativos. Con sistema de discos inteligente, podés agregar, quitar y reorganizar hojas cuando quieras. Diseñado para acompañarte en cada idea, cada clase y cada momento de inspiración.';
