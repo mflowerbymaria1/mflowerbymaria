@@ -23,7 +23,7 @@ function ProductosContent() {
             setLoading(true);
             try {
                 const [productsRes, categoriesRes] = await Promise.all([
-                    supabase.from('products').select('*'),
+                    supabase.from('products').select('*').order('created_at', { ascending: false }),
                     supabase.from('categories').select('*')
                 ]);
                 
