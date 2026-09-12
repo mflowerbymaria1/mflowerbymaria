@@ -121,6 +121,8 @@ export default function ProductDetailPage({ params }) {
     const getIntroDescription = () => {
         const name = product.name || '';
         const nameLower = (product.name || '').toLowerCase();
+        const cat = (product.category || '').toLowerCase();
+
         if (nameLower.includes('midi block') || nameLower.includes('midi')) return 'Práctico y versátil en tamaño A5. Tu aliado para el escritorio o la cartera, con secciones pensadas para organizar cada día al máximo.';
         if (nameLower.includes('baby block') || nameLower.includes('baby')) return 'Súper compacto en tamaño A6 mini. Ideal para tener a mano y anotar recordatorios o ideas de manera rápida e instantánea.';
         if (nameLower.includes('mega block') || nameLower.includes('mega')) return 'Espacio extra grande en tamaño A4. Tu compañero de escritorio para mantener al día materias, tareas y proyectos.';

@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { v4 as uuidv4 } from 'uuid';
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://dgjromtddlvifasmbqin.supabase.co';
 const p1 = 'sb_secret_CcyzVP';
 const p2 = 'XwLf6cedUlqlc';
 const p3 = 'LyQ_s3NP_rUW';
