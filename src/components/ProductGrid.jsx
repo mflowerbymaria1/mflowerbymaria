@@ -123,34 +123,34 @@ export default function ProductGrid() {
           background-color: var(--background);
         }
         .stationery-promo-banner {
-          margin: 0 auto 5.5rem auto;
+          margin: 0 auto 6rem auto;
           width: 100%;
         }
         .banner-row-container {
           display: flex;
           align-items: center;
           justify-content: space-between;
-          gap: 3.5rem;
+          gap: 4.5rem;
           background: #ffffff;
-          padding: 1.8rem;
-          border-radius: 32px;
-          border: 2.5px solid #F5C6D0;
-          box-shadow: 0 16px 45px rgba(212, 119, 146, 0.14);
+          padding: 2.4rem 2.8rem;
+          border-radius: 36px;
+          border: 3px solid #F5C6D0;
+          box-shadow: 0 20px 55px rgba(212, 119, 146, 0.18);
         }
         .banner-image-link {
-          flex: 1.35;
+          flex: 1.45;
           min-width: 0;
           display: block;
           text-decoration: none;
-          border-radius: 24px;
+          border-radius: 28px;
           overflow: hidden;
         }
         .banner-img-wrapper {
           position: relative;
           width: 100%;
-          border-radius: 24px;
+          border-radius: 28px;
           overflow: hidden;
-          box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.09);
           background: #FFF0F3;
         }
         .banner-img {
@@ -170,56 +170,56 @@ export default function ProductGrid() {
           flex-direction: column;
           align-items: flex-start;
           justify-content: center;
-          gap: 1.8rem;
-          padding-right: 1rem;
+          gap: 2.2rem;
+          padding-right: 0.5rem;
         }
         .banner-text-block {
           display: flex;
           flex-direction: column;
           align-items: flex-start;
-          gap: 1rem;
+          gap: 1.2rem;
         }
         .banner-badge {
           display: inline-block;
           background: #FFF0F3;
           color: #D47792;
-          font-size: 0.85rem;
+          font-size: 0.95rem;
           font-weight: 800;
           text-transform: uppercase;
           letter-spacing: 0.08em;
-          padding: 7px 18px;
+          padding: 9px 22px;
           border-radius: 30px;
           border: 1.5px solid #F5C6D0;
         }
         .banner-description {
           font-family: var(--font-montserrat), sans-serif;
-          font-size: 1.15rem;
-          color: #444;
+          font-size: 1.35rem;
+          color: #333;
           line-height: 1.65;
           margin: 0;
-          font-weight: 500;
+          font-weight: 600;
         }
         .banner-cta-btn {
           display: inline-flex;
           align-items: center;
-          gap: 12px;
+          gap: 14px;
           background: #D47792;
           color: #fff !important;
-          padding: 18px 36px;
+          padding: 20px 42px;
           border-radius: 50px;
           font-family: var(--font-montserrat), sans-serif;
-          font-size: 1.05rem;
+          font-size: 1.15rem;
           font-weight: 800;
           text-decoration: none;
           text-transform: uppercase;
           letter-spacing: 0.04em;
-          box-shadow: 0 8px 25px rgba(212, 119, 146, 0.4);
+          box-shadow: 0 10px 30px rgba(212, 119, 146, 0.45);
           transition: all 0.3s ease;
         }
         .banner-cta-btn:hover {
           background: #c25f7c;
-          transform: translateY(-2px);
-          box-shadow: 0 12px 30px rgba(212, 119, 146, 0.5);
+          transform: translateY(-3px);
+          box-shadow: 0 15px 38px rgba(212, 119, 146, 0.55);
         }
         .creative-space-header {
           text-align: center;
@@ -253,12 +253,15 @@ export default function ProductGrid() {
         @media (max-width: 992px) {
           .banner-row-container {
             flex-direction: column;
-            gap: 2rem;
-            padding: 1.2rem;
+            gap: 2.2rem;
+            padding: 1.8rem;
           }
           .banner-right-content {
             padding-right: 0;
             width: 100%;
+          }
+          .banner-description {
+            font-size: 1.2rem;
           }
           .banner-cta-btn {
             width: 100%;
@@ -273,19 +276,19 @@ export default function ProductGrid() {
         }
         @media (max-width: 600px) {
           .banner-row-container {
-            border-radius: 24px;
-            padding: 1rem;
-            gap: 1.5rem;
+            border-radius: 28px;
+            padding: 1.2rem;
+            gap: 1.8rem;
           }
           .banner-img-wrapper {
-            border-radius: 18px;
+            border-radius: 20px;
           }
           .banner-description {
-            font-size: 1rem;
+            font-size: 1.05rem;
           }
           .banner-cta-btn {
-            padding: 15px 22px;
-            font-size: 0.95rem;
+            padding: 16px 26px;
+            font-size: 1rem;
           }
           .stationery-promo-banner {
             margin-bottom: 2.5rem;
