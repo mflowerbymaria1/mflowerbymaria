@@ -18,29 +18,13 @@ export default function StationeryPromoBanner() {
   return (
     <section className="stationery-section">
       <div className="stationery-container">
-        <div className="stationery-card">
-          {/* Lado Izquierdo: Imagen en Grande */}
-          <Link
-            href="/productos?categoria=articulos-de-libreria-para-llevar"
-            className="stationery-img-link"
-          >
-            <div className="stationery-img-box">
-              <img
-                src="/images/banner_libreria.jpg"
-                alt="Artículos de librería para llevar"
-                className="stationery-img"
-              />
-            </div>
-          </Link>
-
-          {/* Lado Derecho: Texto y Botón */}
-          <div className="stationery-content">
-            <div className="stationery-text-group">
-              <span className="stationery-badge">🌸 Nuevos Ingresos</span>
-              <p className="stationery-desc">
-                Resaltadores en tonos pastel, cintas correctoras, lapiceras y accesorios súper tiernos de papelería y deco para tu escritorio.
-              </p>
-            </div>
+        <div className="stationery-grid">
+          {/* LADO IZQUIERDO: Texto, Badge y Botón */}
+          <div className="stationery-left">
+            <span className="stationery-badge">🌸 Nuevos Ingresos</span>
+            <p className="stationery-desc">
+              Resaltadores en tonos pastel, cintas correctoras, lapiceras y accesorios súper tiernos de papelería y deco para tu escritorio.
+            </p>
             <Link
               href="/productos?categoria=articulos-de-libreria-para-llevar"
               className="stationery-btn"
@@ -52,73 +36,47 @@ export default function StationeryPromoBanner() {
               </svg>
             </Link>
           </div>
+
+          {/* LADO DERECHO: Imagen sola en grande */}
+          <div className="stationery-right">
+            <Link
+              href="/productos?categoria=articulos-de-libreria-para-llevar"
+              className="stationery-img-link"
+            >
+              <div className="stationery-img-box">
+                <img
+                  src="/images/banner_libreria.jpg"
+                  alt="Artículos de librería para llevar"
+                  className="stationery-img"
+                />
+              </div>
+            </Link>
+          </div>
         </div>
       </div>
 
       <style jsx>{`
         .stationery-section {
           width: 100%;
-          padding: 4rem 1.5rem 2rem 1.5rem;
+          padding: 3.5rem 1.5rem 1.5rem 1.5rem;
           background-color: var(--background, #FAFAFA);
         }
         .stationery-container {
           max-width: 1400px;
           margin: 0 auto;
         }
-        .stationery-card {
-          display: flex;
+        .stationery-grid {
+          display: grid;
+          grid-template-columns: 1fr 1.55fr;
+          gap: 4.5rem;
           align-items: center;
-          justify-content: space-between;
-          gap: 4rem;
-          background: #ffffff;
-          padding: 2.5rem 3rem;
-          border-radius: 40px;
-          border: 3px solid #F5C6D0;
-          box-shadow: 0 20px 60px rgba(212, 119, 146, 0.18);
         }
-        .stationery-img-link {
-          flex: 1.6;
-          min-width: 0;
-          display: block;
-          text-decoration: none;
-          border-radius: 30px;
-          overflow: hidden;
-        }
-        .stationery-img-box {
-          position: relative;
-          width: 100%;
-          border-radius: 30px;
-          overflow: hidden;
-          box-shadow: 0 12px 35px rgba(0, 0, 0, 0.08);
-          background: #FFF0F3;
-        }
-        .stationery-img {
-          width: 100%;
-          height: auto;
-          min-height: 420px;
-          max-height: 580px;
-          display: block;
-          object-fit: cover;
-          transition: transform 0.4s ease;
-        }
-        .stationery-img-link:hover .stationery-img {
-          transform: scale(1.03);
-        }
-        .stationery-content {
-          flex: 1;
-          min-width: 0;
+        .stationery-left {
           display: flex;
           flex-direction: column;
           align-items: flex-start;
-          justify-content: center;
-          gap: 2.5rem;
+          gap: 2.2rem;
           padding: 1rem 0;
-        }
-        .stationery-text-group {
-          display: flex;
-          flex-direction: column;
-          align-items: flex-start;
-          gap: 1.4rem;
         }
         .stationery-badge {
           display: inline-block;
@@ -134,7 +92,7 @@ export default function StationeryPromoBanner() {
         }
         .stationery-desc {
           font-family: var(--font-montserrat), sans-serif;
-          font-size: 1.45rem;
+          font-size: 1.5rem;
           color: #2D2D2D;
           line-height: 1.6;
           margin: 0;
@@ -146,15 +104,15 @@ export default function StationeryPromoBanner() {
           gap: 14px;
           background: #D47792;
           color: #fff !important;
-          padding: 22px 48px;
+          padding: 20px 42px;
           border-radius: 60px;
           font-family: var(--font-montserrat), sans-serif;
-          font-size: 1.2rem;
+          font-size: 1.15rem;
           font-weight: 800;
           text-decoration: none;
           text-transform: uppercase;
           letter-spacing: 0.04em;
-          box-shadow: 0 12px 35px rgba(212, 119, 146, 0.45);
+          box-shadow: 0 10px 30px rgba(212, 119, 146, 0.45);
           transition: all 0.3s ease;
         }
         .stationery-btn:hover {
@@ -162,20 +120,47 @@ export default function StationeryPromoBanner() {
           transform: translateY(-3px);
           box-shadow: 0 16px 45px rgba(212, 119, 146, 0.6);
         }
+        .stationery-right {
+          width: 100%;
+        }
+        .stationery-img-link {
+          display: block;
+          text-decoration: none;
+          border-radius: 32px;
+          overflow: hidden;
+          width: 100%;
+        }
+        .stationery-img-box {
+          position: relative;
+          width: 100%;
+          border-radius: 32px;
+          overflow: hidden;
+          box-shadow: 0 20px 50px rgba(212, 119, 146, 0.22);
+          border: 3px solid #F5C6D0;
+          background: #FFF0F3;
+        }
+        .stationery-img {
+          width: 100%;
+          height: auto;
+          display: block;
+          object-fit: cover;
+          transition: transform 0.4s ease;
+        }
+        .stationery-img-link:hover .stationery-img {
+          transform: scale(1.03);
+        }
 
-        @media (max-width: 1100px) {
-          .stationery-card {
-            flex-direction: column;
+        @media (max-width: 1024px) {
+          .stationery-grid {
+            grid-template-columns: 1fr;
             gap: 2.5rem;
-            padding: 2rem;
           }
-          .stationery-img-link {
+          .stationery-left {
+            order: 2;
             width: 100%;
           }
-          .stationery-img {
-            min-height: auto;
-          }
-          .stationery-content {
+          .stationery-right {
+            order: 1;
             width: 100%;
           }
           .stationery-desc {
@@ -190,11 +175,6 @@ export default function StationeryPromoBanner() {
         @media (max-width: 600px) {
           .stationery-section {
             padding: 2rem 1rem 1rem 1rem;
-          }
-          .stationery-card {
-            border-radius: 28px;
-            padding: 1.2rem;
-            gap: 1.8rem;
           }
           .stationery-img-box {
             border-radius: 20px;
