@@ -92,6 +92,7 @@ function ProductosContent() {
             case 'stickers-varios': return "Stickers & Varios";
             case 'capsula-argentina': return "Cápsula Argentina";
             case 'sets-dia-del-maestro': return "Sets Día del Maestro";
+            case 'articulos-de-libreria-para-llevar': return "Artículos de librería para llevar";
             case 'repuestos': return "Repuestos";
             default: 
                 return catSlug
@@ -117,6 +118,7 @@ function ProductosContent() {
             case 'stickers-varios': return "Separadores, stickers troquelados y complementos para personalizar tus cuadernos.";
             case 'capsula-argentina': return "Edición especial y limitada inspirada en nuestra cultura nacional.";
             case 'sets-dia-del-maestro': return "Encontrá los mejores sets de regalo y papelería especial para celebrar el Día del Maestro.";
+            case 'articulos-de-libreria-para-llevar': return "Encontrá los mejores resaltadores, lapiceras, cintas correctoras y accesorios indispensables para tu cartuchera.";
             case 'repuestos': return "Todos los repuestos de hojas rayadas, lisas, cuadriculadas y punteadas que necesitás.";
             default: return `Explorá todos los productos en la categoría ${getCategoryTitle(catSlug)}.`;
         }

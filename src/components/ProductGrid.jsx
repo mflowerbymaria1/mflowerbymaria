@@ -48,15 +48,40 @@ export default function ProductGrid() {
         {/* Banner Artículos de librería para llevar */}
         {!isWholesale && (
           <div className="stationery-promo-banner">
-            <Link href="/productos" style={{ display: 'block', textDecoration: 'none' }}>
-              <div className="banner-img-wrapper">
-                <img 
-                  src="/images/banner_libreria.jpg" 
-                  alt="Artículos de librería para llevar" 
-                  className="banner-img"
-                />
+            <div className="banner-grid-layout">
+              {/* Left Column: Image */}
+              <Link 
+                href="/productos?categoria=articulos-de-libreria-para-llevar" 
+                className="banner-left-link"
+              >
+                <div className="banner-img-wrapper">
+                  <img 
+                    src="/images/banner_libreria.jpg" 
+                    alt="Artículos de librería para llevar" 
+                    className="banner-img"
+                  />
+                </div>
+              </Link>
+
+              {/* Right Column: Info and Button */}
+              <div className="banner-cta-card">
+                <span className="banner-badge">🌸 Novedad en la tienda</span>
+                <h3 className="banner-title">Artículos de librería para llevar</h3>
+                <p className="banner-description">
+                  Resaltadores en tonos pastel, cintas correctoras, lapiceras y accesorios súper tiernos para llenar tu cartuchera y escritorio de color.
+                </p>
+                <Link 
+                  href="/productos?categoria=articulos-de-libreria-para-llevar" 
+                  className="banner-cta-btn"
+                >
+                  <span>Ver artículos</span>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                    <polyline points="12 5 19 12 12 19"></polyline>
+                  </svg>
+                </Link>
               </div>
-            </Link>
+            </div>
           </div>
         )}
 
@@ -100,24 +125,97 @@ export default function ProductGrid() {
           margin: 0 auto 4.5rem auto;
           max-width: 100%;
         }
+        .banner-grid-layout {
+          display: grid;
+          grid-template-columns: 1.3fr 1fr;
+          gap: 2.2rem;
+          align-items: center;
+          background: #ffffff;
+          padding: 1.25rem;
+          border-radius: 28px;
+          border: 2px solid #F5C6D0;
+          box-shadow: 0 12px 36px rgba(212, 119, 146, 0.12);
+        }
+        .banner-left-link {
+          display: block;
+          text-decoration: none;
+          border-radius: 20px;
+          overflow: hidden;
+        }
         .banner-img-wrapper {
           position: relative;
           width: 100%;
-          border-radius: 24px;
+          border-radius: 20px;
           overflow: hidden;
-          box-shadow: 0 12px 36px rgba(212, 119, 146, 0.16);
+          box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
           transition: transform 0.3s ease, box-shadow 0.3s ease;
           background: #FFF0F3;
         }
-        .banner-img-wrapper:hover {
-          transform: translateY(-4px);
-          box-shadow: 0 18px 45px rgba(212, 119, 146, 0.24);
+        .banner-left-link:hover .banner-img-wrapper {
+          transform: scale(1.02);
+          box-shadow: 0 10px 25px rgba(212, 119, 146, 0.22);
         }
         .banner-img {
           width: 100%;
           height: auto;
           display: block;
           object-fit: cover;
+        }
+        .banner-cta-card {
+          padding: 1rem 1.5rem 1rem 0.5rem;
+          display: flex;
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 0.9rem;
+        }
+        .banner-badge {
+          display: inline-block;
+          background: #FFF0F3;
+          color: #D47792;
+          font-size: 0.8rem;
+          font-weight: 800;
+          text-transform: uppercase;
+          letter-spacing: 0.06em;
+          padding: 6px 14px;
+          border-radius: 20px;
+          border: 1px solid #F5C6D0;
+        }
+        .banner-title {
+          font-family: var(--font-quicksand), sans-serif;
+          font-size: 2rem;
+          font-weight: 800;
+          color: #1a1a1a;
+          line-height: 1.2;
+          margin: 0;
+        }
+        .banner-description {
+          font-family: var(--font-montserrat), sans-serif;
+          font-size: 0.95rem;
+          color: #666;
+          line-height: 1.55;
+          margin: 0 0 0.5rem 0;
+        }
+        .banner-cta-btn {
+          display: inline-flex;
+          align-items: center;
+          gap: 10px;
+          background: #D47792;
+          color: #fff !important;
+          padding: 14px 28px;
+          border-radius: 50px;
+          font-family: var(--font-montserrat), sans-serif;
+          font-size: 0.95rem;
+          font-weight: 700;
+          text-decoration: none;
+          text-transform: uppercase;
+          letter-spacing: 0.04em;
+          box-shadow: 0 6px 20px rgba(212, 119, 146, 0.35);
+          transition: all 0.3s ease;
+        }
+        .banner-cta-btn:hover {
+          background: #c25f7c;
+          transform: translateY(-2px);
+          box-shadow: 0 10px 25px rgba(212, 119, 146, 0.45);
         }
         .creative-space-header {
           text-align: center;
