@@ -19,7 +19,7 @@ export default function StationeryPromoBanner() {
     <section className="stationery-section">
       <div className="stationery-container">
         <div className="stationery-grid">
-          {/* LADO IZQUIERDO: Imagen sola en grande */}
+          {/* LADO IZQUIERDO: Imagen sola en GIGANTE */}
           <div className="stationery-left">
             <Link
               href="/productos?categoria=articulos-de-libreria-para-llevar"
@@ -35,7 +35,7 @@ export default function StationeryPromoBanner() {
             </Link>
           </div>
 
-          {/* LADO DERECHO: Texto, Badge y Botón Rosa */}
+          {/* LADO DERECHO: Texto, Badge y Botón Rosa Lindo */}
           <div className="stationery-right">
             <span className="stationery-badge">🌸 Nuevos Ingresos</span>
             <p className="stationery-desc">
@@ -46,7 +46,7 @@ export default function StationeryPromoBanner() {
               className="stationery-btn"
             >
               <span>Ver artículos de librería</span>
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                 <line x1="5" y1="12" x2="19" y2="12"></line>
                 <polyline points="12 5 19 12 12 19"></polyline>
               </svg>
@@ -58,16 +58,16 @@ export default function StationeryPromoBanner() {
       <style jsx>{`
         .stationery-section {
           width: 100%;
-          padding: 4rem 1.5rem 2rem 1.5rem;
+          padding: 4.5rem 2rem 2.5rem 2rem;
           background-color: var(--background, #FAFAFA);
         }
         .stationery-container {
-          max-width: 1440px;
+          max-width: 1600px;
           margin: 0 auto;
         }
         .stationery-grid {
           display: grid;
-          grid-template-columns: 1.65fr 1fr;
+          grid-template-columns: 2.1fr 1fr;
           gap: 4.5rem;
           align-items: center;
         }
@@ -86,38 +86,39 @@ export default function StationeryPromoBanner() {
           width: 100%;
           border-radius: 36px;
           overflow: hidden;
-          box-shadow: 0 22px 55px rgba(212, 119, 146, 0.22);
-          border: 3.5px solid #F5C6D0;
+          box-shadow: 0 24px 60px rgba(255, 133, 161, 0.25);
+          border: 4px solid #FFD1DC;
           background: #FFF0F3;
         }
         .stationery-img {
           width: 100%;
           height: auto;
+          min-height: 500px;
           display: block;
           object-fit: cover;
           transition: transform 0.4s ease;
         }
         .stationery-img-link:hover .stationery-img {
-          transform: scale(1.03);
+          transform: scale(1.025);
         }
         .stationery-right {
           display: flex;
           flex-direction: column;
           align-items: flex-start;
           gap: 2.2rem;
-          padding: 1rem 0.5rem 1rem 0;
+          padding: 1rem 0;
         }
         .stationery-badge {
           display: inline-block;
           background: #FFF0F3;
-          color: #E85B81;
+          color: #FF6F96;
           font-size: 1rem;
           font-weight: 800;
           text-transform: uppercase;
           letter-spacing: 0.08em;
           padding: 10px 24px;
           border-radius: 30px;
-          border: 2px solid #F5C6D0;
+          border: 2px solid #FFD1DC;
         }
         .stationery-desc {
           font-family: var(--font-montserrat), sans-serif;
@@ -131,29 +132,33 @@ export default function StationeryPromoBanner() {
           display: inline-flex;
           align-items: center;
           gap: 14px;
-          background: linear-gradient(135deg, #FF7597 0%, #E85B81 100%);
+          background: linear-gradient(135deg, #FFA0BC 0%, #FF6F96 100%);
           color: #ffffff !important;
-          padding: 22px 46px;
+          padding: 20px 44px;
           border-radius: 60px;
+          border: 2px solid #FFD1DC;
           font-family: var(--font-montserrat), sans-serif;
           font-size: 1.15rem;
           font-weight: 800;
           text-decoration: none;
           text-transform: uppercase;
           letter-spacing: 0.04em;
-          box-shadow: 0 12px 32px rgba(232, 91, 129, 0.42);
+          box-shadow: 0 12px 32px rgba(255, 111, 150, 0.45);
           transition: all 0.3s ease;
         }
         .stationery-btn:hover {
-          background: linear-gradient(135deg, #ff5c84 0%, #d44369 100%);
+          background: linear-gradient(135deg, #FF8DAF 0%, #F55582 100%);
           transform: translateY(-3px);
-          box-shadow: 0 16px 42px rgba(232, 91, 129, 0.55);
+          box-shadow: 0 16px 42px rgba(255, 111, 150, 0.6);
         }
 
-        @media (max-width: 1024px) {
+        @media (max-width: 1100px) {
           .stationery-grid {
             grid-template-columns: 1fr;
             gap: 2.5rem;
+          }
+          .stationery-img {
+            min-height: auto;
           }
           .stationery-left {
             width: 100%;
