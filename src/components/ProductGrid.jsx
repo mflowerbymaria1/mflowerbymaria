@@ -48,11 +48,11 @@ export default function ProductGrid() {
         {/* Banner Artículos de librería para llevar */}
         {!isWholesale && (
           <div className="stationery-promo-banner">
-            <div className="banner-grid-layout">
-              {/* Left Column: Image */}
+            <div className="banner-card-container">
+              {/* Full Width Large Image Banner */}
               <Link 
                 href="/productos?categoria=articulos-de-libreria-para-llevar" 
-                className="banner-left-link"
+                className="banner-image-link"
               >
                 <div className="banner-img-wrapper">
                   <img 
@@ -60,28 +60,34 @@ export default function ProductGrid() {
                     alt="Artículos de librería para llevar" 
                     className="banner-img"
                   />
+                  <div className="banner-image-overlay">
+                    <span className="banner-overlay-pill">
+                      Ver colección completa →
+                    </span>
+                  </div>
                 </div>
               </Link>
 
-              {/* Right Column: Info and Button */}
-              <div className="banner-cta-card">
-                <span className="banner-badge">🌸 Nuevos Ingresos</span>
-                <p className="banner-tagline font-quicksand">
-                  ¡Llegaron cositas nuevas para tu día a día!
-                </p>
-                <p className="banner-description">
-                  Resaltadores en tonos pastel, cintas correctoras, lapiceras y accesorios súper tiernos de papelería y deco para tu escritorio.
-                </p>
-                <Link 
-                  href="/productos?categoria=articulos-de-libreria-para-llevar" 
-                  className="banner-cta-btn"
-                >
-                  <span>Ver artículos de librería</span>
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                    <line x1="5" y1="12" x2="19" y2="12"></line>
-                    <polyline points="12 5 19 12 12 19"></polyline>
-                  </svg>
-                </Link>
+              {/* Bottom Action Bar */}
+              <div className="banner-bottom-bar">
+                <div className="banner-bar-left">
+                  <span className="banner-badge">🌸 Nuevos Ingresos</span>
+                  <p className="banner-description">
+                    Resaltadores en tonos pastel, cintas correctoras, lapiceras y accesorios súper tiernos de papelería y deco para tu escritorio.
+                  </p>
+                </div>
+                <div className="banner-bar-right">
+                  <Link 
+                    href="/productos?categoria=articulos-de-libreria-para-llevar" 
+                    className="banner-cta-btn"
+                  >
+                    <span>Ver artículos de librería</span>
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <line x1="5" y1="12" x2="19" y2="12"></line>
+                      <polyline points="12 5 19 12 12 19"></polyline>
+                    </svg>
+                  </Link>
+                </div>
               </div>
             </div>
           </div>
@@ -125,50 +131,78 @@ export default function ProductGrid() {
         }
         .stationery-promo-banner {
           margin: 0 auto 5.5rem auto;
-          max-width: 100%;
+          width: 100%;
         }
-        .banner-grid-layout {
-          display: grid;
-          grid-template-columns: 1.55fr 1fr;
-          gap: 2.8rem;
-          align-items: center;
+        .banner-card-container {
           background: #ffffff;
-          padding: 1.6rem;
+          padding: 1.25rem;
           border-radius: 32px;
           border: 2.5px solid #F5C6D0;
-          box-shadow: 0 16px 45px rgba(212, 119, 146, 0.15);
+          box-shadow: 0 18px 50px rgba(212, 119, 146, 0.16);
+          display: flex;
+          flex-direction: column;
+          gap: 1.5rem;
         }
-        .banner-left-link {
+        .banner-image-link {
           display: block;
           text-decoration: none;
           border-radius: 24px;
           overflow: hidden;
+          width: 100%;
         }
         .banner-img-wrapper {
           position: relative;
           width: 100%;
           border-radius: 24px;
           overflow: hidden;
-          box-shadow: 0 8px 24px rgba(0, 0, 0, 0.07);
-          transition: transform 0.3s ease, box-shadow 0.3s ease;
+          box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
           background: #FFF0F3;
-        }
-        .banner-left-link:hover .banner-img-wrapper {
-          transform: scale(1.02);
-          box-shadow: 0 14px 32px rgba(212, 119, 146, 0.28);
         }
         .banner-img {
           width: 100%;
           height: auto;
           display: block;
           object-fit: cover;
+          transition: transform 0.4s ease;
         }
-        .banner-cta-card {
-          padding: 1.2rem 2rem 1.2rem 0.5rem;
+        .banner-image-link:hover .banner-img {
+          transform: scale(1.02);
+        }
+        .banner-image-overlay {
+          position: absolute;
+          bottom: 20px;
+          right: 24px;
+          opacity: 0;
+          transform: translateY(10px);
+          transition: all 0.3s ease;
+        }
+        .banner-image-link:hover .banner-image-overlay {
+          opacity: 1;
+          transform: translateY(0);
+        }
+        .banner-overlay-pill {
+          background: rgba(26, 26, 26, 0.85);
+          color: #fff;
+          padding: 10px 22px;
+          border-radius: 30px;
+          font-family: var(--font-montserrat), sans-serif;
+          font-size: 0.9rem;
+          font-weight: 700;
+          backdrop-filter: blur(8px);
+          box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        .banner-bottom-bar {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 2rem;
+          padding: 0.5rem 1rem 0.5rem 0.5rem;
+        }
+        .banner-bar-left {
           display: flex;
           flex-direction: column;
-          align-items: flex-start;
-          gap: 1.1rem;
+          gap: 0.6rem;
+          flex: 1;
         }
         .banner-badge {
           display: inline-block;
@@ -178,23 +212,21 @@ export default function ProductGrid() {
           font-weight: 800;
           text-transform: uppercase;
           letter-spacing: 0.08em;
-          padding: 8px 18px;
+          padding: 6px 16px;
           border-radius: 30px;
           border: 1.5px solid #F5C6D0;
-        }
-        .banner-tagline {
-          font-size: 1.85rem;
-          font-weight: 800;
-          color: #1a1a1a;
-          line-height: 1.25;
-          margin: 0;
+          width: fit-content;
         }
         .banner-description {
           font-family: var(--font-montserrat), sans-serif;
-          font-size: 1.05rem;
-          color: #555;
-          line-height: 1.6;
+          font-size: 1.1rem;
+          color: #444;
+          line-height: 1.5;
           margin: 0;
+          font-weight: 500;
+        }
+        .banner-bar-right {
+          flex-shrink: 0;
         }
         .banner-cta-btn {
           display: inline-flex;
@@ -202,7 +234,7 @@ export default function ProductGrid() {
           gap: 12px;
           background: #D47792;
           color: #fff !important;
-          padding: 16px 36px;
+          padding: 18px 36px;
           border-radius: 50px;
           font-family: var(--font-montserrat), sans-serif;
           font-size: 1.05rem;
@@ -212,7 +244,7 @@ export default function ProductGrid() {
           letter-spacing: 0.04em;
           box-shadow: 0 8px 25px rgba(212, 119, 146, 0.4);
           transition: all 0.3s ease;
-          margin-top: 0.4rem;
+          white-space: nowrap;
         }
         .banner-cta-btn:hover {
           background: #c25f7c;
@@ -249,17 +281,18 @@ export default function ProductGrid() {
         }
 
         @media (max-width: 900px) {
-          .banner-grid-layout {
-            grid-template-columns: 1fr;
-            gap: 1.8rem;
-            padding: 1.2rem;
-          }
-          .banner-cta-card {
-            padding: 0.5rem;
+          .banner-bottom-bar {
+            flex-direction: column;
             align-items: flex-start;
+            gap: 1.5rem;
+            padding: 0;
           }
-          .banner-tagline {
-            font-size: 1.5rem;
+          .banner-bar-right {
+            width: 100%;
+          }
+          .banner-cta-btn {
+            width: 100%;
+            justify-content: center;
           }
           .grid-container {
             grid-template-columns: repeat(2, 1fr);
@@ -269,21 +302,23 @@ export default function ProductGrid() {
           }
         }
         @media (max-width: 600px) {
-          .banner-grid-layout {
+          .banner-card-container {
             border-radius: 24px;
-            padding: 1rem;
+            padding: 0.85rem;
+            gap: 1rem;
+          }
+          .banner-img-wrapper {
+            border-radius: 18px;
+          }
+          .banner-description {
+            font-size: 0.95rem;
           }
           .banner-cta-btn {
-            width: 100%;
-            justify-content: center;
-            padding: 14px 24px;
+            padding: 14px 20px;
             font-size: 0.95rem;
           }
           .stationery-promo-banner {
             margin-bottom: 2.5rem;
-          }
-          .banner-img-wrapper {
-            border-radius: 18px;
           }
           .grid-container {
             grid-template-columns: 1fr;
