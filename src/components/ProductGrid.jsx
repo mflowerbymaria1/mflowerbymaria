@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
+import Link from "next/link";
 import ProductCard from "./ProductCard";
 import { supabase } from "../lib/supabase";
 
@@ -44,6 +45,21 @@ export default function ProductGrid() {
   return (
     <section className="product-grid-section">
       <div className="container">
+        {/* Banner Artículos de librería para llevar */}
+        {!isWholesale && (
+          <div className="stationery-promo-banner">
+            <Link href="/productos" style={{ display: 'block', textDecoration: 'none' }}>
+              <div className="banner-img-wrapper">
+                <img 
+                  src="/images/banner_libreria.jpg" 
+                  alt="Artículos de librería para llevar" 
+                  className="banner-img"
+                />
+              </div>
+            </Link>
+          </div>
+        )}
+
         <div className="creative-space-header">
           {isWholesale ? (
             <>
@@ -80,6 +96,29 @@ export default function ProductGrid() {
           padding: 5rem 1rem;
           background-color: var(--background);
         }
+        .stationery-promo-banner {
+          margin: 0 auto 4.5rem auto;
+          max-width: 100%;
+        }
+        .banner-img-wrapper {
+          position: relative;
+          width: 100%;
+          border-radius: 24px;
+          overflow: hidden;
+          box-shadow: 0 12px 36px rgba(212, 119, 146, 0.16);
+          transition: transform 0.3s ease, box-shadow 0.3s ease;
+          background: #FFF0F3;
+        }
+        .banner-img-wrapper:hover {
+          transform: translateY(-4px);
+          box-shadow: 0 18px 45px rgba(212, 119, 146, 0.24);
+        }
+        .banner-img {
+          width: 100%;
+          height: auto;
+          display: block;
+          object-fit: cover;
+        }
         .creative-space-header {
           text-align: center;
           max-width: 800px;
@@ -113,8 +152,17 @@ export default function ProductGrid() {
           .grid-container {
             grid-template-columns: repeat(2, 1fr);
           }
+          .stationery-promo-banner {
+            margin-bottom: 3.5rem;
+          }
         }
         @media (max-width: 600px) {
+          .stationery-promo-banner {
+            margin-bottom: 2.5rem;
+          }
+          .banner-img-wrapper {
+            border-radius: 16px;
+          }
           .grid-container {
             grid-template-columns: 1fr;
           }
