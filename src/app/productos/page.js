@@ -173,19 +173,9 @@ function ProductosContent() {
             <Header />
             <main className="flex-grow bg-background py-16">
                 <div className="container">
-                    {/* Barra de navegación / Migas de pan */}
-                    <div className="breadcrumb-bar mb-8 flex items-center justify-between flex-wrap gap-3">
-                        <nav aria-label="Ruta de navegación" className="flex items-center gap-2 text-sm text-gray-500 font-medium">
-                            <Link href="/" className="breadcrumb-link hover:text-pink transition-colors">
-                                Inicio
-                            </Link>
-                            <span className="text-gray-300">/</span>
-                            <span className="text-gray-700 font-semibold">
-                                {query ? `Búsqueda: "${query}"` : getCategoryTitle(categoria)}
-                            </span>
-                        </nav>
-                        <Link href="/" className="back-btn-pill">
-                            ← Volver al Inicio
+                    <div className="mb-6">
+                        <Link href="/" className="back-link">
+                            ← Volver al inicio
                         </Link>
                     </div>
 
@@ -283,36 +273,17 @@ function ProductosContent() {
                 .mx-auto { margin-left: auto; margin-right: auto; }
                 .block { display: block; }
 
-                .breadcrumb-link {
-                    color: #6b7280;
-                    text-decoration: none;
-                    transition: color 0.2s;
-                }
-                .breadcrumb-link:hover {
-                    color: var(--pastel-pink);
-                    text-decoration: underline;
-                }
-                .back-btn-pill {
+                .back-link {
                     display: inline-flex;
                     align-items: center;
-                    gap: 6px;
-                    background: #fff;
-                    border: 1px solid #e5e7eb;
-                    color: #4b5563;
-                    padding: 6px 14px;
-                    border-radius: 20px;
-                    font-size: 0.85rem;
-                    font-weight: 600;
+                    color: #6b7280;
                     text-decoration: none;
-                    cursor: pointer;
-                    transition: all 0.2s ease;
-                    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+                    font-weight: 500;
+                    font-size: 0.95rem;
+                    transition: color 0.2s;
                 }
-                .back-btn-pill:hover {
-                    background: #fff0f3;
+                .back-link:hover {
                     color: var(--pastel-pink);
-                    border-color: #f5c6d0;
-                    transform: translateX(-2px);
                 }
 
                 /* Botones de vista: solo visibles en mobile */
