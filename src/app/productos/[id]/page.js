@@ -126,6 +126,9 @@ export default function ProductDetailPage({ params }) {
         if (nameLower.includes('midi block') || nameLower.includes('midi') || nameLower.includes('block a5') || (cat.includes('block') && (nameLower.includes('a5') || nameLower.includes('cereza') || nameLower.includes('osito') || nameLower.includes('suertudo')))) return 'Práctico y versátil en tamaño A5. Tu aliado para el escritorio o la cartera, con secciones pensadas para organizar cada día al máximo.';
         if (nameLower.includes('baby block') || nameLower.includes('baby') || (cat.includes('block') && nameLower.includes('a6'))) return 'Súper compacto en tamaño A6 mini. Ideal para tener a mano y anotar recordatorios o ideas de manera rápida e instantánea.';
         if (nameLower.includes('mega block') || nameLower.includes('mega') || (cat.includes('block') && (nameLower.includes('a4') || nameLower.includes('animal print')))) return 'Espacio extra grande en tamaño A4. Tu compañero de escritorio para mantener al día materias, tareas y proyectos.';
+        if (nameLower.includes('snoopy')) return 'El cuaderno más tierno y esperado. Diseñado para llenar tus días de alegría, estudio y organización con la magia inconfundible de Snoopy. ¡Incluye una bolsita de stickers de regalo!';
+        if (nameLower.includes('lapicera') || nameLower.includes('serena')) return 'Escribir lindo transforma cualquier apunte. Con un diseño en suaves tonos pasteles y un trazo ultra suave, esta lapicera retráctil es el accesorio que vas a amar llevar siempre con vos.';
+        if (nameLower.includes('porta lapiceras') || nameLower.includes('lapicero') || nameLower.includes('arcoiris')) return 'Llená tu escritorio de calidez, armonía y estilo con este organizador soñado. En un delicado tono rosa pastel, mantiene todos tus útiles ordenados y al alcance de la mano para inspirarte todos los días.';
 
         // Por categoría (usando includes para cubrir variantes con emojis, plurales, etc.)
         if (cat.includes('cuaderno') && cat.includes('a4')) return 'Tu compañero ideal para la facu, el trabajo o tus proyectos creativos. Con sistema de discos inteligente, podés agregar, quitar y reorganizar hojas cuando quieras. Diseñado para acompañarte en cada idea, cada clase y cada momento de inspiración.';
@@ -139,6 +142,7 @@ export default function ProductDetailPage({ params }) {
         if (cat.includes('sticker') || cat.includes('varios')) return 'Dale tu toque personal a todo lo que uses. Perfectos para decorar cuadernos, libretas, notebooks o cualquier superficie. Porque los detalles hacen la diferencia.';
         if (cat.includes('argentina') || cat.includes('cápsula')) return 'Llevá el orgullo argentino a todos lados. Diseños exclusivos inspirados en nuestra cultura y tradición, para que cada producto cuente una historia que nos representa.';
         if (cat.includes('maestro') || cat.includes('sets')) return 'Ideas pensadas con amor para regalar y homenajear a quienes nos enseñan con tanta dedicación y cariño todos los días.';
+        if (cat.includes('librería') || cat.includes('llevar') || cat.includes('artículo')) return 'Accesorios y complementos de librería llenos de diseño y ternura para acompañar tus días de estudio y trabajo.';
 
         return '';
     };
@@ -893,7 +897,7 @@ export default function ProductDetailPage({ params }) {
                 .tech-desc-label {
                     font-size: 0.9rem;
                     font-weight: 700;
-                    color: #9ca3af;
+                    color: #D47792;
                     text-transform: uppercase;
                     letter-spacing: 0.05em;
                     margin-bottom: 0.6rem;
