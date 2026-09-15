@@ -218,10 +218,27 @@ export default function ProductDetailPage({ params }) {
             <Header />
             <main className="flex-grow bg-background py-16">
                 <div className="container">
-                    <div className="mb-6">
-                        <Link href={backUrl} className="back-link">
-                            ← {backLabel}
-                        </Link>
+                    {/* Migas de pan y botones de navegación */}
+                    <div className="breadcrumb-bar mb-6 flex items-center justify-between flex-wrap gap-3">
+                        <nav aria-label="Ruta de navegación" className="flex items-center gap-2 text-sm text-gray-500 font-medium flex-wrap">
+                            <Link href="/" className="breadcrumb-link hover:text-pink transition-colors">
+                                Inicio
+                            </Link>
+                            <span className="text-gray-300">/</span>
+                            <Link href={backUrl} className="breadcrumb-link hover:text-pink transition-colors">
+                                {product.category || 'Productos'}
+                            </Link>
+                            <span className="text-gray-300">/</span>
+                            <span className="text-gray-800 font-semibold truncate max-w-[200px] sm:max-w-xs">{product.name}</span>
+                        </nav>
+                        <div className="flex items-center gap-2 flex-wrap">
+                            <Link href={backUrl} className="back-btn-pill" title={`Ir a ${product.category || 'categoría'}`}>
+                                ← Volver a {product.category || 'la categoría'}
+                            </Link>
+                            <Link href="/" className="back-btn-pill" title="Volver a la página principal">
+                                Inicio 🏠
+                            </Link>
+                        </div>
                     </div>
 
                     <div className="product-detail-layout">
@@ -1007,16 +1024,36 @@ export default function ProductDetailPage({ params }) {
                     margin-top: 0.8rem;
                     line-height: 1.4;
                 }
-                .back-link {
-                    display: inline-flex;
-                    align-items: center;
+                .breadcrumb-link {
                     color: #6b7280;
                     text-decoration: none;
-                    font-weight: 500;
                     transition: color 0.2s;
                 }
-                .back-link:hover {
+                .breadcrumb-link:hover {
                     color: var(--pastel-pink);
+                    text-decoration: underline;
+                }
+                .back-btn-pill {
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 6px;
+                    background: #fff;
+                    border: 1px solid #e5e7eb;
+                    color: #4b5563;
+                    padding: 6px 14px;
+                    border-radius: 20px;
+                    font-size: 0.85rem;
+                    font-weight: 600;
+                    text-decoration: none;
+                    cursor: pointer;
+                    transition: all 0.2s ease;
+                    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+                }
+                .back-btn-pill:hover {
+                    background: #fff0f3;
+                    color: var(--pastel-pink);
+                    border-color: #f5c6d0;
+                    transform: translateX(-2px);
                 }
                 
                 .shipping-calc-wrapper {

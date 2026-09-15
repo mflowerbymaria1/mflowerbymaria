@@ -2,6 +2,7 @@
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 import ProductCard from "../../components/ProductCard";
+import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { Suspense } from "react";
 
@@ -172,6 +173,22 @@ function ProductosContent() {
             <Header />
             <main className="flex-grow bg-background py-16">
                 <div className="container">
+                    {/* Barra de navegación / Migas de pan */}
+                    <div className="breadcrumb-bar mb-8 flex items-center justify-between flex-wrap gap-3">
+                        <nav aria-label="Ruta de navegación" className="flex items-center gap-2 text-sm text-gray-500 font-medium">
+                            <Link href="/" className="breadcrumb-link hover:text-pink transition-colors">
+                                Inicio
+                            </Link>
+                            <span className="text-gray-300">/</span>
+                            <span className="text-gray-700 font-semibold">
+                                {query ? `Búsqueda: "${query}"` : getCategoryTitle(categoria)}
+                            </span>
+                        </nav>
+                        <Link href="/" className="back-btn-pill">
+                            ← Volver al Inicio
+                        </Link>
+                    </div>
+
                     <div className="text-center mb-12">
                         <h1 className="font-quicksand text-4xl text-pink font-bold mb-4 flex-center justify-center">
                             {query ? `Resultados para "${query}"` : 
@@ -265,6 +282,38 @@ function ProductosContent() {
                 .max-w-2xl { max-width: 42rem; }
                 .mx-auto { margin-left: auto; margin-right: auto; }
                 .block { display: block; }
+
+                .breadcrumb-link {
+                    color: #6b7280;
+                    text-decoration: none;
+                    transition: color 0.2s;
+                }
+                .breadcrumb-link:hover {
+                    color: var(--pastel-pink);
+                    text-decoration: underline;
+                }
+                .back-btn-pill {
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 6px;
+                    background: #fff;
+                    border: 1px solid #e5e7eb;
+                    color: #4b5563;
+                    padding: 6px 14px;
+                    border-radius: 20px;
+                    font-size: 0.85rem;
+                    font-weight: 600;
+                    text-decoration: none;
+                    cursor: pointer;
+                    transition: all 0.2s ease;
+                    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+                }
+                .back-btn-pill:hover {
+                    background: #fff0f3;
+                    color: var(--pastel-pink);
+                    border-color: #f5c6d0;
+                    transform: translateX(-2px);
+                }
 
                 /* Botones de vista: solo visibles en mobile */
                 .view-toggle-bar {
