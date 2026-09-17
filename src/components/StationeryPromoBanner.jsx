@@ -54,7 +54,7 @@ export default function StationeryPromoBanner() {
             }}
           >
             <Link
-              href="/productos?categoria=articulos-de-libreria-para-llevar"
+              href="/productos?categoria=articulos-para-sumar-a-tu-carrito"
               style={{
                 display: "block",
                 textDecoration: "none",
@@ -77,7 +77,7 @@ export default function StationeryPromoBanner() {
               >
                 <img
                   src="/images/banner_libreria.jpg"
-                  alt="Artículos de librería para llevar"
+                  alt="Artículos para sumar a tu carrito"
                   className="stationery-img"
                   style={{
                     width: "100%",
@@ -135,7 +135,7 @@ export default function StationeryPromoBanner() {
               Resaltadores en tonos pastel, cintas correctoras, lapiceras y accesorios súper tiernos de papelería y deco para tu escritorio.
             </p>
             <Link
-              href="/productos?categoria=articulos-de-libreria-para-llevar"
+              href="/productos?categoria=articulos-para-sumar-a-tu-carrito"
               className="stationery-btn"
               style={{
                 display: "inline-flex",
@@ -157,7 +157,7 @@ export default function StationeryPromoBanner() {
                 cursor: "pointer"
               }}
             >
-              <span>Ver artículos de librería</span>
+              <span>Ver artículos para sumar a tu carrito</span>
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                 <line x1="5" y1="12" x2="19" y2="12"></line>
                 <polyline points="12 5 19 12 12 19"></polyline>
