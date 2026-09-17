@@ -247,7 +247,8 @@ export default function ProductDetailPage({ params }) {
                                                               product.name.toLowerCase().includes('midi block') ||
                                                               product.name.toLowerCase().includes('baby block') ||
                                                               product.name.toLowerCase().includes('mega block') ||
-                                                              product.name.toLowerCase().includes('croissant')
+                                                              product.name.toLowerCase().includes('croissant') ||
+                                                              product.name.toLowerCase().includes('futura')
                                                           )
                                                                 ? { transform: 'scale(1.3)', objectFit: 'contain', objectPosition: 'center' }
                                                                 : {})
