@@ -569,8 +569,9 @@ export default function ProductDetailPage({ params }) {
             <style>{`
                 .product-detail-layout {
                     display: grid;
-                    grid-template-columns: 1fr 1fr;
+                    grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
                     gap: 3rem;
+                    align-items: start;
                     background: #fff;
                     padding: 3rem;
                     border-radius: 20px;
@@ -614,6 +615,8 @@ export default function ProductDetailPage({ params }) {
                     display: flex;
                     flex-direction: column;
                     gap: 1rem;
+                    min-width: 0;
+                    width: 100%;
                 }
                 .product-image-container {
                     width: 100%;
@@ -760,26 +763,29 @@ export default function ProductDetailPage({ params }) {
                 }
                 .gallery-thumbnails {
                     display: flex;
+                    flex-wrap: wrap;
                     gap: 10px;
-                    overflow-x: auto;
-                    padding-bottom: 5px;
+                    padding-top: 4px;
+                    width: 100%;
+                    max-width: 100%;
                 }
                 .thumbnail-btn {
-                    width: 80px;
-                    height: 80px;
-                    border-radius: 10px;
-                    border: 2px solid transparent;
+                    width: 68px;
+                    height: 68px;
+                    border-radius: 12px;
+                    border: 2px solid #eee;
                     padding: 0;
                     overflow: hidden;
                     cursor: pointer;
                     background-color: #fff;
                     flex-shrink: 0;
-                    opacity: 0.6;
+                    opacity: 0.7;
                     transition: all 0.2s ease;
                 }
                 .thumbnail-btn.active, .thumbnail-btn:hover {
                     opacity: 1;
                     border-color: var(--pastel-pink);
+                    transform: scale(1.04);
                 }
                 .thumbnail-btn img {
                     width: 100%;
