@@ -10,8 +10,8 @@ import "swiper/css/pagination";
 export default function Hero() {
   const slides = [
     {
-      image: "/images/mflower_hero_desk_new.jpg",
-      subtitle: "Todo lo que tu lado girly necesita.",
+      image: "/images/banner_hero_collage.png",
+      subtitle: "",
       link: "/productos",
       buttonText: "EXPLORAR COLECCIÓN",
     },
@@ -20,12 +20,6 @@ export default function Hero() {
       subtitle: "",
       link: "/productos?categoria=capsula-argentina",
       buttonText: "VER CÁPSULA",
-    },
-    {
-      image: "/images/banner_maestro.png",
-      subtitle: "",
-      link: "/productos?categoria=sets-dia-del-maestro",
-      buttonText: "APROVECHAR",
     },
   ];
 
@@ -85,21 +79,12 @@ export default function Hero() {
           overflow: hidden;
         }
 
-        /* Primer slide: exactamente como estaba antes (cover) */
+        /* Primer slide (Collage Papelería): se adapta sin cortarse */
         .hero-slide-bg.slide-0 {
-          background-size: cover;
-          background-position: center;
-        }
-
-        .hero-slide-bg.slide-0::after {
-          content: '';
-          position: absolute;
-          bottom: 0;
-          right: 0;
-          width: 160px;
-          height: 40px;
-          background: linear-gradient(to right, transparent, #f5f0eb 30%);
-          z-index: 5;
+          background-size: contain;
+          background-position: center center;
+          background-repeat: no-repeat;
+          background-color: #F8F3F1;
         }
 
         /* Segundo slide (Cápsula Argentina): se adapta sin cortarse */
@@ -108,13 +93,6 @@ export default function Hero() {
           background-position: center center;
           background-repeat: no-repeat;
           background-color: #E2D7CC;
-        }
-
-        /* Tercer slide (Día del Maestro) */
-        .hero-slide-bg.slide-2 {
-          background-size: cover;
-          background-position: center center;
-          background-repeat: no-repeat;
         }
 
         .overlay {
@@ -136,6 +114,11 @@ export default function Hero() {
           align-items: center;
           gap: 20px;
           padding: 0 20px;
+        }
+
+        /* En el primer slide ubicamos el botón abajo para no tapar el collage */
+        .content-slide-0 {
+          margin-top: 260px;
         }
 
         /* En el segundo slide levantamos el botón para que no tape los productos */
@@ -202,8 +185,10 @@ export default function Hero() {
             background-position: center center;
           }
           .hero-slide-bg.slide-0 {
-            background-size: cover;
+            background-size: contain;
             background-position: center center;
+            background-repeat: no-repeat;
+            background-color: #F8F3F1;
           }
           .hero-slide-bg.slide-1 {
             background-size: contain;
@@ -211,11 +196,17 @@ export default function Hero() {
             background-repeat: no-repeat;
             background-color: #E2D7CC;
           }
-          .hero-slide-bg.slide-2 {
-            background-size: contain;
-            background-position: center center;
-            background-repeat: no-repeat;
-            background-color: #F8C3D2;
+
+          /* Slide 0 (Collage principal): botón bien nítido, chiquito y ubicado abajo */
+          .content-slide-0 {
+            margin-top: 0 !important;
+            margin-bottom: 0 !important;
+            padding-bottom: 0 !important;
+            position: absolute;
+            top: 82%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%;
           }
 
           /* Slide 1 (Cápsula Argentina): botón bien nítido, chiquito y ubicado justo debajo de '20% Off transferencia' */
@@ -230,26 +221,14 @@ export default function Hero() {
             width: 100%;
           }
 
-          /* Slide 2 (Día del Maestro): botón bien nítido, chiquito y ubicado más arriba */
-          .content-slide-2 {
-            margin-top: 0 !important;
-            margin-bottom: 0 !important;
-            padding-bottom: 0 !important;
-            position: absolute;
-            top: 76%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 100%;
-          }
-
           .hero-subtitle {
             font-size: 1.1rem;
             margin-bottom: 2px;
           }
 
           /* Botones para celulares: bien chicos, súper nítidos y sin sombras borrosas */
-          .content-slide-1 .cta-button,
-          .content-slide-2 .cta-button {
+          .content-slide-0 .cta-button,
+          .content-slide-1 .cta-button {
             padding: 4px 12px !important;
             font-size: 0.65rem !important;
             letter-spacing: 0.5px !important;
@@ -257,11 +236,6 @@ export default function Hero() {
             border-radius: 16px !important;
             box-shadow: 0 1px 4px rgba(0,0,0,0.2) !important;
             margin: 0 !important;
-          }
-
-          .content-slide-0 .cta-button {
-            padding: 8px 20px;
-            font-size: 0.8rem;
           }
 
           .hero-content {
