@@ -57,7 +57,7 @@ export default function ProductGrid() {
             <>
               <h2 className="creative-title">Tu espacio creativo empieza acá.</h2>
               <p className="creative-subtitle">
-                En M•flower by Maria vas a encontrar herramientas pensadas con amor para organizar tu mundo y hacerlo un poquito mas lindo, para que tus ideas tengan el lugar que se merecen.
+                En M•flower by Maria vas a encontrar papelería para organizar tus días, darle lugar a tus ideas y disfrutar cada página :)
               </p>
             </>
           )}
