@@ -28,9 +28,9 @@ export default function Hero() {
       <Swiper
         modules={[Autoplay, EffectFade, Pagination]}
         effect="fade"
-        speed={800}
+        speed={1000}
         autoplay={{
-          delay: 3000,
+          delay: 4500,
           disableOnInteraction: false,
         }}
         pagination={{ clickable: true }}
