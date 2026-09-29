@@ -10,6 +10,12 @@ import "swiper/css/pagination";
 export default function Hero() {
   const slides = [
     {
+      image: "/images/banner_dia_de_la_madre.png",
+      subtitle: "",
+      link: "/productos",
+      buttonText: "VER ESPECIAL MAMÁ",
+    },
+    {
       image: "/images/banner_hero_collage.png",
       subtitle: "",
       link: "/productos",
@@ -79,16 +85,24 @@ export default function Hero() {
           overflow: hidden;
         }
 
-        /* Primer slide (Collage Papelería): se adapta sin cortarse */
+        /* Primer slide (Día de la Madre): se adapta sin cortarse */
         .hero-slide-bg.slide-0 {
+          background-size: contain;
+          background-position: center center;
+          background-repeat: no-repeat;
+          background-color: #D4BABF;
+        }
+
+        /* Segundo slide (Collage Papelería): se adapta sin cortarse */
+        .hero-slide-bg.slide-1 {
           background-size: contain;
           background-position: center center;
           background-repeat: no-repeat;
           background-color: #F8F3F1;
         }
 
-        /* Segundo slide (Cápsula Argentina): se adapta sin cortarse */
-        .hero-slide-bg.slide-1 {
+        /* Tercer slide (Cápsula Argentina): se adapta sin cortarse */
+        .hero-slide-bg.slide-2 {
           background-size: contain;
           background-position: center center;
           background-repeat: no-repeat;
@@ -116,13 +130,18 @@ export default function Hero() {
           padding: 0 20px;
         }
 
-        /* En el primer slide ubicamos el botón abajo para no tapar el collage */
+        /* En el slide 0 (Día de la Madre) ubicamos el botón abajo */
         .content-slide-0 {
           margin-top: 260px;
         }
 
-        /* En el segundo slide levantamos el botón para que no tape los productos */
+        /* En el slide 1 (Collage) ubicamos el botón abajo */
         .content-slide-1 {
+          margin-top: 260px;
+        }
+
+        /* En el slide 2 (Cápsula) levantamos el botón para que no tape los productos */
+        .content-slide-2 {
           margin-bottom: 130px;
         }
 
@@ -188,17 +207,35 @@ export default function Hero() {
             background-size: contain;
             background-position: center center;
             background-repeat: no-repeat;
-            background-color: #F8F3F1;
+            background-color: #D4BABF;
           }
           .hero-slide-bg.slide-1 {
+            background-size: contain;
+            background-position: center center;
+            background-repeat: no-repeat;
+            background-color: #F8F3F1;
+          }
+          .hero-slide-bg.slide-2 {
             background-size: contain;
             background-position: center center;
             background-repeat: no-repeat;
             background-color: #E2D7CC;
           }
 
-          /* Slide 0 (Collage principal): botón bien nítido, chiquito y ubicado abajo */
+          /* Slide 0 (Día de la Madre): botón bien nítido, chiquito y ubicado abajo */
           .content-slide-0 {
+            margin-top: 0 !important;
+            margin-bottom: 0 !important;
+            padding-bottom: 0 !important;
+            position: absolute;
+            top: 84%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%;
+          }
+
+          /* Slide 1 (Collage principal): botón bien nítido, chiquito y ubicado abajo */
+          .content-slide-1 {
             margin-top: 0 !important;
             margin-bottom: 0 !important;
             padding-bottom: 0 !important;
@@ -209,8 +246,8 @@ export default function Hero() {
             width: 100%;
           }
 
-          /* Slide 1 (Cápsula Argentina): botón bien nítido, chiquito y ubicado justo debajo de '20% Off transferencia' */
-          .content-slide-1 {
+          /* Slide 2 (Cápsula Argentina): botón bien nítido, chiquito y ubicado justo debajo de '20% Off transferencia' */
+          .content-slide-2 {
             margin-top: 0 !important;
             margin-bottom: 0 !important;
             padding-bottom: 0 !important;
@@ -228,7 +265,8 @@ export default function Hero() {
 
           /* Botones para celulares: bien chicos, súper nítidos y sin sombras borrosas */
           .content-slide-0 .cta-button,
-          .content-slide-1 .cta-button {
+          .content-slide-1 .cta-button,
+          .content-slide-2 .cta-button {
             padding: 4px 12px !important;
             font-size: 0.65rem !important;
             letter-spacing: 0.5px !important;
