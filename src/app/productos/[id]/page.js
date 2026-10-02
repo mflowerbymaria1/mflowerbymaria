@@ -416,30 +416,52 @@ export default function ProductDetailPage({ params }) {
                                                 ¿Cómo nos enviás tus fotos?
                                             </h4>
                                         </div>
-                                        <p style={{ fontSize: '0.88rem', color: '#4b5563', lineHeight: 1.6, margin: '0 0 12px 0' }}>
-                                            Es un producto 100% personalizado. Al finalizar tu compra, nos enviás tus <strong>31 fotos</strong> (30 verticales y 1 horizontal) junto con tu <strong>número de pedido</strong> por WhatsApp o por e-mail a <strong style={{ color: '#D47792' }}>contacto.mflower@gmail.com</strong>, ¡y nosotras nos encargamos del resto! 💖
+                                        <p style={{ fontSize: '0.88rem', color: '#4b5563', lineHeight: 1.6, margin: '0 0 14px 0' }}>
+                                            Es un producto 100% personalizado. Al finalizar tu compra, nos enviás tus <strong>31 fotos</strong> (30 verticales y 1 horizontal) junto con tu <strong>número de pedido</strong> por WhatsApp o por e-mail a <a href="mailto:contacto.mflower@gmail.com?subject=Fotos%20para%20mi%20pedido%20-%20Álbum%20de%20Figuritas" style={{ color: '#D47792', fontWeight: 800, textDecoration: 'underline' }}>contacto.mflower@gmail.com</a>, ¡y nosotras nos encargamos del resto! 💖
                                         </p>
-                                        <a 
-                                            href="https://wa.me/541141817424?text=Hola!%20Tengo%20una%20consulta%20sobre%20el%20Álbum%20de%20Figuritas%20🌸" 
-                                            target="_blank" 
-                                            rel="noopener noreferrer"
-                                            style={{
-                                                display: 'inline-flex',
-                                                alignItems: 'center',
-                                                gap: '8px',
-                                                background: '#25D366',
-                                                color: '#fff',
-                                                padding: '9px 18px',
-                                                borderRadius: '25px',
-                                                fontSize: '0.85rem',
-                                                fontWeight: 700,
-                                                textDecoration: 'none',
-                                                boxShadow: '0 2px 8px rgba(37, 211, 102, 0.3)',
-                                                transition: 'transform 0.2s'
-                                            }}
-                                        >
-                                            <span>💬 Consultar o enviar fotos por WhatsApp</span>
-                                        </a>
+                                        <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+                                            <a 
+                                                href="https://wa.me/541141817424?text=Hola!%20Tengo%20una%20consulta%20sobre%20el%20Álbum%20de%20Figuritas%20🌸" 
+                                                target="_blank" 
+                                                rel="noopener noreferrer"
+                                                style={{
+                                                    display: 'inline-flex',
+                                                    alignItems: 'center',
+                                                    gap: '8px',
+                                                    background: '#25D366',
+                                                    color: '#fff',
+                                                    padding: '9px 18px',
+                                                    borderRadius: '25px',
+                                                    fontSize: '0.85rem',
+                                                    fontWeight: 700,
+                                                    textDecoration: 'none',
+                                                    boxShadow: '0 2px 8px rgba(37, 211, 102, 0.3)',
+                                                    transition: 'transform 0.2s'
+                                                }}
+                                            >
+                                                <span>💬 Enviar fotos por WhatsApp</span>
+                                            </a>
+                                            <a 
+                                                href="mailto:contacto.mflower@gmail.com?subject=Fotos%20para%20mi%20pedido%20-%20Álbum%20de%20Figuritas" 
+                                                style={{
+                                                    display: 'inline-flex',
+                                                    alignItems: 'center',
+                                                    gap: '8px',
+                                                    background: '#FFF',
+                                                    color: '#D47792',
+                                                    border: '1.5px solid #F5C6D0',
+                                                    padding: '9px 18px',
+                                                    borderRadius: '25px',
+                                                    fontSize: '0.85rem',
+                                                    fontWeight: 700,
+                                                    textDecoration: 'none',
+                                                    boxShadow: '0 2px 6px rgba(0,0,0,0.04)',
+                                                    transition: 'all 0.2s'
+                                                }}
+                                            >
+                                                <span>✉️ Enviar fotos por Email</span>
+                                            </a>
+                                        </div>
                                     </div>
                                 )}
                             </div>

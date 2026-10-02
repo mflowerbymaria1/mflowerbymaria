@@ -22,10 +22,11 @@ const GREEN = '#059669';
 const GREEN_BG = '#D1FAE5';
 
 const QUICK_PROMPTS = [
-  "🌸 Ideas de promos para este finde",
-  "📸 Copys para Instagram de Sets Día del Maestro",
-  "💡 ¿Cómo subo el ticket promedio?",
-  "🛒 Mensaje para carrito de más de $30.000"
+  "🌸 Ideas de promos para el Día de la Madre y fin de semana",
+  "📸 Copys para Instagram y TikTok del Álbum de Figuritas",
+  "💡 ¿Cómo subir el ticket promedio y cerrar más ventas?",
+  "💌 Mensajes para clientas y recuperación de carritos",
+  "🎁 Ideas de nuevos combos, productos y packaging"
 ];
 
 export default function MarketingPage() {
@@ -43,7 +44,7 @@ export default function MarketingPage() {
     {
       id: 'welcome',
       role: 'assistant',
-      text: '¡Hola Flor! 🌸 Soy tu Asesor Estratégico de Inteligencia Artificial potenciado por Gemini. Tengo acceso en tiempo real a tus pedidos, ticket promedio y carritos abandonados. ¿En qué estrategia o copy te gustaría que trabajemos hoy?',
+      text: '¡Hola Flor! 🌸 Soy tu Asesor Estratégico de Inteligencia Artificial de M•flower. Podés preguntarme lo que necesites: ideas de promos, copys para Instagram/TikTok, campañas de Día de la Madre, estrategias para subir ventas o mensajes para tus clientas. ¿Qué armamos hoy? ✨',
       time: new Date().toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' })
     }
   ]);
@@ -141,7 +142,8 @@ export default function MarketingPage() {
         avgTicket,
         abandonedCount: abandonedCarts.length,
         conversionRate,
-        productsCount: products.length
+        productsCount: products.length,
+        productsList: products.map(p => p.name)
       };
 
       const res = await fetch('/api/ai/advisor', {
@@ -391,15 +393,15 @@ export default function MarketingPage() {
                     <Target size={18} />
                   </div>
                   <div>
-                    <h4 style={{ fontSize: 15, fontWeight: 900, color: '#1a1a1a', margin: 0 }}>2. Potenciar "Sets Día del Maestro"</h4>
-                    <span style={{ fontSize: 10, color: INDIGO, fontWeight: 800, textTransform: 'uppercase' }}>Estacionalidad Clave</span>
+                    <h4 style={{ fontSize: 15, fontWeight: 900, color: '#1a1a1a', margin: 0 }}>2. Potenciar Productos de Temporada</h4>
+                    <span style={{ fontSize: 10, color: INDIGO, fontWeight: 800, textTransform: 'uppercase' }}>Alto Valor & Regalos</span>
                   </div>
                 </div>
                 <p style={{ fontSize: 13, color: '#444', lineHeight: 1.5, marginBottom: 16 }}>
-                  Los sets completos (Set Organízate, Cherry y Bloom) tienen un ticket promedio más alto que productos individuales. Sugerí en la descripción que vienen <strong>listos para regalar en sobre PVC con tarjeta</strong> para cerrar ventas.
+                  Los productos de temporada (como el <strong>Álbum de Figuritas para Mamá</strong> y los <strong>Sets de Regalo</strong>) tienen el ticket promedio más alto de la tienda. Destacar que vienen listos para regalar genera compras espontáneas y de alto valor.
                 </p>
                 <div style={{ background: '#fff', padding: '10px 14px', borderRadius: 12, fontSize: 12, color: '#666', border: '1px dashed #C7D2FE' }}>
-                  🎯 <strong>Acción:</strong> Mantené el slide 3 del banner activo durante las próximas semanas.
+                  🎯 <strong>Acción:</strong> Mantené el banner de Día de la Madre como primer slide y compartí stories con los sobres de figuritas.
                 </div>
               </div>
 
