@@ -10,14 +10,93 @@ const AVAILABLE_MODELS = [
   'gemini-3-flash-preview'
 ];
 
+function cleanRawText(str) {
+  let res = (str || '').trim();
+  res = res.replace(/^(hola|che|gravy|gemini)?[\s,]*(mejorame|mejora|corregime|corregi|revisa|revisame|reescribime|cambiale|sacale|mira|tengo|este es|que opinas de|que te parece)?[\s,]*(un|el|este|mi)?[\s,]*(copy|texto|borrador|mensaje)?[\s,]*(que arme|que hice|que tengo|para instagram|para tiktok|para redes|que dice|que puse)?[\s,:]*/i, '');
+  res = res.replace(/^["'“”«»]+|["'“”«»]+$/g, '').trim();
+  return res || str;
+}
+
 function generateSmartAdvisorResponse(userQuery, storeData) {
-  const query = (userQuery || '').toLowerCase();
+  const query = (userQuery || '').trim();
+  const queryLower = query.toLowerCase();
   const ordersCount = storeData?.ordersCount || 0;
   const avgTicket = storeData?.avgTicket ? Number(storeData.avgTicket).toLocaleString('es-AR') : '25.000';
   const abandonedCount = storeData?.abandonedCount || 0;
 
-  // 1. DÍA DE LA MADRE / ÁLBUM DE FIGURITAS / FOTOS
-  if (query.includes('madre') || query.includes('mama') || query.includes('mamá') || query.includes('álbum') || query.includes('album') || query.includes('figurita') || query.includes('foto')) {
+  // 1. SI FLOR PIDE MEJORAR / CORREGIR / REESCRIBIR SU PROPIO COPY O TEXTO
+  const isRewriteRequest = 
+    queryLower.includes('mejorame') ||
+    queryLower.includes('mejora') ||
+    queryLower.includes('corregime') ||
+    queryLower.includes('corregi') ||
+    queryLower.includes('reescribime') ||
+    queryLower.includes('cambiale') ||
+    queryLower.includes('sacale') ||
+    queryLower.includes('tengo este') ||
+    queryLower.includes('mira este') ||
+    queryLower.includes('que opinas de este') ||
+    queryLower.includes('que te parece este') ||
+    queryLower.includes('hacelo mas corto') ||
+    queryLower.includes('hacelo mas largo') ||
+    (query.includes('"') && query.length > 30) ||
+    (query.includes('\n') && query.length > 40);
+
+  if (isRewriteRequest) {
+    const rawContent = cleanRawText(query);
+    const isMotherDay = queryLower.includes('madre') || queryLower.includes('mama') || queryLower.includes('mamá') || queryLower.includes('figurita');
+    const isNotebook = queryLower.includes('cuaderno') || queryLower.includes('planner') || queryLower.includes('libreta') || queryLower.includes('block') || queryLower.includes('disco');
+    const isGiftSet = queryLower.includes('set') || queryLower.includes('combo') || queryLower.includes('pack') || queryLower.includes('regalo');
+
+    return `🌸 ¡Me encantó la base de tu texto, Flor! Tomé tu idea original y la pulí para que sea súper magnética, clara y vendedora:
+
+---
+
+### 📝 Tu texto original analizado:
+> *"${rawContent || query}"*
+
+---
+
+### ✨ OPCIÓN 1: Para Feed / Carrusel de Instagram (Aesthetic & Emocional)
+> **Hook:** ${isMotherDay ? '*"El regalo que a mamá le va a sacar lágrimas de emoción (de las lindas) 🥹💖"*' : isNotebook ? '*"Si tu mente va a mil y querés ordenarte con estilo, esto es para vos 🌸✨"*' : '*"El detalle perfecto para regalar (o auto-mimarte) sin vueltas 🎀✨"*'}
+> 
+> ${rawContent || '¡Llegaron los nuevos productos más lindos de la temporada!'}
+> 
+> **¿Por qué te va a enamorar?**
+> * 🌸 Diseño exclusivo y detalles cuidados al 100%
+> * 🪄 Papel de alto gramaje que no traspasa y súper suave
+> * 🎁 Viene listo para regalar con presentación hermosa
+> 
+> *📦 Envíos a todo el país o retiro por General Rodríguez.*
+> *💳 Hasta 3 cuotas sin interés | 💸 20% OFF pagando con transferencia.*
+> *🔗 ¡Conseguí el tuyo en el link de nuestra bio antes de que vuele el stock!*
+> 
+> \`#mflower #papeleria #stationerylover #hechoenargentina #diseñonacional\`
+
+---
+
+### ⚡ OPCIÓN 2: Para Stories / TikTok (Corta, Dinámica & Directa)
+> *"¿Buscabas una señal para renovar tu papelería? Acá está 💖*  
+> *${rawContent.slice(0, 100)}...*  
+> *Asegurá el tuyo hoy con 20% OFF por transferencia y 3 cuotas sin interés. Tocá el sticker de abajo para ir a la tienda 🛍️👇"*
+
+---
+
+### 💬 OPCIÓN 3: Para enviar por WhatsApp o Mensaje Privado
+> *"¡Hola bella! 🌸 Te pasamos toda la info: ${rawContent}. Podés abonar en hasta 3 cuotas sin interés o con un 20% OFF por transferencia bancaria. Si tenés alguna duda sobre el envío o detalles, ¡escribinos por acá que te ayudamos con mucho amor! 💕"*
+
+---
+
+### 💡 ¿Qué cambios le hicimos y por qué?
+1. **Gancho inicial (Hook):** Le agregamos una primera línea atrapante para que frenen el scroll al instante.
+2. **Estructura en viñetas:** Reorganizamos los puntos clave para que se lean en 3 segundos.
+3. **Llamado a la acción (CTA):** Sumamos las facilidades de pago (3 cuotas / 20% OFF) y el link a la bio para cerrar la venta.
+
+¿Te gusta cómo quedó o querés que ajustemos alguna frase puntual? ¡Decime! 💖`;
+  }
+
+  // 2. DÍA DE LA MADRE / ÁLBUM DE FIGURITAS / FOTOS
+  if (queryLower.includes('madre') || queryLower.includes('mama') || queryLower.includes('mamá') || queryLower.includes('álbum') || queryLower.includes('album') || queryLower.includes('figurita') || queryLower.includes('foto')) {
     return `🌸 ¡Hola Flor! El **Álbum de Figuritas para el Día de la Madre** es sin dudas tu producto estrella con mayor potencial de venta emocional 💕.
 
 Acá tenés un plan de acción directo con ideas y copys listos para usar:
@@ -56,8 +135,8 @@ Acá tenés un plan de acción directo con ideas y copys listos para usar:
 ¿Querés que adaptemos algún punto o preparemos más contenido? ¡Decime y lo armamos! 💖`;
   }
 
-  // 2. COPYS / REDES SOCIALES / REELS / HISTORIAS
-  if (query.includes('copy') || query.includes('texto') || query.includes('instagram') || query.includes('tiktok') || query.includes('reel') || query.includes('storie') || query.includes('historia') || query.includes('post') || query.includes('redes')) {
+  // 3. COPYS GENERALES / REDES SOCIALES
+  if (queryLower.includes('copy') || queryLower.includes('texto') || queryLower.includes('instagram') || queryLower.includes('tiktok') || queryLower.includes('reel') || queryLower.includes('storie') || queryLower.includes('historia') || queryLower.includes('post') || queryLower.includes('redes')) {
     return `✨ ¡Hola Flor! Acá tenés opciones de copys irresistibles para redes sociales, pensados para conectar y vender en M•flower:
 
 ---
@@ -84,11 +163,11 @@ Acá tenés un plan de acción directo con ideas y copys listos para usar:
 ### 📱 Tip para Stories Interactivas:
 Hacé una encuesta de 2 opciones: *"¿Sos team Libreta rayada 📝 o punteada/bullet journal 🪄?"* — Esto genera hasta un 40% más de interacción con tus seguidoras.
 
-¿Querés que redacte un copy para algún producto específico de tu tienda? ¡Nombrámelo y te lo armo! 🌸`;
+💡 **Recordá:** Si ya tenés un borrador escrito por vos, ¡pegámelo acá y te lo mejoro al instante! 🌸`;
   }
 
-  // 3. PROMOS / DESCUENTOS / CUPONES / FIN DE SEMANA
-  if (query.includes('promo') || query.includes('descuento') || query.includes('cupon') || query.includes('cupón') || query.includes('oferta') || query.includes('finde') || query.includes('semana') || query.includes('combo')) {
+  // 4. PROMOS / DESCUENTOS / CUPONES / FIN DE SEMANA
+  if (queryLower.includes('promo') || queryLower.includes('descuento') || queryLower.includes('cupon') || queryLower.includes('cupón') || queryLower.includes('oferta') || queryLower.includes('finde') || queryLower.includes('semana') || queryLower.includes('combo')) {
     return `🛍️ ¡Hola Flor! Analizando tu ticket promedio actual ($${avgTicket}) y el catálogo de M•flower, te propongo 3 promociones muy efectivas:
 
 ---
@@ -113,8 +192,8 @@ Hacé una encuesta de 2 opciones: *"¿Sos team Libreta rayada 📝 o punteada/bu
 ¿Cuál de estas opciones te gusta más para lanzar en tus historias hoy? 🌸`;
   }
 
-  // 4. VENTAS / TICKET PROMEDIO / CONVERSIÓN / CARRITOS
-  if (query.includes('ticket') || query.includes('vender') || query.includes('venta') || query.includes('conversion') || query.includes('carrito') || query.includes('abandonado') || query.includes('crecer')) {
+  // 5. VENTAS / TICKET PROMEDIO / CONVERSIÓN / CARRITOS
+  if (queryLower.includes('ticket') || queryLower.includes('vender') || queryLower.includes('venta') || queryLower.includes('conversion') || queryLower.includes('carrito') || queryLower.includes('abandonado') || queryLower.includes('crecer')) {
     return `📈 ¡Hola Flor! Con **${ordersCount} pedidos registrados** y un ticket promedio de **$${avgTicket}**, acá tenés 3 palancas clave para disparar tus ventas:
 
 ---
@@ -141,51 +220,25 @@ Hacé una encuesta de 2 opciones: *"¿Sos team Libreta rayada 📝 o punteada/bu
 ¿Querés que nos enfoquemos en armar un mensaje específico para tus clientas? 🌸`;
   }
 
-  // 5. ATENCIÓN AL CLIENTE / MENSAJES / PACKAGING
-  if (query.includes('mensaje') || query.includes('whatsapp') || query.includes('mail') || query.includes('cliente') || query.includes('pack') || query.includes('tarjeta')) {
-    return `💌 ¡Hola Flor! El tono dulce, detallista y cercano es el sello distintivo de **M•flower**. Acá tenés plantillas listas para usar en cada momento:
-
----
-
-### 📦 1. Notita de Agradecimiento para incluir dentro del paquete:
-> *"¡Gracias por elegir M•flower! 🌸 Cada detalle de este pedido fue preparado con muchísimo amor especialmente para vos. Ojalá llene tus días de inspiración y momentos lindos ✨ No te olvides de etiquetarnos en @mflowerbymaria cuando lo abras 💖 ¡Nos hace inmensamente felices verte disfrutarlo!"*
-
----
-
-### 🚚 2. Mensaje cuando el pedido fue despachado:
-> *"¡Buenas noticias bella! 🚚✨ Tu paquetito de M•flower ya está en camino. Te dejamos tu código de seguimiento para que veas el recorrido. ¡Preparate para recibir mucho amor en tu puerta! 🎁🌸"*
-
----
-
-### 📸 3. Mensaje para pedir fotos pendientes del Álbum de Figuritas:
-> *"¡Hola! 🌸 Te escribimos de M•flower por tu pedido #[NroPedido]. ¡Ya tenemos todo listo para armar tu Álbum! Recordá pasarnos por acá tus 31 fotos (30 verticales y 1 horizontal) así lo imprimimos cuanto antes 💕"*
-
-¿Necesitás algún otro mensaje o respuesta personalizada para una clienta? ¡Contame el caso! 🌸`;
-  }
-
   // 6. DEFAULT GENERAL PERSONALIZADO
-  return `🌸 ¡Hola Flor! Analizando tu consulta sobre *"**${userQuery}**"*, acá tenés recomendaciones prácticas y estratégicas para M•flower:
+  return `🌸 ¡Hola Flor! Sobre lo que me comentás: *"**${userQuery}**"*, acá tenés recomendaciones directas para M•flower:
 
 ---
 
-### 💡 1. Estrategia & Enfoque Recomendado:
-Para potenciar las ventas de tus productos (como el **Álbum de Figuritas Día de la Madre**, **Planners**, **Cuadernos con discos** y **Sets de regalo**), lo más efectivo es combinar contenido visual en Instagram con llamados a la acción claros y promociones por ticket.
+### 💡 1. Enfoque Práctico:
+Para cualquier acción que quieras implementar en tu tienda (promos, textos o atención):
+* Mantené siempre el tono dulce, estético y cercano de M•flower.
+* Destacá los beneficios reales: personalización, calidad de encuadernación y rapidez de entrega.
+* Facilitá el pago recordando las **3 cuotas sin interés** y el **20% OFF con transferencia bancaria**.
 
 ---
 
-### 🎯 2. Pasos concretos de acción:
-1. **En Redes:** Publicá fotos o reels mostrando el producto en uso o el proceso de armado de pedidos (el empaquetado estético genera muchísima confianza).
-2. **En la Tienda:** Destacá las **3 cuotas sin interés** y el **20% OFF con transferencia bancaria**.
-3. **En Atención:** Respondé rápido por WhatsApp con un tono cercano y afectuoso.
+### ✨ ¿Qué te gustaría que hagamos ahora con esto?
+* 📝 **¿Tenés un borrador o copy que quieras que te mejore o acorte?** ¡Pegalo acá tal cual lo tengas y te armo 3 versiones listas!
+* 📸 **¿Querés que te prepare ideas de historias o reels para filmar hoy?**
+* 💌 **¿Necesitás que redactemos un mensaje para tus clientas de WhatsApp o email?**
 
----
-
-### ✨ ¿En qué querés que profundicemos ahora?
-* 📸 ¿Te redacto los copys y guiones para Instagram/TikTok?
-* 🎁 ¿Armamos una promo o cupón de descuento especial?
-* 💌 ¿Escribimos mensajes personalizados para tus clientas?
-
-¡Decime y lo armamos al instante! 💖`;
+¡Escribime lo que tengas en mente y lo trabajamos juntas! 💖`;
 }
 
 export async function POST(req) {
@@ -203,9 +256,9 @@ export async function POST(req) {
 
       const systemPrompt = `Sos el Asesor Estratégico e Integral de Inteligencia Artificial de "M•flower by Maria", la tienda online de papelería girly, diseño y regalos de Argentina.
 Trabajás codo a codo con Flor (la creadora y dueña). Respondé con entusiasmo, emojis aesthetic (🌸✨🛍️💖), y consejos 100% prácticos y aplicables para lo que ella te pregunte.
-Datos actuales: ${storeData?.ordersCount || 0} pedidos, ticket prom $${storeData?.avgTicket || 0}, productos: ${productsSummary}.`;
+Si Flor te manda un copy o texto propio para mejorar, analizalo, reescribilo en 3 versiones (Feed, Stories, WhatsApp) y explicá qué cambios hiciste.`;
 
-      const fullPrompt = `${systemPrompt}\n\nPregunta de Flor: "${userMessage}"\n\nTu respuesta directa como asesor de M•flower:`;
+      const fullPrompt = `${systemPrompt}\n\nMensaje de Flor:\n"${userMessage}"\n\nTu respuesta directa como asesor de M•flower:`;
 
       for (const modelName of AVAILABLE_MODELS) {
         try {
@@ -226,12 +279,11 @@ Datos actuales: ${storeData?.ordersCount || 0} pedidos, ticket prom $${storeData
             }
           }
         } catch (e) {
-          // ignore and fallback
+          // fallback
         }
       }
     }
 
-    // Dynamic smart assistant generator tailored specifically to Flor's query
     if (!replyText) {
       replyText = generateSmartAdvisorResponse(userMessage, storeData);
     }
