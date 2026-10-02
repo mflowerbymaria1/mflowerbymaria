@@ -417,7 +417,7 @@ export default function ProductDetailPage({ params }) {
                                             </h4>
                                         </div>
                                         <p style={{ fontSize: '0.88rem', color: '#4b5563', lineHeight: 1.6, margin: '0 0 12px 0' }}>
-                                            Es un producto 100% personalizado. Al finalizar tu compra, nos enviás tus <strong>31 fotos</strong> (30 verticales y 1 horizontal) junto con tu <strong>número de pedido</strong> por WhatsApp o e-mail, ¡y nosotras nos encargamos del resto! 💖
+                                            Es un producto 100% personalizado. Al finalizar tu compra, nos enviás tus <strong>31 fotos</strong> (30 verticales y 1 horizontal) junto con tu <strong>número de pedido</strong> por WhatsApp o por e-mail a <strong style={{ color: '#D47792' }}>contacto.mflower@gmail.com</strong>, ¡y nosotras nos encargamos del resto! 💖
                                         </p>
                                         <a 
                                             href="https://wa.me/541141817424?text=Hola!%20Tengo%20una%20consulta%20sobre%20el%20Álbum%20de%20Figuritas%20🌸" 

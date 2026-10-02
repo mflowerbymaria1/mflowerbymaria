@@ -89,7 +89,7 @@ function GraciasContent() {
                             </h3>
                         </div>
                         <p style={{ fontSize: '0.88rem', color: '#4b5563', lineHeight: 1.6, marginBottom: '14px' }}>
-                            ¡Es momento de enviarnos tus fotos! Tocá el botón verde para mandarlas por WhatsApp junto con tu <strong>número o ID de pedido</strong> (o envialas por email a <a href="mailto:mariadeleandro.design@gmail.com" style={{ color: '#D47792', fontWeight: 700 }}>mariadeleandro.design@gmail.com</a>).
+                            ¡Es momento de enviarnos tus fotos! Tocá el botón verde para mandarlas por WhatsApp junto con tu <strong>número o ID de pedido</strong> (o envialas por email a <a href="mailto:contacto.mflower@gmail.com" style={{ color: '#D47792', fontWeight: 700 }}>contacto.mflower@gmail.com</a>).
                         </p>
                         <a 
                             href={`https://wa.me/541141817424?text=${encodeURIComponent('¡Hola Flor! Acá te paso las fotos para mi Álbum de Figuritas del pedido ' + (paymentId ? '#' + paymentId : ''))}`}
