@@ -72,6 +72,50 @@ function GraciasContent() {
                         </div>
                     )}
 
+                    {/* Callout para productos personalizados como Álbum de Figuritas */}
+                    <div style={{
+                        background: 'linear-gradient(135deg, #FFF0F3 0%, #FFE4E9 100%)',
+                        border: '2px solid #F5C6D0',
+                        borderRadius: '16px',
+                        padding: '1.5rem',
+                        marginBottom: '1.5rem',
+                        textAlign: 'left',
+                        boxShadow: '0 4px 15px rgba(212, 119, 146, 0.12)'
+                    }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '8px' }}>
+                            <span style={{ fontSize: '1.5rem' }}>📸</span>
+                            <h3 style={{ margin: 0, fontSize: '1.05rem', fontWeight: 800, color: '#D47792', fontFamily: 'var(--font-quicksand), sans-serif' }}>
+                                ¿Compraste el Álbum de Figuritas u otro producto personalizado?
+                            </h3>
+                        </div>
+                        <p style={{ fontSize: '0.88rem', color: '#4b5563', lineHeight: 1.6, marginBottom: '14px' }}>
+                            ¡Es momento de enviarnos tus fotos! Tocá el botón verde para mandarlas por WhatsApp junto con tu <strong>número o ID de pedido</strong> (o envialas por email a <a href="mailto:mariadeleandro.design@gmail.com" style={{ color: '#D47792', fontWeight: 700 }}>mariadeleandro.design@gmail.com</a>).
+                        </p>
+                        <a 
+                            href={`https://wa.me/541141817424?text=${encodeURIComponent('¡Hola Flor! Acá te paso las fotos para mi Álbum de Figuritas del pedido ' + (paymentId ? '#' + paymentId : ''))}`}
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            style={{
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                gap: '8px',
+                                background: '#25D366',
+                                color: '#fff',
+                                padding: '11px 22px',
+                                borderRadius: '30px',
+                                fontSize: '0.9rem',
+                                fontWeight: 800,
+                                textDecoration: 'none',
+                                boxShadow: '0 4px 12px rgba(37, 211, 102, 0.35)',
+                                width: '100%',
+                                boxSizing: 'border-box'
+                            }}
+                        >
+                            <span>📲 Enviar fotos por WhatsApp ahora</span>
+                        </a>
+                    </div>
+
                     <div style={{
                         background: 'rgba(255, 209, 220, 0.15)',
                         padding: '1.25rem',

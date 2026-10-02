@@ -144,7 +144,7 @@ export default function ProductDetailPage({ params }) {
         if (cat.includes('sticker') || cat.includes('varios')) return 'Dale tu toque personal a todo lo que uses. Perfectos para decorar cuadernos, libretas, notebooks o cualquier superficie. Porque los detalles hacen la diferencia.';
         if (cat.includes('argentina') || cat.includes('cápsula')) return 'Llevá el orgullo argentino a todos lados. Diseños exclusivos inspirados en nuestra cultura y tradición, para que cada producto cuente una historia que nos representa.';
         if (cat.includes('maestro') || cat.includes('sets')) return 'Ideas pensadas con amor para regalar y homenajear a quienes nos enseñan con tanta dedicación y cariño todos los días.';
-        if (cat.includes('álbum') || cat.includes('album') || cat.includes('figurita')) return 'Un recuerdo único y especial para atesorar momentos inolvidables, fotos y recuerdos de una manera súper original y divertida.';
+        if (nameLower.includes('álbum') || nameLower.includes('album') || nameLower.includes('figurita') || cat.includes('figurita') || cat.includes('álbum') || cat.includes('album')) return 'El regalo más emocionante y original para mamá. Un álbum de figuritas 100% personalizado con sus fotos y recuerdos favoritos para abrir los sobres y pegarlas juntos.';
         if (cat.includes('sumar') || cat.includes('carrito') || cat.includes('librería') || cat.includes('llevar') || cat.includes('artículo')) return 'Accesorios y complementos de librería llenos de diseño y ternura para acompañar tus días de estudio y trabajo.';
 
         return '';
@@ -398,8 +398,50 @@ export default function ProductDetailPage({ params }) {
                                 )}
                                 <div className="tech-desc-section">
                                     <h4 className="tech-desc-label font-quicksand">Detalle del producto</h4>
-                                    <p className="desc-text">{product.description}</p>
+                                    <p className="desc-text" style={{ whiteSpace: 'pre-line' }}>{product.description}</p>
                                 </div>
+
+                                {(product.name?.toLowerCase().includes('figurita') || product.name?.toLowerCase().includes('álbum') || product.category?.toLowerCase().includes('figurita')) && (
+                                    <div style={{
+                                        marginTop: '1.5rem',
+                                        background: 'linear-gradient(135deg, #FFF0F3 0%, #FFE4E9 100%)',
+                                        border: '2px solid #F5C6D0',
+                                        borderRadius: '16px',
+                                        padding: '1.25rem 1.5rem',
+                                        boxShadow: '0 4px 15px rgba(212, 119, 146, 0.1)'
+                                    }}>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '8px' }}>
+                                            <span style={{ fontSize: '1.4rem' }}>📸</span>
+                                            <h4 style={{ margin: 0, fontSize: '1rem', fontWeight: 800, color: '#D47792', fontFamily: 'var(--font-quicksand), sans-serif' }}>
+                                                ¿Cómo nos enviás tus fotos?
+                                            </h4>
+                                        </div>
+                                        <p style={{ fontSize: '0.88rem', color: '#4b5563', lineHeight: 1.6, margin: '0 0 12px 0' }}>
+                                            Es un producto 100% personalizado. Al finalizar tu compra, nos enviás tus <strong>31 fotos</strong> (30 verticales y 1 horizontal) junto con tu <strong>número de pedido</strong> por WhatsApp o e-mail, ¡y nosotras nos encargamos del resto! 💖
+                                        </p>
+                                        <a 
+                                            href="https://wa.me/541141817424?text=Hola!%20Tengo%20una%20consulta%20sobre%20el%20Álbum%20de%20Figuritas%20🌸" 
+                                            target="_blank" 
+                                            rel="noopener noreferrer"
+                                            style={{
+                                                display: 'inline-flex',
+                                                alignItems: 'center',
+                                                gap: '8px',
+                                                background: '#25D366',
+                                                color: '#fff',
+                                                padding: '9px 18px',
+                                                borderRadius: '25px',
+                                                fontSize: '0.85rem',
+                                                fontWeight: 700,
+                                                textDecoration: 'none',
+                                                boxShadow: '0 2px 8px rgba(37, 211, 102, 0.3)',
+                                                transition: 'transform 0.2s'
+                                            }}
+                                        >
+                                            <span>💬 Consultar o enviar fotos por WhatsApp</span>
+                                        </a>
+                                    </div>
+                                )}
                             </div>
 
                             <div className="actions-box">
