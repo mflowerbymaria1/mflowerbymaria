@@ -15,6 +15,8 @@ import {
 } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 
+import { products as fallbackProducts, defaultCategories } from '@/data/products';
+
 export default function ProductosPage() {
   const [products, setProducts] = useState([]);
   const [dbCategories, setDbCategories] = useState([]); // Categorías desde la tabla
@@ -35,24 +37,58 @@ export default function ProductosPage() {
   async function fetchData(isSilent = false) {
     if (!isSilent) setLoading(true);
     
-    // Fetch Productos
-    const { data: pData } = await supabase.from('products').select('*').order('created_at', { ascending: false });
-    const parsedProducts = (pData || []).map(p => {
-      let wp = p.wholesale_price;
-      if (!wp && p.description) {
-        const match = p.description.match(/\[WHOLESALE:\s*(\d+(\.\d+)?)\]/);
-        if (match) wp = parseFloat(match[1]);
+    try {
+      // Fetch Productos
+      const { data: pData } = await supabase.from('products').select('*').order('created_at', { ascending: false });
+      if (pData && pData.length > 0) {
+        const parsedProducts = pData.map(p => {
+          let wp = p.wholesale_price;
+          if (!wp && p.description) {
+            const match = p.description.match(/\[WHOLESALE:\s*(\d+(\.\d+)?)\]/);
+            if (match) wp = parseFloat(match[1]);
+          }
+          return {
+            ...p,
+            wholesale_price: wp
+          };
+        });
+        setProducts(parsedProducts);
+      } else {
+        // Fallback local products
+        const parsedFallback = fallbackProducts.map(p => {
+          let wp = p.wholesalePrice || (typeof p.price === 'string' ? Math.round(parseFloat(p.price.replace(/\./g, '')) * 0.65) : 0);
+          return {
+            ...p,
+            price: typeof p.price === 'string' ? parseFloat(p.price.replace(/\./g, '')) : p.price,
+            image_url: p.image || p.image_url,
+            gallery: p.images || p.gallery || [],
+            short_description: p.shortDescription || p.short_description,
+            wholesale_price: wp
+          };
+        });
+        setProducts(parsedFallback);
       }
-      return {
-        ...p,
-        wholesale_price: wp
-      };
-    });
-    setProducts(parsedProducts);
 
-    // Fetch Categorías Reales
-    const { data: cData } = await supabase.from('categories').select('*').order('name', { ascending: true });
-    setDbCategories((cData || []).filter(c => !c.name?.startsWith('WHOLESALE_CODE:')));
+      // Fetch Categorías Reales
+      const { data: cData } = await supabase.from('categories').select('*').order('name', { ascending: true });
+      const validCategories = (cData || []).filter(c => !c.name?.startsWith('WHOLESALE_CODE:'));
+      if (validCategories.length > 0) {
+        setDbCategories(validCategories);
+      } else {
+        setDbCategories(defaultCategories);
+      }
+    } catch(e) {
+      console.warn('Error fetching Supabase products, loading fallback:', e);
+      const parsedFallback = fallbackProducts.map(p => ({
+        ...p,
+        price: typeof p.price === 'string' ? parseFloat(p.price.replace(/\./g, '')) : p.price,
+        image_url: p.image || p.image_url,
+        gallery: p.images || p.gallery || [],
+        short_description: p.shortDescription || p.short_description
+      }));
+      setProducts(parsedFallback);
+      setDbCategories(defaultCategories);
+    }
 
     if (!isSilent) setLoading(false);
   }

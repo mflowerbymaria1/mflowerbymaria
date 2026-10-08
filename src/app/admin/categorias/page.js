@@ -4,6 +4,8 @@ import React, { useState, useEffect } from 'react';
 import { Tag, Plus, Trash2, Edit2, Loader2, X } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 
+import { defaultCategories } from '@/data/products';
+
 const ROSE = '#D47792';
 const ROSE_LIGHT = '#FFF0F3';
 const ROSE_BORDER = '#F5C6D0';
@@ -19,9 +21,18 @@ export default function CategoriasPage() {
 
   async function fetchCategories() {
     setLoading(true);
-    const { data, error } = await supabase.from('categories').select('*').order('name', { ascending: true });
-    if (error) console.error('Error fetching categories:', error);
-    else setCategories((data || []).filter(c => !c.name?.startsWith('WHOLESALE_CODE:')));
+    try {
+      const { data, error } = await supabase.from('categories').select('*').order('name', { ascending: true });
+      const valid = (data || []).filter(c => !c.name?.startsWith('WHOLESALE_CODE:'));
+      if (valid.length > 0) {
+        setCategories(valid);
+      } else {
+        setCategories(defaultCategories);
+      }
+    } catch(e) {
+      console.warn('Error fetching Supabase categories, using default:', e);
+      setCategories(defaultCategories);
+    }
     setLoading(false);
   }
 
