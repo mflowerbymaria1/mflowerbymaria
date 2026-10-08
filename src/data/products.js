@@ -89,7 +89,11 @@ export const products = [
         image: "/images/cuaderno_snoopy_front.jpg",
         images: [
             "/images/cuaderno_snoopy_front.jpg",
-            "/images/cuaderno_snoopy_separador.jpg"
+            "/images/cuaderno_snoopy_separador.jpg",
+            "/images/mockup_interior_1.png",
+            "/images/mockup_interior_2.png",
+            "/images/mockup_interior_3.png",
+            "/images/mockup_interior_4.png"
         ]
     },
     {
@@ -101,7 +105,14 @@ export const products = [
         price: "26.500",
         wholesalePrice: 17200,
         image: "/images/mockup_croissant_front.jpg",
-        images: ["/images/mockup_croissant_front.jpg", "/images/mockup_croissant_back.jpg"]
+        images: [
+            "/images/mockup_croissant_front.jpg",
+            "/images/mockup_croissant_back.jpg",
+            "/images/mockup_interior_1.png",
+            "/images/mockup_interior_2.png",
+            "/images/mockup_interior_3.png",
+            "/images/mockup_interior_4.png"
+        ]
     },
     {
         id: "22a184bd-e2d9-4f6f-8d90-cb757942233b",
@@ -123,7 +134,14 @@ export const products = [
         price: "26.500",
         wholesalePrice: 17200,
         image: "/images/mockup_candy_front.jpg",
-        images: ["/images/mockup_candy_front.jpg", "/images/mockup_candy_back.jpg"]
+        images: [
+            "/images/mockup_candy_front.jpg",
+            "/images/mockup_candy_back.jpg",
+            "/images/mockup_interior_1.png",
+            "/images/mockup_interior_2.png",
+            "/images/mockup_interior_3.png",
+            "/images/mockup_interior_4.png"
+        ]
     },
     {
         id: "103",
@@ -135,7 +153,14 @@ export const products = [
         wholesalePrice: 17200,
         isBestSeller: true,
         image: "/images/mockup_pretty_girls_front.jpg",
-        images: ["/images/mockup_pretty_girls_front.jpg", "/images/mockup_pretty_girls_back.jpg"]
+        images: [
+            "/images/mockup_pretty_girls_front.jpg",
+            "/images/mockup_pretty_girls_back.jpg",
+            "/images/mockup_interior_1.png",
+            "/images/mockup_interior_2.png",
+            "/images/mockup_interior_3.png",
+            "/images/mockup_interior_4.png"
+        ]
     },
     {
         id: "5eadcc0d-c0b6-4a42-a6f2-88cffd05e47e",
@@ -163,7 +188,11 @@ export const products = [
         image: "/images/cuaderno_futura_front.jpg",
         images: [
             "/images/cuaderno_futura_front.jpg",
-            "/images/cuaderno_futura_back.jpg"
+            "/images/cuaderno_futura_back.jpg",
+            "/images/mockup_interior_1.png",
+            "/images/mockup_interior_2.png",
+            "/images/mockup_interior_3.png",
+            "/images/mockup_interior_4.png"
         ]
     },
     {
@@ -175,8 +204,15 @@ export const products = [
         price: "31.900",
         wholesalePrice: 21000,
         isBestSeller: true,
-        image: "/images/mockup_croissant_back.jpg",
-        images: ["/images/mockup_croissant_back.jpg", "/images/mockup_croissant_front.jpg"]
+        image: "/images/mockup_croissant_front.jpg",
+        images: [
+            "/images/mockup_croissant_front.jpg",
+            "/images/mockup_croissant_back.jpg",
+            "/images/mockup_interior_1.png",
+            "/images/mockup_interior_2.png",
+            "/images/mockup_interior_3.png",
+            "/images/mockup_interior_4.png"
+        ]
     },
     {
         id: "b7962807-6cb8-4607-ba84-b01b7816f4c7",
@@ -187,7 +223,14 @@ export const products = [
         price: "31.900",
         wholesalePrice: 21000,
         image: "/images/mockup_candy_front.jpg",
-        images: ["/images/mockup_candy_front.jpg", "/images/mockup_candy_back.jpg"]
+        images: [
+            "/images/mockup_candy_front.jpg",
+            "/images/mockup_candy_back.jpg",
+            "/images/mockup_interior_1.png",
+            "/images/mockup_interior_2.png",
+            "/images/mockup_interior_3.png",
+            "/images/mockup_interior_4.png"
+        ]
     },
     {
         id: "2825de91-c921-4ced-a59c-4d85313020a6",
@@ -243,7 +286,14 @@ export const products = [
         wholesalePrice: 21000,
         isBestSeller: true,
         image: "/images/mockup_amelie_front.jpg",
-        images: ["/images/mockup_amelie_front.jpg", "/images/mockup_amelie_back.jpg"]
+        images: [
+            "/images/mockup_amelie_front.jpg",
+            "/images/mockup_amelie_back.jpg",
+            "/images/mockup_interior_1.png",
+            "/images/mockup_interior_2.png",
+            "/images/mockup_interior_3.png",
+            "/images/mockup_interior_4.png"
+        ]
     },
     {
         id: "13",
@@ -253,8 +303,15 @@ export const products = [
         description: "Diseño exclusivo Pinky Jirafa. Contiene: Interior 100 hojas A4, 2 separadores internos, calendario 2026, 6 temarios de exámen, anillado inteligente, discos de colores. [WHOLESALE:21000]",
         price: "31.900",
         wholesalePrice: 21000,
-        image: "/images/mockup_jirafa_back.jpg",
-        images: ["/images/mockup_jirafa_back.jpg", "/images/mockup_jirafa_front.jpg"]
+        image: "/images/mockup_jirafa_front.jpg",
+        images: [
+            "/images/mockup_jirafa_front.jpg",
+            "/images/mockup_jirafa_back.jpg",
+            "/images/mockup_interior_1.png",
+            "/images/mockup_interior_2.png",
+            "/images/mockup_interior_3.png",
+            "/images/mockup_interior_4.png"
+        ]
     },
     {
         id: "104",
@@ -276,7 +333,14 @@ export const products = [
         price: "31.900",
         wholesalePrice: 21000,
         image: "/images/mockup_yendo_front.jpg",
-        images: ["/images/mockup_yendo_front.jpg", "/images/mockup_yendo_back.jpg"]
+        images: [
+            "/images/mockup_yendo_front.jpg",
+            "/images/mockup_yendo_back.jpg",
+            "/images/mockup_interior_1.png",
+            "/images/mockup_interior_2.png",
+            "/images/mockup_interior_3.png",
+            "/images/mockup_interior_4.png"
+        ]
     },
 
     // 5. BLOCK DE HOJAS
@@ -381,8 +445,10 @@ export const products = [
         price: "15.000",
         wholesalePrice: 9800,
         isBestSeller: true,
-        image: "/images/mockup_candy_front.jpg",
-        images: ["/images/mockup_candy_front.jpg"]
+        image: "/images/libretas_pack.jpg",
+        images: [
+            "/images/libretas_pack.jpg"
+        ]
     },
     {
         id: "5f589d3a-0fe5-4b33-83cc-3c7e3f08ca77",
@@ -469,12 +535,19 @@ export const products = [
         id: "12",
         name: "Cuaderno A4 Sol de Mayo sistema de discos",
         category: "Cápsula Argentina",
-        shortDescription: "A4, 100 hojas, diseño Sol de Mayo.",
+        shortDescription: "Edición Limitada Sol de Mayo.",
         description: "Edición Limitada. Diseño exclusivo Sol de Mayo. Contiene: Interior 100 hojas A4, 2 separadores internos, calendario 2026, 6 temarios de exámen, anillado inteligente, discos. [WHOLESALE:21000]",
         price: "31.900",
         wholesalePrice: 21000,
         image: "/images/mockup_sol_de_mayo_front.jpg",
-        images: ["/images/mockup_sol_de_mayo_front.jpg", "/images/mockup_sol_de_mayo_back.jpg"]
+        images: [
+            "/images/mockup_sol_de_mayo_front.jpg",
+            "/images/mockup_sol_de_mayo_back.jpg",
+            "/images/mockup_arg_interior_1.png",
+            "/images/mockup_arg_interior_2.png",
+            "/images/mockup_arg_interior_3.png",
+            "/images/mockup_arg_interior_4.png"
+        ]
     },
     {
         id: "8bd15072-44f0-4dc7-aaa1-274dd8519613",

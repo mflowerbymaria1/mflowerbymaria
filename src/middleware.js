@@ -116,19 +116,14 @@ export function middleware(request) {
     }
 
     // 2. Maintenance Mode Logic
-    // If NEXT_PUBLIC_MAINTENANCE_MODE is true, block everything EXCEPT /admin, /mantenimiento, and static assets
-    if (process.env.NEXT_PUBLIC_MAINTENANCE_MODE === 'true') {
+    // If maintenance mode is active, block everything EXCEPT /admin, /mantenimiento, and static assets for non-admins
+    const isMaintenanceMode = true;
+    if (isMaintenanceMode) {
         const authCookie = request.cookies.get('mflower_admin_auth');
         const isAdmin = authCookie && authCookie.value === 'authenticated';
 
         if (!isAdmin && !pathname.startsWith('/admin') && !pathname.startsWith('/mantenimiento') && !pathname.startsWith('/_next') && !pathname.startsWith('/images') && !pathname.startsWith('/fonts')) {
             url.pathname = '/mantenimiento';
-            return NextResponse.redirect(url);
-        }
-    } else {
-        // If maintenance is OFF, and user tries to visit /mantenimiento, redirect them to home
-        if (pathname.startsWith('/mantenimiento')) {
-            url.pathname = '/';
             return NextResponse.redirect(url);
         }
     }
