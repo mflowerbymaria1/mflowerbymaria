@@ -9,6 +9,7 @@ import { useCart } from "../../../store/CartContext";
 import { supabase } from "../../../lib/supabase";
 import Logo from "../../../components/Logo";
 import ShippingCalculator from "../../../components/ShippingCalculator";
+import { products as fallbackProducts } from "../../../data/products";
 
 export default function ProductDetailPage({ params }) {
     const { id } = use(params);
@@ -40,56 +41,80 @@ export default function ProductDetailPage({ params }) {
         async function fetchProduct() {
             setLoading(true);
             try {
-                // Try to find by UUID first (the standard Supabase way)
-                const { data, error } = await supabase
-                    .from('products')
-                    .select('*')
-                    .eq('id', id)
-                    .maybeSingle();
+                let foundProduct = null;
 
-                if (!error && data) {
+                // Try to find in Supabase first
+                try {
+                    const { data, error } = await supabase
+                        .from('products')
+                        .select('*')
+                        .eq('id', id)
+                        .maybeSingle();
+
+                    if (!error && data) {
+                        foundProduct = data;
+                    }
+                } catch (sbErr) {
+                    console.warn("Supabase single fetch failed, fallback to local dataset");
+                }
+
+                // If not found in Supabase, search in fallbackProducts
+                if (!foundProduct) {
+                    const match = fallbackProducts.find(p => 
+                        String(p.id).toLowerCase() === String(id).toLowerCase() ||
+                        p.name.toLowerCase().replace(/[^a-z0-9]+/g, '-') === String(id).toLowerCase()
+                    );
+                    if (match) {
+                        foundProduct = {
+                            ...match,
+                            image_url: match.image,
+                            gallery: match.images || [match.image],
+                            short_description: match.shortDescription,
+                            is_best_seller: match.isBestSeller,
+                            stock: match.stock || 50
+                        };
+                    }
+                }
+
+                if (foundProduct) {
                     const wholesaleActive = !!localStorage.getItem('mflower_wholesale_session');
-                    let wp = data.wholesale_price;
-                    if (!wp && data.description) {
-                        const match = data.description.match(/\[WHOLESALE:\s*(\d+(\.\d+)?)\]/);
+                    let wp = foundProduct.wholesale_price;
+                    if (!wp && foundProduct.description) {
+                        const match = foundProduct.description.match(/\[WHOLESALE:\s*(\d+(\.\d+)?)\]/);
                         if (match) wp = parseFloat(match[1]);
                     }
-                    const chosenPrice = (wholesaleActive && wp) ? wp : data.price;
-                    const cleanDescription = (data.description || '').replace(/\[WHOLESALE:\s*\d+(\.\d+)?\]/g, '').trim();
+                    const chosenPrice = (wholesaleActive && wp) ? wp : foundProduct.price;
+                    const cleanDescription = (foundProduct.description || '').replace(/\[WHOLESALE:\s*\d+(\.\d+)?\]/g, '').trim();
 
                     setProduct({
-                        ...data,
+                        ...foundProduct,
                         description: cleanDescription,
                         wholesale_price: wp,
-                        image: data.image_url,
-                        images: data.image_url ? [data.image_url, ...(data.gallery || [])] : (data.gallery || []),
-                        shortDescription: data.short_description,
-                        isBestSeller: data.is_best_seller,
+                        image: foundProduct.image_url || foundProduct.image,
+                        images: foundProduct.image_url ? [foundProduct.image_url, ...(foundProduct.gallery || [])] : (foundProduct.gallery || [foundProduct.image]),
+                        shortDescription: foundProduct.short_description || foundProduct.shortDescription,
+                        isBestSeller: foundProduct.is_best_seller || foundProduct.isBestSeller,
                         // Format price for display
                         price: typeof chosenPrice === 'number'
                             ? chosenPrice.toLocaleString('es-AR', { minimumFractionDigits: 0, maximumFractionDigits: 0 })
                             : chosenPrice
                     });
-                    if (data.name.toLowerCase().includes('libreta')) {
+
+                    if (foundProduct.name.toLowerCase().includes('libreta')) {
                         setSheetType('lisas');
                         setPaperType('blanco');
                     }
 
-                    // Fetch related products from the same category
-                    const { data: related, error: relError } = await supabase
-                        .from('products')
-                        .select('id, name, price, image_url, short_description')
-                        .eq('category', data.category)
-                        .neq('id', data.id)
-                        .limit(4);
-                    if (!relError && related) {
-                        setRelatedProducts(related.map(p => ({
+                    // Related products fallback
+                    const related = fallbackProducts
+                        .filter(p => p.category === foundProduct.category && String(p.id) !== String(foundProduct.id))
+                        .slice(0, 4)
+                        .map(p => ({
                             ...p,
-                            price: typeof p.price === 'number'
-                                ? p.price.toLocaleString('es-AR', { minimumFractionDigits: 0, maximumFractionDigits: 0 })
-                                : p.price
-                        })));
-                    }
+                            image_url: p.image,
+                            short_description: p.shortDescription
+                        }));
+                    setRelatedProducts(related);
                 }
             } catch (err) {
                 console.error("Error al obtener detalles del producto:", err);

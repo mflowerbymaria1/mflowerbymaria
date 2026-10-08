@@ -8,6 +8,7 @@ import { Suspense } from "react";
 
 import { useEffect, useState } from "react";
 import { supabase } from "../../lib/supabase";
+import { products as fallbackProducts, defaultCategories } from "../../data/products";
 
 function ProductosContent() {
     const searchParams = useSearchParams();
@@ -28,11 +29,13 @@ function ProductosContent() {
                     supabase.from('categories').select('*')
                 ]);
                 
-                if (!categoriesRes.error && categoriesRes.data) {
+                if (!categoriesRes.error && categoriesRes.data && categoriesRes.data.length > 0) {
                     setDbCategories(categoriesRes.data.filter(c => !c.name?.startsWith('WHOLESALE_CODE:')));
+                } else {
+                    setDbCategories(defaultCategories);
                 }
 
-                if (!productsRes.error && productsRes.data) {
+                if (!productsRes.error && productsRes.data && productsRes.data.length > 0) {
                     // Mapping Supabase schema to component expectations and formatting prices
                     const formatted = productsRes.data.map(p => {
                         let formattedPrice = p.price;
@@ -54,12 +57,12 @@ function ProductosContent() {
                     });
                     setAllProducts(formatted);
                 } else {
-                    console.error("Error fetching products from Supabase:", productsRes.error);
-                    setAllProducts([]);
+                    setAllProducts(fallbackProducts);
                 }
             } catch (err) {
-                console.error("Error fetching data:", err);
-                setAllProducts([]);
+                console.error("Error fetching data, using fallback:", err);
+                setDbCategories(defaultCategories);
+                setAllProducts(fallbackProducts);
             }
             setLoading(false);
         }

@@ -8,6 +8,7 @@ import AccountModal from "./AccountModal";
 import CartDropdown from "./CartDropdown";
 import Logo from "./Logo";
 import { supabase } from "../lib/supabase";
+import { defaultCategories } from "../data/products";
 
 export default function Header() {
   const router = useRouter();
@@ -63,14 +64,20 @@ export default function Header() {
   // Fetch categories from Supabase for the dropdown menu
   useEffect(() => {
     async function fetchCategories() {
-      const { data, error } = await supabase
-        .from('categories')
-        .select('*')
-        .order('name', { ascending: true });
-      if (!error && data) {
-        // Filter out system entries like WHOLESALE_CODE
-        const productCategories = data.filter(c => !c.name?.startsWith('WHOLESALE_CODE:'));
-        setCategories(productCategories);
+      try {
+        const { data, error } = await supabase
+          .from('categories')
+          .select('*')
+          .order('name', { ascending: true });
+        if (!error && data && data.length > 0) {
+          // Filter out system entries like WHOLESALE_CODE
+          const productCategories = data.filter(c => !c.name?.startsWith('WHOLESALE_CODE:'));
+          setCategories(productCategories);
+        } else {
+          setCategories(defaultCategories);
+        }
+      } catch (e) {
+        setCategories(defaultCategories);
       }
     }
     fetchCategories();

@@ -3,6 +3,7 @@ import { useState, useRef, useEffect } from 'react';
 import { useFavorites } from '../store/FavoritesContext';
 import Link from 'next/link';
 import { supabase } from '../lib/supabase';
+import { products as fallbackProducts } from '../data/products';
 
 export default function ProductCarousel() {
   const [favoritesList, setFavoritesList] = useState([]);
@@ -10,13 +11,14 @@ export default function ProductCarousel() {
 
   useEffect(() => {
     async function fetchFavorites() {
+      try {
         const { data, error } = await supabase
             .from('products')
             .select('*')
             .eq('is_best_seller', true)
             .limit(10);
         
-        if (!error && data) {
+        if (!error && data && data.length > 0) {
             const favorites = data
                 .slice(0, 8)
                 .map(p => ({
@@ -24,8 +26,13 @@ export default function ProductCarousel() {
                     image: p.image_url
                 }));
             setFavoritesList(favorites);
+        } else {
+            setFavoritesList(fallbackProducts.filter(p => p.isBestSeller).slice(0, 8));
         }
-        setLoading(false);
+      } catch(e) {
+        setFavoritesList(fallbackProducts.filter(p => p.isBestSeller).slice(0, 8));
+      }
+      setLoading(false);
     }
     fetchFavorites();
   }, []);

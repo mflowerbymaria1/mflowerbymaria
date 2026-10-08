@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import ProductCard from "./ProductCard";
 import { supabase } from "../lib/supabase";
+import { products as fallbackProducts } from "../data/products";
 
 export default function ProductGrid() {
   const [products, setProducts] = useState([]);
@@ -10,22 +11,28 @@ export default function ProductGrid() {
 
   useEffect(() => {
     async function fetchProducts() {
-      const { data, error } = await supabase
-        .from('products')
-        .select('*')
-        .order('created_at', { ascending: false });
+      try {
+        const { data, error } = await supabase
+          .from('products')
+          .select('*')
+          .order('created_at', { ascending: false });
 
-      if (!error && data) {
-        setProducts(data.map(p => ({
-          ...p,
-          image: p.image_url,
-          shortDescription: p.short_description,
-          isBestSeller: p.is_best_seller,
-          // Format price for display (Supabase stores as number)
-          price: typeof p.price === 'number'
-            ? p.price.toLocaleString('es-AR', { minimumFractionDigits: 0, maximumFractionDigits: 0 })
-            : p.price
-        })));
+        if (!error && data && data.length > 0) {
+          setProducts(data.map(p => ({
+            ...p,
+            image: p.image_url,
+            shortDescription: p.short_description,
+            isBestSeller: p.is_best_seller,
+            price: typeof p.price === 'number'
+              ? p.price.toLocaleString('es-AR', { minimumFractionDigits: 0, maximumFractionDigits: 0 })
+              : p.price
+          })));
+        } else {
+          // Fallback to local products dataset
+          setProducts(fallbackProducts);
+        }
+      } catch (err) {
+        setProducts(fallbackProducts);
       }
       setLoading(false);
     }

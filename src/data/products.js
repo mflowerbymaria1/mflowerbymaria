@@ -387,5 +387,68 @@ export const products = [
         price: "24.000",
         image: "/images/block_mega_a4.jpg",
         images: ["/images/block_mega_a4.jpg"]
+    },
+    {
+        id: "d67f9b95-c763-4685-8c1e-e3575bc26e58",
+        name: "ÁLBUM DE FIGURITAS",
+        category: "Álbum de figuritas - Día de la Madre",
+        shortDescription: "El regalo perfecto para mamá. 31 fotos en sobres para completar.",
+        description: "El regalo perfecto para mamá 💕\n\n• Tarjeta día de la madre\n• Stickers para decorar - EDICIÓN ESPECIAL\n• Álbum para completar\n• 5 sobres con figuritas (fotos)\n• Sobre transparente para guardado\n\nTOTAL DE FOTOS 31 (30 fotos verticales y 1 horizontal)\n\nEs un producto personalizado, al finalizar la compra nos envían las fotos por e-mail/whatsapp y nosotras nos encargamos del resto. (enviar las imágenes junto con su número de pedido).",
+        price: "27.900",
+        isBestSeller: true,
+        stock: 50,
+        image: "/images/banner_dia_de_la_madre.png",
+        images: [
+            "/images/banner_dia_de_la_madre.png"
+        ]
+    },
+    {
+        id: "set-organizate",
+        name: "Set Organízate",
+        category: "Sets de Regalo",
+        shortDescription: "Planner + Libreta + Resaltadores pastel en sobre PVC.",
+        description: "El kit definitivo para organizar tu año con estilo. Incluye Planner Perpetuo, Libreta A5, set de resaltadores en tonos pastel y stickers decorativos. Viene listo para regalar en sobre PVC con tarjeta personalizada.",
+        price: "35.000",
+        isBestSeller: true,
+        stock: 20,
+        image: "/images/mflower_prod_planner_1772749261418.png",
+        images: ["/images/mflower_prod_planner_1772749261418.png"]
+    },
+    {
+        id: "set-cherry",
+        name: "Set Cherry",
+        category: "Sets de Regalo",
+        shortDescription: "Cuaderno A5 + Block de notas + Lapicera Cherry.",
+        description: "Inspirado en tonos cereza y estética girly. Incluye Cuaderno A5 sistema de discos, MIDI Block de notas, lapicera retráctil y stickers holográficos. Presentación de regalo.",
+        price: "35.000",
+        isBestSeller: true,
+        stock: 20,
+        image: "/images/mflower_prod_cuaderno_1772749182939.png",
+        images: ["/images/mflower_prod_cuaderno_1772749182939.png"]
+    },
+    {
+        id: "set-bloom",
+        name: "Set Bloom",
+        category: "Sets de Regalo",
+        shortDescription: "Cuaderno A4 + Separadores + Fichero Bloom.",
+        description: "Un set completo para estudio y trabajo con flores pasteles. Incluye Cuaderno A4 con discos, Fichero N° 3, 3 separadores y plancha de stickers.",
+        price: "38.000",
+        isBestSeller: true,
+        stock: 15,
+        image: "/images/mockup_combinado_ia.png",
+        images: ["/images/mockup_combinado_ia.png"]
     }
+];
+
+export const defaultCategories = [
+    { id: 'cat-madre', name: 'Álbum de figuritas - Día de la Madre', slug: 'album-de-figuritas-dia-de-la-madre' },
+    { id: 'cat-cuadernos-a4', name: 'Cuadernos A4', slug: 'cuadernos-a4' },
+    { id: 'cat-cuadernos-a5', name: 'Cuadernos A5', slug: 'cuadernos-a5' },
+    { id: 'cat-planners', name: 'Planners', slug: 'planners' },
+    { id: 'cat-ficheros', name: 'Ficheros N° 3', slug: 'ficheros-n-3' },
+    { id: 'cat-blocks', name: 'Block de papeles', slug: 'block-de-papeles' },
+    { id: 'cat-stickers', name: 'Stickers & Varios', slug: 'stickers-varios' },
+    { id: 'cat-capsula-arg', name: 'Cápsula Argentina', slug: 'capsula-argentina' },
+    { id: 'cat-repuestos', name: 'Repuestos', slug: 'repuestos' },
+    { id: 'cat-sets', name: 'Sets de Regalo', slug: 'sets-de-regalo' }
 ];
