@@ -156,7 +156,7 @@ export default function ProductCard({ product }) {
       
       {/* Miniaturas de vista previa */}
       {(() => {
-        const uniqueImages = Array.from(new Set([product.image, ...(product.gallery || [])].filter(Boolean))).slice(0, 5);
+        const uniqueImages = Array.from(new Set([product.image, ...(product.gallery || []), ...(product.images || [])].filter(Boolean))).slice(0, 5);
         if (uniqueImages.length <= 1) return null;
         return (
           <div className="card-thumbnails-preview" onClick={(e) => e.stopPropagation()}>
