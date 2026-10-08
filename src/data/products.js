@@ -427,16 +427,59 @@ export const products = [
         images: ["/images/mflower_prod_cuaderno_1772749182939.png"]
     },
     {
-        id: "set-bloom",
-        name: "Set Bloom",
-        category: "Sets de Regalo",
-        shortDescription: "Cuaderno A4 + Separadores + Fichero Bloom.",
-        description: "Un set completo para estudio y trabajo con flores pasteles. Incluye Cuaderno A4 con discos, Fichero N° 3, 3 separadores y plancha de stickers.",
-        price: "38.000",
-        isBestSeller: true,
-        stock: 15,
-        image: "/images/mockup_combinado_ia.png",
-        images: ["/images/mockup_combinado_ia.png"]
+        id: "block-inspiracion",
+        name: "Block de papeles A5 Colección Inspiración",
+        category: "Block de papeles",
+        shortDescription: "Set de 24 papeles en tamaño A5, diseño Colección Inspiración.",
+        description: "Block de papeles tamaño A5. Contiene 24 papeles con hermosos diseños de la Colección Inspiración. Ideales para decorar tu journal, hacer collages, notas o lo que te imagines.",
+        price: "12.000",
+        stock: 20,
+        image: "/images/block_papeles_inspiracion_1.jpg",
+        images: ["/images/block_papeles_inspiracion_1.jpg", "/images/block_papeles_inspiracion_2.jpg"]
+    },
+    {
+        id: "block-osito",
+        name: "Block de hojas To Do List Osito",
+        category: "Block de papeles",
+        shortDescription: "Block de notas To Do List, diseño Osito.",
+        description: "Block de hojas diseño To Do List Osito. Perfecto para anotar todas tus tareas diarias, hacer listas y organizarte con estilo. Diseño súper tierno y práctico.",
+        price: "7.500",
+        stock: 20,
+        image: "/images/block_hojas_osito.jpg",
+        images: ["/images/block_hojas_osito.jpg"]
+    },
+    {
+        id: "block-cerezas",
+        name: "Block de hojas Cerezas",
+        category: "Block de papeles",
+        shortDescription: "Block de notas rayado, diseño Cerezas.",
+        description: "Block de hojas rayado diseño Cerezas. Práctico y hermoso para llevar a todos lados, anotar recordatorios, notas rápidas o listas.",
+        price: "7.500",
+        stock: 20,
+        image: "/images/block_hojas_cerezas.jpg",
+        images: ["/images/block_hojas_cerezas.jpg"]
+    },
+    {
+        id: "midi-suertudo",
+        name: "Midi Block Suertudo",
+        category: "Block de papeles",
+        shortDescription: "Block de notas A5 (15x21 cm) con 40 hojas, diseño Suertudo.",
+        description: "El Midi Block Suertudo combina el tamaño ideal A5 con un diseño lleno de buena vibra y estilo. Perfecto para tener siempre a mano en tu escritorio o llevar en la cartera para anotar pendientes, ideas y recordatorios diarios.\n\nDetalles del producto:\n- Tamaño: A5 (15 x 21 cm).\n- Cantidad: 40 hojas impresas a todo color.\n- Papel: Papel obra de 90g de alto gramaje (apto para todo tipo de lapiceras y resaltadores sin traspasar).\n- Encuadernación: Block encolado superior con base rígida para escribir cómodo.",
+        price: "18.500",
+        stock: 25,
+        image: "/images/block_midi_a5.jpg",
+        images: ["/images/block_midi_a5.jpg"]
+    },
+    {
+        id: "mega-animal-print",
+        name: "Mega Block Animal Print",
+        category: "Block de papeles",
+        shortDescription: "Mega Block de notas A4 (21x30 cm) con 40 hojas, diseño Animal Print.",
+        description: "El Mega Block Animal Print es el compañero perfecto para quienes necesitan espacio de sobra para planificar, estudiar y trabajar con estilo chic y canchero. Su tamaño extra grande A4 te permite tener una visión clara de todas tus prioridades en un solo lugar.\n\nDetalles del producto:\n- Tamaño: A4 (21 x 30 cm) extra espacio.\n- Cantidad: 40 hojas impresas con diseño exclusivo Animal Print.\n- Papel: Papel obra de 90g de excelente calidad, suave al tacto y resistente a tintas y resaltadores.\n- Encuadernación: Block encolado superior con respaldo rígido.",
+        price: "24.000",
+        stock: 20,
+        image: "/images/block_mega_a4.jpg",
+        images: ["/images/block_mega_a4.jpg"]
     }
 ];
 
