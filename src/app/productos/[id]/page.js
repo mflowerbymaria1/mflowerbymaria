@@ -135,9 +135,11 @@ export default function ProductDetailPage({ params }) {
     const ficheroIds = [4, 7, 14];
 
     // Lógica para detectar si es cuaderno por nombre si no es ID estático
-    const isNotebook = notebookIds.includes(Number(product.id)) || product.name.toLowerCase().includes('cuaderno') || product.name.toLowerCase().includes('libreta');
+    const isColoring = product.name.toLowerCase().includes('colorear') || (product.category && product.category.toLowerCase().includes('colorear'));
+    const isNotebook = (notebookIds.includes(Number(product.id)) || product.name.toLowerCase().includes('cuaderno')) && !product.name.toLowerCase().includes('libreta') && !isColoring;
     const isFichero = ficheroIds.includes(Number(product.id)) || product.name.toLowerCase().includes('fichero');
     const isLibreta = product.name.toLowerCase().includes('libreta');
+    const isPack = product.name.toLowerCase().includes('pack');
 
     const needsNotebookOptions = isNotebook;
     const needsFicheroOptions = isFichero;
@@ -158,6 +160,7 @@ export default function ProductDetailPage({ params }) {
         if (nameLower.includes('resaltador') || nameLower.includes('aurora')) return 'Un set adorable y súper práctico para llenar tus apuntes y lecturas de colores suaves y prolijos. Vienen en tamaño mini para llevarlos a todos lados sin ocupar espacio.';
 
         // Por categoría (usando includes para cubrir variantes con emojis, plurales, etc.)
+        if (cat.includes('colorear') || nameLower.includes('colorear') || nameLower.includes('disney')) return '¡Descubrí la magia de Disney hoja por hoja! Un cuaderno para colorear único con misterio oculto que se revela dibujo a dibujo mientras pintás. El plan perfecto para desconectar, relajarte y llenar tus momentos libres de color y creatividad.';
         if (cat.includes('cuaderno') && cat.includes('a4')) return 'Tu compañero ideal para la facu, el trabajo o tus proyectos creativos. Con sistema de discos inteligente, podés agregar, quitar y reorganizar hojas cuando quieras. Diseñado para acompañarte en cada idea, cada clase y cada momento de inspiración.';
         if (cat.includes('cuaderno') && cat.includes('a5')) return 'Compacto y versátil, perfecto para llevar a todos lados. Con sistema de discos inteligente que te permite personalizarlo a tu gusto. Ideal para tomar notas rápidas, hacer listas o dejar volar tu creatividad donde sea que estés.';
         if (cat.includes('libreta')) return 'Liviana y práctica, tu aliada para el día a día. Perfecta para anotar ideas sueltas, listas de pendientes o esos pensamientos que no querés olvidar. Llevala en la cartera, la mochila o tenela siempre a mano.';
@@ -330,73 +333,6 @@ export default function ProductDetailPage({ params }) {
                                             ))}
                                         </div>
                                     )}
-                                    {/* Selector de diseños debajo de las imágenes para el Pack */}
-                                    {product.name.toLowerCase().includes('pack') && (
-                                        <div className="pack-selectors-under-gallery" style={{ marginTop: '1rem', background: '#fafafa', padding: '1.2rem', borderRadius: '14px', border: '1px solid #eee' }}>
-                                            <div className="sheet-selector-box" style={{ marginBottom: '12px' }}>
-                                                <h4 className="font-quicksand font-bold mb-2 text-gray-800" style={{ fontSize: '0.95rem' }}>Elegí tu primera Libreta A5:</h4>
-                                                <select 
-                                                    value={design1} 
-                                                    onChange={(e) => {
-                                                        const val = e.target.value;
-                                                        setDesign1(val);
-                                                        const designsList = [
-                                                            'Breakfast 1', 'Breakfast 2', 'Breakfast 3', 
-                                                            'Libreta Black', 'Libreta Pink', 'Libreta Flower', 
-                                                            'Libreta Garabato', 'Libreta Waves Red', 
-                                                            'Libreta Yellow Grid'
-                                                        ];
-                                                        const idx = designsList.indexOf(val);
-                                                        if (idx !== -1 && idx < imagesToDisplay.length) {
-                                                            setSelectedImage(idx);
-                                                        }
-                                                    }} 
-                                                    style={{ width: '100%', padding: '10px', borderRadius: '12px', border: '1px solid #ddd', fontFamily: 'Montserrat, sans-serif', fontSize: '0.9rem', outline: 'none', background: '#fff' }}
-                                                >
-                                                    <option value="Breakfast 1">Breakfast 1</option>
-                                                    <option value="Breakfast 2">Breakfast 2</option>
-                                                    <option value="Breakfast 3">Breakfast 3</option>
-                                                    <option value="Libreta Black">Libreta Black</option>
-                                                    <option value="Libreta Pink">Libreta Pink</option>
-                                                    <option value="Libreta Flower">Libreta Flower</option>
-                                                    <option value="Libreta Garabato">Libreta Garabato</option>
-                                                    <option value="Libreta Waves Red">Libreta Waves Red</option>
-                                                    <option value="Libreta Yellow Grid">Libreta Yellow Grid</option>
-                                                </select>
-                                            </div>
-                                            <div className="sheet-selector-box">
-                                                <h4 className="font-quicksand font-bold mb-2 text-gray-800" style={{ fontSize: '0.95rem' }}>Elegí tu segunda Libreta A5:</h4>
-                                                <select 
-                                                    value={design2} 
-                                                    onChange={(e) => {
-                                                        const val = e.target.value;
-                                                        setDesign2(val);
-                                                        const designsList = [
-                                                            'Breakfast 1', 'Breakfast 2', 'Breakfast 3', 
-                                                            'Libreta Black', 'Libreta Pink', 'Libreta Flower', 
-                                                            'Libreta Garabato', 'Libreta Waves Red', 
-                                                            'Libreta Yellow Grid'
-                                                        ];
-                                                        const idx = designsList.indexOf(val);
-                                                        if (idx !== -1 && idx < imagesToDisplay.length) {
-                                                            setSelectedImage(idx);
-                                                        }
-                                                    }} 
-                                                    style={{ width: '100%', padding: '10px', borderRadius: '12px', border: '1px solid #ddd', fontFamily: 'Montserrat, sans-serif', fontSize: '0.9rem', outline: 'none', background: '#fff' }}
-                                                >
-                                                    <option value="Breakfast 1">Breakfast 1</option>
-                                                    <option value="Breakfast 2">Breakfast 2</option>
-                                                    <option value="Breakfast 3">Breakfast 3</option>
-                                                    <option value="Libreta Black">Libreta Black</option>
-                                                    <option value="Libreta Pink">Libreta Pink</option>
-                                                    <option value="Libreta Flower">Libreta Flower</option>
-                                                    <option value="Libreta Garabato">Libreta Garabato</option>
-                                                    <option value="Libreta Waves Red">Libreta Waves Red</option>
-                                                    <option value="Libreta Yellow Grid">Libreta Yellow Grid</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    )}
                         </div>
 
                         {/* Detalles del Producto */}
@@ -492,7 +428,47 @@ export default function ProductDetailPage({ params }) {
                             </div>
 
                             <div className="actions-box">
-                                {product.name.toLowerCase().includes('pack') ? null : (
+                                {isPack ? (
+                                    <div style={{ background: '#FFF0F3', border: '2px solid #F5C6D0', borderRadius: '18px', padding: '18px', marginBottom: '20px', width: '100%' }}>
+                                        <div style={{ marginBottom: '14px' }}>
+                                            <label style={{ display: 'block', fontWeight: 800, fontSize: '0.85rem', color: '#1a1a1a', marginBottom: '6px', fontFamily: 'Montserrat, sans-serif' }}>
+                                                🌸 1. Elegí tu primera libreta A5:
+                                            </label>
+                                            <select
+                                                value={design1}
+                                                onChange={(e) => setDesign1(e.target.value)}
+                                                style={{ width: '100%', padding: '12px 14px', borderRadius: '12px', border: '1.5px solid #F5C6D0', fontSize: '0.9rem', fontWeight: 700, background: '#fff', color: '#1a1a1a', outline: 'none', cursor: 'pointer' }}
+                                            >
+                                                {[
+                                                    'Libreta Flora', 'Libreta Smile', 'Libreta Gratitud', 'Libreta Sardinas',
+                                                    'Libreta Breakfast 1', 'Libreta Breakfast 2', 'Libreta Breakfast 3',
+                                                    'Libreta Black', 'Libreta Pink', 'Libreta Flower',
+                                                    'Libreta Garabato', 'Libreta Waves Red', 'Libreta Yellow Grid'
+                                                ].map(opt => <option key={opt} value={opt}>{opt}</option>)}
+                                            </select>
+                                        </div>
+                                        <div style={{ marginBottom: '14px' }}>
+                                            <label style={{ display: 'block', fontWeight: 800, fontSize: '0.85rem', color: '#1a1a1a', marginBottom: '6px', fontFamily: 'Montserrat, sans-serif' }}>
+                                                🌸 2. Elegí tu segunda libreta A5:
+                                            </label>
+                                            <select
+                                                value={design2}
+                                                onChange={(e) => setDesign2(e.target.value)}
+                                                style={{ width: '100%', padding: '12px 14px', borderRadius: '12px', border: '1.5px solid #F5C6D0', fontSize: '0.9rem', fontWeight: 700, background: '#fff', color: '#1a1a1a', outline: 'none', cursor: 'pointer' }}
+                                            >
+                                                {[
+                                                    'Libreta Flora', 'Libreta Smile', 'Libreta Gratitud', 'Libreta Sardinas',
+                                                    'Libreta Breakfast 1', 'Libreta Breakfast 2', 'Libreta Breakfast 3',
+                                                    'Libreta Black', 'Libreta Pink', 'Libreta Flower',
+                                                    'Libreta Garabato', 'Libreta Waves Red', 'Libreta Yellow Grid'
+                                                ].map(opt => <option key={opt} value={opt}>{opt}</option>)}
+                                            </select>
+                                        </div>
+                                        <div style={{ padding: '10px 14px', background: '#fff', borderRadius: '12px', fontSize: '0.85rem', color: '#D47792', fontWeight: 800, border: '1px dashed #F5C6D0', textAlign: 'center' }}>
+                                            ✨ Tu pack incluye: <strong>{design1}</strong> + <strong>{design2}</strong>
+                                        </div>
+                                    </div>
+                                ) : (
                                     <>
                                         {needsNotebookOptions && (
                                             <div className="sheet-selector-box">

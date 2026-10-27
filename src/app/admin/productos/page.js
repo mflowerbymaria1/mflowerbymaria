@@ -390,7 +390,14 @@ export default function ProductosPage() {
                               <label>Categoría</label>
                               <select 
                                 value={editingProduct.category}
-                                onChange={(e) => setEditingProduct({...editingProduct, category: e.target.value})}
+                                onChange={(e) => {
+                                  const newCat = e.target.value;
+                                  let updated = { ...editingProduct, category: newCat };
+                                  if (newCat.toLowerCase().includes('colorear') && !editingProduct.description) {
+                                    updated.description = "Cuaderno de Disney para colorear con misterio hoja por hoja.\n\nContiene:\n• Papel obra 120 gr\n• 132 páginas (100 dibujos para colorear con sus soluciones al final)\n• Sistema de discos inteligente\n• Tapas plastificadas de alta resistencia y durabilidad";
+                                  }
+                                  setEditingProduct(updated);
+                                }}
                                 required
                                 className="styled-input-select"
                               >
@@ -399,6 +406,16 @@ export default function ProductosPage() {
                                       <option key={cat.id} value={cat.name}>{cat.name}</option>
                                   ))}
                               </select>
+                          </div>
+                          <div className="form-group span-2">
+                              <label>Descripción del Producto</label>
+                              <textarea 
+                                rows={4}
+                                value={editingProduct.description || ''}
+                                onChange={(e) => setEditingProduct({...editingProduct, description: e.target.value})}
+                                placeholder="Escribí los detalles y características del producto..."
+                                style={{ width: '100%', padding: '12px 14px', borderRadius: 12, border: '1px solid #eee', background: '#F9FAFB', fontFamily: 'inherit', fontSize: '0.9rem', outline: 'none', resize: 'vertical' }}
+                              />
                           </div>
                           <div className="form-group span-2">
                               <label>Imágenes del Producto (La primera será la principal)</label>

@@ -87,6 +87,7 @@ function ProductosContent() {
             case 'cuadernos-a4': return "Cuadernos A4 Sistema de discos 📓";
             case 'cuadernos-a5': return "Cuadernos A5 Sistema de discos 📓";
             case 'libretas-a5': return "Libretas A5";
+            case 'cuadernos-para-colorear': return "Cuadernos para colorear";
             case 'planners': return "Planners";
             case 'ficheros-n-3': return "Ficheros N° 3";
             case 'block-de-papeles-a5': return "Block de papeles A5";
@@ -112,6 +113,7 @@ function ProductosContent() {
     const getCategoryDescription = (catSlug) => {
         if (!catSlug) return "Explorá nuestra colección completa y encontrá lo que necesitás para tu espacio creativo.";
         switch (catSlug.toLowerCase()) {
+            case 'cuadernos-para-colorear': return "Descubrí la magia de colorear con nuestros cuadernos de Disney con misterio hoja por hoja, papel de 120 gr y sistema de discos.";
             case 'cuadernos-a4': return "Nuestros cuadernos de tamaño A4 con el exclusivo sistema de discos inteligente.";
             case 'cuadernos-a5': return "Nuestros cuadernos A5 con sistema de discos para llevar tus ideas a todas partes.";
             case 'libretas-a5': return "Nuestras libretas prácticas de tamaño A5, ideales para llevar con vos.";

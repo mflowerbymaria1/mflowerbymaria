@@ -1,5 +1,6 @@
 export const defaultCategories = [
     { id: 'cat-madre', name: 'Álbum de figuritas - Día de la Madre', slug: 'album-de-figuritas-dia-de-la-madre' },
+    { id: 'cat-colorear', name: 'Cuadernos para colorear', slug: 'cuadernos-para-colorear' },
     { id: 'cat-cuadernos-a4', name: 'Cuadernos A4 Sistema de discos 📓', slug: 'cuadernos-a4' },
     { id: 'cat-cuadernos-a5', name: 'Cuadernos A5 Sistema de discos 📓', slug: 'cuadernos-a5' },
     { id: 'cat-capsula-arg', name: 'Cápsula Argentina', slug: 'capsula-argentina' },
@@ -435,7 +436,7 @@ export const products = [
         images: ["/images/block_papeles_inspiracion_1.jpg", "/images/block_papeles_inspiracion_2.jpg"]
     },
 
-    // 7. LIBRETAS A5
+        // 7. LIBRETAS A5
     {
         id: "7bc995e9-0a7e-4a34-8f5c-38fb542ea298",
         name: "Libretas A5 PACK X 2",
@@ -446,53 +447,150 @@ export const products = [
         wholesalePrice: 9800,
         isBestSeller: true,
         image: "/images/libretas_pack.jpg",
-        images: [
-            "/images/libretas_pack.jpg"
-        ]
+        images: ["/images/libretas_pack.jpg"]
     },
     {
         id: "5f589d3a-0fe5-4b33-83cc-3c7e3f08ca77",
         name: "Libreta A5 Gratitud",
         category: "Libretas A5",
         shortDescription: "Libreta A5 de 24 hojas lisas, diseño Gratitud.",
-        description: "Libreta A5 de tapa blanda flexible plastificada. Ideal para notas diarias, journaling o gratitud. [WHOLESALE:5200]",
+        description: "Libreta A5 de tapa blanda flexible plastificada. Ideal para notas diarias, journaling o gratitud.\n\nCaracterísticas:\n- 24 hojas lisas papel obra 80g.\n- Tapa blanda flexible a color.\n- Medidas: 15 x 21 cm aprox. [WHOLESALE:5200]",
         price: "8.500",
         wholesalePrice: 5200,
-        image: "/images/mockup_pretty_girls_front.jpg",
-        images: ["/images/mockup_pretty_girls_front.jpg"]
+        image: "/images/libretas_pack.jpg",
+        images: ["/images/libretas_pack.jpg"]
     },
     {
         id: "a1c69a0b-b376-4962-8bcb-df5642c4260f",
         name: "Libreta A5 Flora",
         category: "Libretas A5",
         shortDescription: "Libreta A5 de 24 hojas lisas, diseño Flora.",
-        description: "Libreta A5 de tapa blanda flexible plastificada. Ideal para notas diarias y dibujo. [WHOLESALE:5200]",
+        description: "Libreta A5 de tapa blanda flexible plastificada. Ideal para notas diarias y dibujo.\n\nCaracterísticas:\n- 24 hojas lisas papel obra 80g.\n- Tapa blanda flexible a color.\n- Medidas: 15 x 21 cm aprox. [WHOLESALE:5200]",
         price: "8.500",
         wholesalePrice: 5200,
-        image: "/images/mockup_amelie_front.jpg",
-        images: ["/images/mockup_amelie_front.jpg"]
+        image: "/images/libretas_pack.jpg",
+        images: ["/images/libretas_pack.jpg"]
     },
     {
         id: "c8f3317b-0d06-4d36-bead-779e2625c1ad",
         name: "Libreta A5 Smile",
         category: "Libretas A5",
         shortDescription: "Libreta A5 de 24 hojas lisas, diseño Smile.",
-        description: "Libreta A5 de tapa blanda flexible plastificada. [WHOLESALE:5200]",
+        description: "Libreta A5 de tapa blanda flexible plastificada con diseño Smile aesthetic.\n\nCaracterísticas:\n- 24 hojas lisas papel obra 80g.\n- Tapa blanda flexible a color.\n- Medidas: 15 x 21 cm aprox. [WHOLESALE:5200]",
         price: "8.500",
         wholesalePrice: 5200,
-        image: "/images/mockup_croissant_front.jpg",
-        images: ["/images/mockup_croissant_front.jpg"]
+        image: "/images/libretas_pack.jpg",
+        images: ["/images/libretas_pack.jpg"]
     },
     {
         id: "07f47305-057e-4f26-83dd-27f68447ab94",
         name: "Libreta A5 Sardinas",
         category: "Libretas A5",
         shortDescription: "Libreta A5 de 24 hojas lisas, diseño Sardinas.",
-        description: "Libreta A5 de tapa blanda flexible plastificada con diseño de sardinas aesthetic. [WHOLESALE:5200]",
+        description: "Libreta A5 de tapa blanda flexible plastificada con diseño de sardinas aesthetic.\n\nCaracterísticas:\n- 24 hojas lisas papel obra 80g.\n- Tapa blanda flexible a color.\n- Medidas: 15 x 21 cm aprox. [WHOLESALE:5200]",
         price: "8.500",
         wholesalePrice: 5200,
-        image: "/images/mockup_salchicha_front.jpg",
-        images: ["/images/mockup_salchicha_front.jpg"]
+        image: "/images/libretas_pack.jpg",
+        images: ["/images/libretas_pack.jpg"]
+    },
+    {
+        id: "lib-a5-breakfast-1",
+        name: "Libreta A5 Breakfast 1",
+        category: "Libretas A5",
+        shortDescription: "Libreta A5 de 24 hojas lisas, diseño Breakfast 1.",
+        description: "Libreta A5 de tapa blanda flexible plastificada. 24 hojas lisas. [WHOLESALE:5200]",
+        price: "8.500",
+        wholesalePrice: 5200,
+        image: "/images/libretas_pack.jpg",
+        images: ["/images/libretas_pack.jpg"]
+    },
+    {
+        id: "lib-a5-breakfast-2",
+        name: "Libreta A5 Breakfast 2",
+        category: "Libretas A5",
+        shortDescription: "Libreta A5 de 24 hojas lisas, diseño Breakfast 2.",
+        description: "Libreta A5 de tapa blanda flexible plastificada. 24 hojas lisas. [WHOLESALE:5200]",
+        price: "8.500",
+        wholesalePrice: 5200,
+        image: "/images/libretas_pack.jpg",
+        images: ["/images/libretas_pack.jpg"]
+    },
+    {
+        id: "lib-a5-breakfast-3",
+        name: "Libreta A5 Breakfast 3",
+        category: "Libretas A5",
+        shortDescription: "Libreta A5 de 24 hojas lisas, diseño Breakfast 3.",
+        description: "Libreta A5 de tapa blanda flexible plastificada. 24 hojas lisas. [WHOLESALE:5200]",
+        price: "8.500",
+        wholesalePrice: 5200,
+        image: "/images/libretas_pack.jpg",
+        images: ["/images/libretas_pack.jpg"]
+    },
+    {
+        id: "lib-a5-black",
+        name: "Libreta A5 Black",
+        category: "Libretas A5",
+        shortDescription: "Libreta A5 de 24 hojas lisas, diseño Black.",
+        description: "Libreta A5 de tapa blanda flexible plastificada. 24 hojas lisas. [WHOLESALE:5200]",
+        price: "8.500",
+        wholesalePrice: 5200,
+        image: "/images/libretas_pack.jpg",
+        images: ["/images/libretas_pack.jpg"]
+    },
+    {
+        id: "lib-a5-pink",
+        name: "Libreta A5 Pink",
+        category: "Libretas A5",
+        shortDescription: "Libreta A5 de 24 hojas lisas, diseño Pink.",
+        description: "Libreta A5 de tapa blanda flexible plastificada. 24 hojas lisas. [WHOLESALE:5200]",
+        price: "8.500",
+        wholesalePrice: 5200,
+        image: "/images/libretas_pack.jpg",
+        images: ["/images/libretas_pack.jpg"]
+    },
+    {
+        id: "lib-a5-flower",
+        name: "Libreta A5 Flower",
+        category: "Libretas A5",
+        shortDescription: "Libreta A5 de 24 hojas lisas, diseño Flower.",
+        description: "Libreta A5 de tapa blanda flexible plastificada. 24 hojas lisas. [WHOLESALE:5200]",
+        price: "8.500",
+        wholesalePrice: 5200,
+        image: "/images/libretas_pack.jpg",
+        images: ["/images/libretas_pack.jpg"]
+    },
+    {
+        id: "lib-a5-garabato",
+        name: "Libreta A5 Garabato",
+        category: "Libretas A5",
+        shortDescription: "Libreta A5 de 24 hojas lisas, diseño Garabato.",
+        description: "Libreta A5 de tapa blanda flexible plastificada. 24 hojas lisas. [WHOLESALE:5200]",
+        price: "8.500",
+        wholesalePrice: 5200,
+        image: "/images/libretas_pack.jpg",
+        images: ["/images/libretas_pack.jpg"]
+    },
+    {
+        id: "lib-a5-waves-red",
+        name: "Libreta A5 Waves Red",
+        category: "Libretas A5",
+        shortDescription: "Libreta A5 de 24 hojas lisas, diseño Waves Red.",
+        description: "Libreta A5 de tapa blanda flexible plastificada. 24 hojas lisas. [WHOLESALE:5200]",
+        price: "8.500",
+        wholesalePrice: 5200,
+        image: "/images/libretas_pack.jpg",
+        images: ["/images/libretas_pack.jpg"]
+    },
+    {
+        id: "lib-a5-yellow-grid",
+        name: "Libreta A5 Yellow Grid",
+        category: "Libretas A5",
+        shortDescription: "Libreta A5 de 24 hojas lisas, diseño Yellow Grid.",
+        description: "Libreta A5 de tapa blanda flexible plastificada. 24 hojas lisas. [WHOLESALE:5200]",
+        price: "8.500",
+        wholesalePrice: 5200,
+        image: "/images/libretas_pack.jpg",
+        images: ["/images/libretas_pack.jpg"]
     },
 
     // 8. FICHEROS N° 3
@@ -519,30 +617,38 @@ export const products = [
         images: ["/images/mockup_maleva_front.jpg", "/images/mockup_maleva_back.jpg"]
     },
 
-    // 9. CÁPSULA ARGENTINA
+        // 9. CÁPSULA ARGENTINA
+    {
+        id: "12",
+        name: "Cuaderno A4 Sol de Mayo sistema de discos",
+        category: "Cápsula Argentina",
+        shortDescription: "A4, 100 hojas, diseño Sol de Mayo.",
+        description: "Edición Limitada. Diseño exclusivo Sol de Mayo. Contiene: Interior 100 hojas A4, 2 separadores internos, calendario 2026, 6 temarios de exámen, anillado inteligente, discos. [WHOLESALE:21000]",
+        price: "31.900",
+        wholesalePrice: 21000,
+        isBestSeller: true,
+        image: "/images/mockup_sol_de_mayo_front.jpg",
+        images: [
+            "/images/mockup_sol_de_mayo_front.jpg",
+            "/images/mockup_sol_de_mayo_back.jpg",
+            "/images/mockup_arg_interior_1.png",
+            "/images/mockup_arg_interior_2.png",
+            "/images/mockup_arg_interior_3.png",
+            "/images/mockup_arg_interior_4.png"
+        ]
+    },
     {
         id: "2",
         name: "Cuaderno A4 Pink Buenos Aires sistema de discos",
         category: "Cápsula Argentina",
         shortDescription: "A4, 90 hojas, anillado inteligente.",
-        description: "Contiene: Interior 90 hojas A4, 3 separadores internos, calendario 2026, 6 temarios de exámen, anillado inteligente, discos de colores (no se pueden elegir). [WHOLESALE:21000]",
+        description: "Contiene: Interior 90 hojas A4, 3 separadores internos, calendario 2026, 6 temarios de exámen, anillado inteligente, discos de colores. [WHOLESALE:21000]",
         price: "31.900",
         wholesalePrice: 21000,
-        image: "/images/mockup_combinado_ia.png",
-        images: ["/images/mockup_combinado_ia.png", "/images/mockup_back_cover.png"]
-    },
-    {
-        id: "12",
-        name: "Cuaderno A4 Sol de Mayo sistema de discos",
-        category: "Cápsula Argentina",
-        shortDescription: "Edición Limitada Sol de Mayo.",
-        description: "Edición Limitada. Diseño exclusivo Sol de Mayo. Contiene: Interior 100 hojas A4, 2 separadores internos, calendario 2026, 6 temarios de exámen, anillado inteligente, discos. [WHOLESALE:21000]",
-        price: "31.900",
-        wholesalePrice: 21000,
-        image: "/images/mockup_sol_de_mayo_front.jpg",
+        image: "/images/mockup_a4_argentina_front.png",
         images: [
-            "/images/mockup_sol_de_mayo_front.jpg",
-            "/images/mockup_sol_de_mayo_back.jpg",
+            "/images/mockup_a4_argentina_front.png",
+            "/images/mockup_a4_argentina_back.png",
             "/images/mockup_arg_interior_1.png",
             "/images/mockup_arg_interior_2.png",
             "/images/mockup_arg_interior_3.png",
@@ -557,8 +663,15 @@ export const products = [
         description: "Edición Limitada Cápsula Argentina. Diseño exclusivo \"Malvinas Argentinas\". Contiene: Interior 100 hojas A4, 2 separadores internos, 1 señalador, calendario 2026, 6 temarios de exámen, anillado inteligente y discos de colores. [WHOLESALE:21000]",
         price: "31.900",
         wholesalePrice: 21000,
-        image: "/images/mockup_sol_de_mayo_front.jpg",
-        images: ["/images/mockup_sol_de_mayo_front.jpg"]
+        image: "/images/mockup_stamps_front.png",
+        images: [
+            "/images/mockup_stamps_front.png",
+            "/images/mockup_stamps_back.png",
+            "/images/mockup_stamps_interior_1.png",
+            "/images/mockup_stamps_interior_2.png",
+            "/images/mockup_stamps_interior_3.png",
+            "/images/mockup_stamps_interior_4.png"
+        ]
     },
     {
         id: "72d015d8-8bad-42bb-aa40-77a65140d1fc",
@@ -569,7 +682,14 @@ export const products = [
         price: "31.900",
         wholesalePrice: 21000,
         image: "/images/mockup_sol_de_mayo_front.jpg",
-        images: ["/images/mockup_sol_de_mayo_front.jpg"]
+        images: [
+            "/images/mockup_sol_de_mayo_front.jpg",
+            "/images/mockup_sol_de_mayo_back.jpg",
+            "/images/mockup_arg_interior_1.png",
+            "/images/mockup_arg_interior_2.png",
+            "/images/mockup_arg_interior_3.png",
+            "/images/mockup_arg_interior_4.png"
+        ]
     },
     {
         id: "2dbbf727-6c61-434f-a490-14a575c3d6c5",
@@ -580,7 +700,14 @@ export const products = [
         price: "31.900",
         wholesalePrice: 21000,
         image: "/images/mockup_combinado_ia.png",
-        images: ["/images/mockup_combinado_ia.png"]
+        images: [
+            "/images/mockup_combinado_ia.png",
+            "/images/mockup_back_cover.png",
+            "/images/mockup_arg_interior_1.png",
+            "/images/mockup_arg_interior_2.png",
+            "/images/mockup_arg_interior_3.png",
+            "/images/mockup_arg_interior_4.png"
+        ]
     },
     {
         id: "4d920446-d890-4f1c-bc60-32f109147930",
@@ -591,7 +718,14 @@ export const products = [
         price: "31.900",
         wholesalePrice: 21000,
         image: "/images/planner_obelisco_original.jpg",
-        images: ["/images/planner_obelisco_original.jpg"]
+        images: [
+            "/images/planner_obelisco_original.jpg",
+            "/images/mockup_back_cover.png",
+            "/images/mockup_arg_interior_1.png",
+            "/images/mockup_arg_interior_2.png",
+            "/images/mockup_arg_interior_3.png",
+            "/images/mockup_arg_interior_4.png"
+        ]
     },
     {
         id: "aadcfa44-a929-428b-9de8-0ae07520b5fa",
@@ -602,7 +736,14 @@ export const products = [
         price: "26.900",
         wholesalePrice: 17200,
         image: "/images/mockup_sol_de_mayo_front.jpg",
-        images: ["/images/mockup_sol_de_mayo_front.jpg"]
+        images: [
+            "/images/mockup_sol_de_mayo_front.jpg",
+            "/images/mockup_sol_de_mayo_back.jpg",
+            "/images/mockup_arg_interior_1.png",
+            "/images/mockup_arg_interior_2.png",
+            "/images/mockup_arg_interior_3.png",
+            "/images/mockup_arg_interior_4.png"
+        ]
     },
     {
         id: "943ae53c-167f-4d6a-b109-7b8b681a7699",
@@ -612,8 +753,15 @@ export const products = [
         description: "Edición Limitada Cápsula Argentina. Diseño exclusivo \"Gloria Eterna\". Contiene: Interior 100 hojas A5, 2 separadores internos, 1 señalador, calendario 2026, 6 temarios de exámen, anillado inteligente y discos de colores. [WHOLESALE:17200]",
         price: "26.900",
         wholesalePrice: 17200,
-        image: "/images/mockup_sol_de_mayo_front.jpg",
-        images: ["/images/mockup_sol_de_mayo_front.jpg"]
+        image: "/images/mockup_stamps_front.png",
+        images: [
+            "/images/mockup_stamps_front.png",
+            "/images/mockup_stamps_back.png",
+            "/images/mockup_stamps_interior_1.png",
+            "/images/mockup_stamps_interior_2.png",
+            "/images/mockup_stamps_interior_3.png",
+            "/images/mockup_stamps_interior_4.png"
+        ]
     },
 
     // 10. PLANNERS
