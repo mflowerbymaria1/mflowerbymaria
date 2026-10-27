@@ -117,7 +117,7 @@ export function middleware(request) {
 
     // 2. Maintenance Mode Logic
     // If maintenance mode is active, block everything EXCEPT /admin, /mantenimiento, and static assets for non-admins
-    const isMaintenanceMode = true;
+    const isMaintenanceMode = false;
     if (isMaintenanceMode) {
         const authCookie = request.cookies.get('mflower_admin_auth');
         const isAdmin = authCookie && authCookie.value === 'authenticated';
