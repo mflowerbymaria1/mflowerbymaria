@@ -27,9 +27,27 @@ export default function ProductCard({ product }) {
   const notebookIds = [2, 5, 9, 11, 12, 13];
   const ficheroIds = [4, 7, 14];
 
-  const isNotebook = notebookIds.includes(Number(product.id)) || product.name.toLowerCase().includes('cuaderno') || product.name.toLowerCase().includes('libreta');
+  const isColoring = Boolean(
+    (product?.category && product.category.toLowerCase().includes('colorear')) ||
+    (product?.name && product.name.toLowerCase().includes('colorear'))
+  );
+
+  const isNotebook = !isColoring && (notebookIds.includes(Number(product.id)) || product.name.toLowerCase().includes('cuaderno') || product.name.toLowerCase().includes('libreta'));
   const isFichero = ficheroIds.includes(Number(product.id)) || product.name.toLowerCase().includes('fichero');
   const isLibreta = product.name.toLowerCase().includes('libreta');
+
+  const [showColoringLightbox, setShowColoringLightbox] = useState(false);
+  const [coloringImageIndex, setColoringImageIndex] = useState(0);
+
+  const cardGalleryImages = Array.from(
+    new Set([
+      product.image_url,
+      product.image,
+      ...(product.gallery || []),
+      ...(product.images || [])
+    ].filter(Boolean))
+  );
+  const displayImages = cardGalleryImages.length > 0 ? cardGalleryImages : (product.image ? [product.image] : []);
 
   const isFav = isFavorite(product.id);
   const needsNotebookOptions = isNotebook;
@@ -120,7 +138,19 @@ export default function ProductCard({ product }) {
   return (
     <div className="product-card relative group cursor-pointer" onClick={goToProduct} onMouseLeave={() => setActiveImage(product.image)}>
       
-      <div className="product-image-wrapper">
+      <div 
+        className="product-image-wrapper"
+        onClick={(e) => {
+          if (isColoring) {
+            e.preventDefault();
+            e.stopPropagation();
+            const currentIdx = displayImages.indexOf(activeImage);
+            setColoringImageIndex(currentIdx >= 0 ? currentIdx : 0);
+            setShowColoringLightbox(true);
+          }
+        }}
+        style={isColoring ? { cursor: 'zoom-in' } : {}}
+      >
         <button
           className={`favorite-heart-btn relative z-20 ${isFav ? 'active' : ''} ${isHeartBumping ? 'btn-bump' : ''}`}
           onClick={(e) => { e.stopPropagation(); handleToggleFavorite(e); }}
@@ -151,6 +181,17 @@ export default function ProductCard({ product }) {
         )}
         {product.isBestSeller && (
           <div className="bestseller-badge">🔥 Más Vendido</div>
+        )}
+        {isColoring && (
+          <div className="coloring-zoom-badge">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              <line x1="11" y1="8" x2="11" y2="14"></line>
+              <line x1="8" y1="11" x2="14" y2="11"></line>
+            </svg>
+            <span>Ver más grande</span>
+          </div>
         )}
       </div>
       
@@ -247,6 +288,106 @@ export default function ProductCard({ product }) {
             )}
 
             <button className="confirm-add-btn" onClick={confirmOptionsAndAdd}>Confirmar Agregar</button>
+          </div>
+        </div>
+      )}
+
+      {/* Lightbox Modal exclusivo para Cuadernos para colorear */}
+      {showColoringLightbox && isColoring && (
+        <div 
+          className="coloring-card-lightbox-overlay"
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            setShowColoringLightbox(false);
+          }}
+        >
+          <button 
+            className="coloring-lightbox-close-btn"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              setShowColoringLightbox(false);
+            }}
+            aria-label="Cerrar vista ampliada"
+          >
+            ✕
+          </button>
+
+          <div className="coloring-lightbox-card-container" onClick={(e) => e.stopPropagation()}>
+            <div className="coloring-lightbox-header">
+              <h4 className="coloring-lightbox-title font-quicksand">{product.name}</h4>
+              {displayImages.length > 1 && (
+                <span className="coloring-lightbox-counter">{coloringImageIndex + 1} / {displayImages.length}</span>
+              )}
+            </div>
+
+            <div className="coloring-lightbox-main-img-box">
+              <img 
+                src={displayImages[coloringImageIndex] || activeImage} 
+                alt={product.name} 
+                className="coloring-lightbox-img"
+              />
+
+              {displayImages.length > 1 && (
+                <>
+                  <button
+                    className="coloring-lightbox-arrow-btn left"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      setColoringImageIndex(prev => prev === 0 ? displayImages.length - 1 : prev - 1);
+                    }}
+                    aria-label="Imagen anterior"
+                  >
+                    ❮
+                  </button>
+                  <button
+                    className="coloring-lightbox-arrow-btn right"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      setColoringImageIndex(prev => prev === displayImages.length - 1 ? 0 : prev + 1);
+                    }}
+                    aria-label="Siguiente imagen"
+                  >
+                    ❯
+                  </button>
+                </>
+              )}
+            </div>
+
+            {displayImages.length > 1 && (
+              <div className="coloring-lightbox-thumbnails">
+                {displayImages.map((img, idx) => (
+                  <button
+                    key={idx}
+                    className={`coloring-thumb-item ${coloringImageIndex === idx ? 'active' : ''}`}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      setColoringImageIndex(idx);
+                    }}
+                  >
+                    <img src={img} alt={`${product.name} foto ${idx + 1}`} />
+                  </button>
+                ))}
+              </div>
+            )}
+
+            <div className="coloring-lightbox-footer">
+              <button
+                className="coloring-view-product-btn"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  setShowColoringLightbox(false);
+                  router.push(`/productos/${product.id}`);
+                }}
+              >
+                Ver cuaderno y comprar ➔
+              </button>
+            </div>
           </div>
         </div>
       )}
@@ -580,6 +721,210 @@ export default function ProductCard({ product }) {
           height: 100%;
           object-fit: cover;
           mix-blend-mode: multiply;
+        }
+
+        /* Estilos exclusivos para Cuadernos para colorear */
+        .coloring-zoom-badge {
+          position: absolute;
+          bottom: 12px;
+          right: 12px;
+          background: rgba(255, 255, 255, 0.96);
+          color: #2e3a47;
+          font-size: 0.72rem;
+          font-weight: 700;
+          padding: 6px 12px;
+          border-radius: 20px;
+          display: flex;
+          align-items: center;
+          gap: 5px;
+          box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+          z-index: 10;
+          transition: all 0.25s ease;
+          border: 1px solid rgba(212, 119, 146, 0.25);
+          pointer-events: none;
+        }
+        .product-card:hover .coloring-zoom-badge {
+          background: var(--pastel-pink);
+          color: white;
+          transform: scale(1.05);
+          box-shadow: 0 6px 16px rgba(212, 119, 146, 0.35);
+        }
+        .coloring-card-lightbox-overlay {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100vw;
+          height: 100vh;
+          background: rgba(15, 23, 42, 0.9);
+          backdrop-filter: blur(8px);
+          z-index: 99999;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 1.5rem;
+          cursor: default;
+        }
+        .coloring-lightbox-close-btn {
+          position: absolute;
+          top: 20px;
+          right: 25px;
+          background: rgba(255, 255, 255, 0.18);
+          border: none;
+          color: white;
+          width: 44px;
+          height: 44px;
+          border-radius: 50%;
+          font-size: 1.5rem;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          transition: all 0.2s ease;
+          z-index: 100000;
+        }
+        .coloring-lightbox-close-btn:hover {
+          background: var(--pastel-pink);
+          transform: scale(1.1);
+        }
+        .coloring-lightbox-card-container {
+          background: white;
+          border-radius: 20px;
+          padding: 1.5rem;
+          max-width: 900px;
+          width: 95vw;
+          max-height: 94vh;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          box-shadow: 0 25px 60px rgba(0,0,0,0.45);
+          animation: modalAppear 0.25s ease-out;
+          overflow-y: auto;
+        }
+        @keyframes modalAppear {
+          from { opacity: 0; transform: scale(0.92); }
+          to { opacity: 1; transform: scale(1); }
+        }
+        .coloring-lightbox-header {
+          width: 100%;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 1rem;
+          padding-bottom: 0.75rem;
+          border-bottom: 1px solid #f0f0f0;
+        }
+        .coloring-lightbox-title {
+          font-size: 1.15rem;
+          font-weight: 700;
+          color: #1f2937;
+          margin: 0;
+        }
+        .coloring-lightbox-counter {
+          font-size: 0.85rem;
+          font-weight: 600;
+          color: #6b7280;
+          background: #f3f4f6;
+          padding: 3px 10px;
+          border-radius: 12px;
+        }
+        .coloring-lightbox-main-img-box {
+          position: relative;
+          width: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          max-height: 65vh;
+          min-height: 320px;
+          background: #fafafa;
+          border-radius: 16px;
+          padding: 1rem;
+        }
+        .coloring-lightbox-img {
+          max-width: 100%;
+          max-height: 62vh;
+          object-fit: contain;
+          border-radius: 10px;
+          filter: drop-shadow(0 10px 20px rgba(0,0,0,0.08));
+        }
+        .coloring-lightbox-arrow-btn {
+          position: absolute;
+          top: 50%;
+          transform: translateY(-50%);
+          background: white;
+          border: none;
+          width: 46px;
+          height: 46px;
+          border-radius: 50%;
+          font-size: 1.25rem;
+          color: #333;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+          transition: all 0.2s ease;
+          z-index: 10;
+        }
+        .coloring-lightbox-arrow-btn:hover {
+          background: var(--pastel-pink);
+          color: white;
+          transform: translateY(-50%) scale(1.1);
+        }
+        .coloring-lightbox-arrow-btn.left { left: 15px; }
+        .coloring-lightbox-arrow-btn.right { right: 15px; }
+        .coloring-lightbox-thumbnails {
+          display: flex;
+          gap: 10px;
+          margin-top: 1rem;
+          max-width: 100%;
+          overflow-x: auto;
+          padding-bottom: 4px;
+        }
+        .coloring-thumb-item {
+          width: 58px;
+          height: 58px;
+          border-radius: 10px;
+          border: 2px solid #e5e7eb;
+          padding: 0;
+          background: white;
+          overflow: hidden;
+          cursor: pointer;
+          opacity: 0.6;
+          transition: all 0.2s ease;
+          flex-shrink: 0;
+        }
+        .coloring-thumb-item.active, .coloring-thumb-item:hover {
+          opacity: 1;
+          border-color: var(--pastel-pink);
+          transform: scale(1.06);
+        }
+        .coloring-thumb-item img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+        .coloring-lightbox-footer {
+          margin-top: 1.25rem;
+          width: 100%;
+          display: flex;
+          justify-content: center;
+        }
+        .coloring-view-product-btn {
+          background: var(--pastel-pink);
+          color: white;
+          font-family: var(--font-quicksand), sans-serif;
+          font-weight: 700;
+          font-size: 0.95rem;
+          padding: 10px 24px;
+          border-radius: 25px;
+          border: none;
+          cursor: pointer;
+          box-shadow: 0 4px 14px rgba(212, 119, 146, 0.35);
+          transition: all 0.2s ease;
+        }
+        .coloring-view-product-btn:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 6px 18px rgba(212, 119, 146, 0.45);
         }
       `}</style>
     </div>

@@ -23,6 +23,7 @@ export default function ProductDetailPage({ params }) {
     const [selectedImage, setSelectedImage] = useState(0);
     const [zoomOrigin, setZoomOrigin] = useState('center center');
     const [isLightboxOpen, setIsLightboxOpen] = useState(false);
+    const [isDetailZoomed, setIsDetailZoomed] = useState(false);
     const [relatedProducts, setRelatedProducts] = useState([]);
     const [design1, setDesign1] = useState('Breakfast 1');
     const [design2, setDesign2] = useState('Breakfast 2');
@@ -265,27 +266,47 @@ export default function ProductDetailPage({ params }) {
                                             className="zoom-image-wrapper w-full h-full"
                                             onMouseMove={handleMouseMove}
                                             onMouseLeave={handleMouseLeave}
-                                                    onClick={() => setIsLightboxOpen(true)}
-                                                    style={{ cursor: 'zoom-in' }}
-                                                >
-                                                    <img
-                                                        src={imagesToDisplay[selectedImage]}
-                                                        alt={product.name}
-                                                        className="product-image"
-                                                        style={{ 
-                                                          transformOrigin: zoomOrigin,
-                                                          ...(selectedImage === 0 && (
-                                                              product.name.toLowerCase().includes('midi block') ||
-                                                              product.name.toLowerCase().includes('baby block') ||
-                                                              product.name.toLowerCase().includes('mega block') ||
-                                                              product.name.toLowerCase().includes('croissant') ||
-                                                              product.name.toLowerCase().includes('futura')
-                                                          )
-                                                                ? { transform: 'scale(1.3)', objectFit: 'contain', objectPosition: 'center' }
-                                                                : {})
-                                                        }}
-                                                    />
-                                                </div>
+                                            onClick={() => {
+                                                setIsLightboxOpen(true);
+                                                setIsDetailZoomed(false);
+                                            }}
+                                            style={{ cursor: 'zoom-in' }}
+                                        >
+                                            <img
+                                                src={imagesToDisplay[selectedImage]}
+                                                alt={product.name}
+                                                className="product-image"
+                                                style={{ 
+                                                  transformOrigin: zoomOrigin,
+                                                  ...(selectedImage === 0 && (
+                                                      product.name.toLowerCase().includes('midi block') ||
+                                                      product.name.toLowerCase().includes('baby block') ||
+                                                      product.name.toLowerCase().includes('mega block') ||
+                                                      product.name.toLowerCase().includes('croissant') ||
+                                                      product.name.toLowerCase().includes('futura')
+                                                  )
+                                                        ? { transform: 'scale(1.3)', objectFit: 'contain', objectPosition: 'center' }
+                                                        : {})
+                                                }}
+                                            />
+                                        </div>
+                                        {isColoring && (
+                                            <div 
+                                                className="coloring-detail-zoom-badge"
+                                                onClick={() => {
+                                                    setIsLightboxOpen(true);
+                                                    setIsDetailZoomed(false);
+                                                }}
+                                            >
+                                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                                    <circle cx="11" cy="11" r="8"></circle>
+                                                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                                                    <line x1="11" y1="8" x2="11" y2="14"></line>
+                                                    <line x1="8" y1="11" x2="14" y2="11"></line>
+                                                </svg>
+                                                <span>Clic para ver dibujo en tamaño grande</span>
+                                            </div>
+                                        )}
                                                 {/* Flechas de navegación */}
                                                 {imagesToDisplay.length > 1 && (
                                                     <>
@@ -599,13 +620,43 @@ export default function ProductDetailPage({ params }) {
             
             {/* Fullscreen Lightbox Modal */}
             {isLightboxOpen && (
-                <div className="lightbox-overlay" onClick={() => setIsLightboxOpen(false)}>
-                    <button className="lightbox-close" onClick={() => setIsLightboxOpen(false)}>×</button>
-                    <div className="lightbox-content" onClick={e => e.stopPropagation()}>
+                <div 
+                    className={`lightbox-overlay ${isColoring ? 'coloring-lightbox-active' : ''}`} 
+                    onClick={() => {
+                        setIsLightboxOpen(false);
+                        setIsDetailZoomed(false);
+                    }}
+                >
+                    <button 
+                        className="lightbox-close" 
+                        onClick={() => {
+                            setIsLightboxOpen(false);
+                            setIsDetailZoomed(false);
+                        }}
+                    >
+                        ×
+                    </button>
+
+                    {isColoring && (
+                        <div 
+                            className="coloring-zoom-helper-pill"
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                setIsDetailZoomed(prev => !prev);
+                            }}
+                        >
+                            {isDetailZoomed ? "🔍 Alejar imagen" : "🔍 Clic en la imagen para ampliar dibujo al 100%"}
+                        </div>
+                    )}
+
+                    <div className={`lightbox-content ${isColoring ? 'coloring-lightbox-content' : ''}`} onClick={e => e.stopPropagation()}>
                         <img 
                             src={imagesToDisplay[selectedImage]} 
                             alt={product.name} 
-                            className="lightbox-image" 
+                            className={`lightbox-image ${isColoring ? 'coloring-lightbox-image' : ''} ${isDetailZoomed ? 'zoomed-extra' : ''}`}
+                            style={isColoring ? { cursor: isDetailZoomed ? 'zoom-out' : 'zoom-in' } : {}}
+                            onClick={isColoring ? () => setIsDetailZoomed(prev => !prev) : undefined}
+                            title={isColoring ? (isDetailZoomed ? "Click para alejar" : "Click para ampliar") : undefined}
                         />
                         {imagesToDisplay.length > 1 && (
                             <>
@@ -614,6 +665,7 @@ export default function ProductDetailPage({ params }) {
                                     onClick={(e) => {
                                         e.preventDefault();
                                         e.stopPropagation();
+                                        setIsDetailZoomed(false);
                                         setSelectedImage(prev => prev === 0 ? imagesToDisplay.length - 1 : prev - 1);
                                     }}
                                 >
@@ -624,6 +676,7 @@ export default function ProductDetailPage({ params }) {
                                     onClick={(e) => {
                                         e.preventDefault();
                                         e.stopPropagation();
+                                        setIsDetailZoomed(false);
                                         setSelectedImage(prev => prev === imagesToDisplay.length - 1 ? 0 : prev + 1);
                                     }}
                                 >
@@ -772,6 +825,89 @@ export default function ProductDetailPage({ params }) {
                 @keyframes zoomIn {
                     from { transform: scale(0.9); opacity: 0; }
                     to { transform: scale(1); opacity: 1; }
+                }
+
+                /* Modificaciones exclusivas para Cuadernos para colorear */
+                .coloring-detail-zoom-badge {
+                    position: absolute;
+                    bottom: 15px;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    background: rgba(255, 255, 255, 0.96);
+                    color: #2e3a47;
+                    font-size: 0.8rem;
+                    font-weight: 700;
+                    padding: 8px 18px;
+                    border-radius: 25px;
+                    display: flex;
+                    align-items: center;
+                    gap: 6px;
+                    box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+                    cursor: pointer;
+                    z-index: 10;
+                    border: 1px solid rgba(212, 119, 146, 0.3);
+                    transition: all 0.2s ease;
+                    white-space: nowrap;
+                }
+                .coloring-detail-zoom-badge:hover {
+                    background: var(--pastel-pink);
+                    color: white;
+                    transform: translateX(-50%) scale(1.05);
+                }
+                .coloring-lightbox-active {
+                    background: rgba(15, 23, 42, 0.94) !important;
+                }
+                .coloring-lightbox-active .lightbox-close {
+                    color: white !important;
+                }
+                .coloring-lightbox-active .lightbox-close:hover {
+                    color: var(--pastel-pink) !important;
+                }
+                .coloring-lightbox-content {
+                    width: 96vw !important;
+                    height: 94vh !important;
+                    max-width: 96vw !important;
+                    max-height: 94vh !important;
+                    display: flex !important;
+                    align-items: center !important;
+                    justify-content: center !important;
+                    overflow: hidden !important;
+                }
+                .coloring-lightbox-image {
+                    max-width: 95vw !important;
+                    max-height: 88vh !important;
+                    object-fit: contain !important;
+                    border-radius: 12px !important;
+                    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5) !important;
+                    background: white !important;
+                    transition: transform 0.3s ease !important;
+                }
+                .coloring-lightbox-image.zoomed-extra {
+                    transform: scale(1.65) !important;
+                }
+                .coloring-zoom-helper-pill {
+                    position: absolute;
+                    top: 25px;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    background: rgba(255, 255, 255, 0.96);
+                    color: #2e3a47;
+                    padding: 8px 20px;
+                    border-radius: 30px;
+                    font-size: 0.85rem;
+                    font-weight: 700;
+                    cursor: pointer;
+                    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+                    z-index: 10001;
+                    display: flex;
+                    align-items: center;
+                    gap: 6px;
+                    transition: all 0.2s ease;
+                }
+                .coloring-zoom-helper-pill:hover {
+                    background: var(--pastel-pink);
+                    color: white;
+                    transform: translateX(-50%) scale(1.05);
                 }
                 .lightbox-close {
                     position: absolute;
