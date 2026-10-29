@@ -23,6 +23,7 @@ export default function ProductDetailPage({ params }) {
     const [selectedImage, setSelectedImage] = useState(0);
     const [zoomOrigin, setZoomOrigin] = useState('center center');
     const [isLightboxOpen, setIsLightboxOpen] = useState(false);
+    const [lightboxZoom, setLightboxZoom] = useState(1);
     const [relatedProducts, setRelatedProducts] = useState([]);
     const [design1, setDesign1] = useState('Breakfast 1');
     const [design2, setDesign2] = useState('Breakfast 2');
@@ -41,6 +42,7 @@ export default function ProductDetailPage({ params }) {
         const handleKeyDown = (e) => {
             if (e.key === 'Escape') {
                 setIsLightboxOpen(false);
+                setLightboxZoom(1);
             }
         };
         if (isLightboxOpen) {
@@ -277,9 +279,11 @@ export default function ProductDetailPage({ params }) {
                                             className="zoom-image-wrapper w-full h-full"
                                             onMouseMove={handleMouseMove}
                                             onMouseLeave={handleMouseLeave}
-                                            onClick={() => setIsLightboxOpen(true)}
+                                            onClick={() => {
+                                                setIsLightboxOpen(true);
+                                                setLightboxZoom(1);
+                                            }}
                                             style={{ cursor: 'zoom-in' }}
-                                            title={isColoring ? "Clic para ver más grande" : undefined}
                                         >
                                             <img
                                                 src={imagesToDisplay[selectedImage]}
@@ -332,23 +336,6 @@ export default function ProductDetailPage({ params }) {
                                         )}
                                     </div>
 
-                                    {/* Botón Ver más grande exclusivo para Cuadernos para colorear */}
-                                    {isColoring && (
-                                        <button 
-                                            type="button"
-                                            className="coloring-expand-action-btn"
-                                            onClick={() => setIsLightboxOpen(true)}
-                                        >
-                                            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                                                <polyline points="15 3 21 3 21 9"></polyline>
-                                                <polyline points="9 21 3 21 3 15"></polyline>
-                                                <line x1="21" y1="3" x2="14" y2="10"></line>
-                                                <line x1="3" y1="21" x2="10" y2="14"></line>
-                                            </svg>
-                                            <span>🔍 Ver dibujo más grande</span>
-                                        </button>
-                                    )}
-
                                     {/* Miniaturas */}
                                     {imagesToDisplay.length > 1 && (
                                         <div className="gallery-thumbnails">
@@ -356,7 +343,10 @@ export default function ProductDetailPage({ params }) {
                                                 <button
                                                     key={idx}
                                                     className={`thumbnail-btn ${selectedImage === idx ? 'active' : ''}`}
-                                                    onClick={() => setSelectedImage(idx)}
+                                                    onClick={() => {
+                                                        setSelectedImage(idx);
+                                                        setLightboxZoom(1);
+                                                    }}
                                                 >
                                                     <img src={img} alt={`${product.name} miniatura ${idx + 1}`} />
                                                 </button>
@@ -631,26 +621,88 @@ export default function ProductDetailPage({ params }) {
             {isLightboxOpen && (
                 <div 
                     className={`lightbox-overlay ${isColoring ? 'coloring-modal' : ''}`}
-                    onClick={() => setIsLightboxOpen(false)}
+                    onClick={() => {
+                        setIsLightboxOpen(false);
+                        setLightboxZoom(1);
+                    }}
                 >
                     <button 
                         className="lightbox-close" 
                         onClick={(e) => {
                             e.stopPropagation();
                             setIsLightboxOpen(false);
+                            setLightboxZoom(1);
                         }}
                         aria-label="Cerrar imagen ampliada"
                     >
                         ×
                     </button>
 
-                    <div className="lightbox-content" onClick={e => e.stopPropagation()}>
+                    <div 
+                        className="lightbox-content" 
+                        onClick={e => e.stopPropagation()}
+                        style={isColoring && lightboxZoom > 1 ? { overflow: 'auto', touchAction: 'pan-x pan-y' } : {}}
+                    >
                         <img 
                             src={imagesToDisplay[selectedImage]} 
                             alt={product.name} 
-                            className="lightbox-image" 
+                            className="lightbox-image"
+                            style={isColoring ? {
+                                transform: `scale(${lightboxZoom})`,
+                                transition: 'transform 0.25s ease',
+                                cursor: lightboxZoom > 1 ? 'zoom-out' : 'zoom-in',
+                                transformOrigin: 'center center'
+                            } : {}}
+                            onClick={isColoring ? () => setLightboxZoom(prev => prev > 1 ? 1 : 2) : undefined}
+                            title={isColoring ? (lightboxZoom > 1 ? "Clic para alejar" : "Clic para hacer zoom") : undefined}
                         />
                     </div>
+
+                    {/* Controles de Zoom interactivos exclusivos para Cuadernos para colorear */}
+                    {isColoring && (
+                        <div className="lightbox-zoom-controls" onClick={(e) => e.stopPropagation()}>
+                            <button
+                                type="button"
+                                className="zoom-ctrl-btn"
+                                onClick={() => setLightboxZoom(prev => Math.max(1, Number((prev - 0.5).toFixed(1))))}
+                                disabled={lightboxZoom <= 1}
+                                aria-label="Alejar imagen"
+                                title="Alejar"
+                            >
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                    <circle cx="11" cy="11" r="8"></circle>
+                                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                                    <line x1="8" y1="11" x2="14" y2="11"></line>
+                                </svg>
+                            </button>
+                            <span className="zoom-level-text">{Math.round(lightboxZoom * 100)}%</span>
+                            <button
+                                type="button"
+                                className="zoom-ctrl-btn"
+                                onClick={() => setLightboxZoom(prev => Math.min(3, Number((prev + 0.5).toFixed(1))))}
+                                disabled={lightboxZoom >= 3}
+                                aria-label="Acercar imagen"
+                                title="Acercar"
+                            >
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                    <circle cx="11" cy="11" r="8"></circle>
+                                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                                    <line x1="11" y1="8" x2="11" y2="14"></line>
+                                    <line x1="8" y1="11" x2="14" y2="11"></line>
+                                </svg>
+                            </button>
+                            {lightboxZoom > 1 && (
+                                <button
+                                    type="button"
+                                    className="zoom-reset-btn"
+                                    onClick={() => setLightboxZoom(1)}
+                                    title="Restablecer tamaño"
+                                >
+                                    Restablecer
+                                </button>
+                            )}
+                        </div>
+                    )}
 
                     {imagesToDisplay.length > 1 && (
                         <>
@@ -659,6 +711,7 @@ export default function ProductDetailPage({ params }) {
                                 onClick={(e) => {
                                     e.preventDefault();
                                     e.stopPropagation();
+                                    setLightboxZoom(1);
                                     setSelectedImage(prev => prev === 0 ? imagesToDisplay.length - 1 : prev - 1);
                                 }}
                                 aria-label="Imagen anterior"
@@ -670,6 +723,7 @@ export default function ProductDetailPage({ params }) {
                                 onClick={(e) => {
                                     e.preventDefault();
                                     e.stopPropagation();
+                                    setLightboxZoom(1);
                                     setSelectedImage(prev => prev === imagesToDisplay.length - 1 ? 0 : prev + 1);
                                 }}
                                 aria-label="Siguiente imagen"
@@ -820,32 +874,6 @@ export default function ProductDetailPage({ params }) {
                     to { transform: scale(1); opacity: 1; }
                 }
 
-                /* Botón Ver más grande exclusivo para Cuadernos para colorear */
-                .coloring-expand-action-btn {
-                    display: inline-flex;
-                    align-items: center;
-                    justify-content: center;
-                    gap: 8px;
-                    margin-top: 12px;
-                    width: 100%;
-                    padding: 11px 18px;
-                    background: #FFF5F7;
-                    color: var(--pastel-pink);
-                    border: 1.5px solid var(--pastel-pink);
-                    border-radius: 14px;
-                    font-family: var(--font-quicksand), sans-serif;
-                    font-size: 0.95rem;
-                    font-weight: 700;
-                    cursor: pointer;
-                    transition: all 0.25s ease;
-                }
-                .coloring-expand-action-btn:hover {
-                    background: var(--pastel-pink);
-                    color: white;
-                    transform: translateY(-2px);
-                    box-shadow: 0 4px 14px rgba(212, 119, 146, 0.3);
-                }
-
                 /* Lightbox Modal exclusivo para Cuadernos para colorear */
                 .coloring-modal {
                     background: rgba(15, 23, 42, 0.94) !important;
@@ -857,18 +885,87 @@ export default function ProductDetailPage({ params }) {
                     color: var(--pastel-pink) !important;
                 }
                 .coloring-modal .lightbox-content {
-                    width: 95vw !important;
-                    height: 92vh !important;
-                    max-width: 95vw !important;
-                    max-height: 92vh !important;
+                    width: 90vw !important;
+                    height: 85vh !important;
+                    max-width: 90vw !important;
+                    max-height: 85vh !important;
+                    display: flex !important;
+                    align-items: center !important;
+                    justify-content: center !important;
+                    padding: 1.5rem !important;
                 }
                 .coloring-modal .lightbox-image {
-                    max-width: 92vw !important;
-                    max-height: 88vh !important;
+                    max-width: 86vw !important;
+                    max-height: 80vh !important;
                     object-fit: contain !important;
                     border-radius: 12px !important;
                     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6) !important;
                     background: white !important;
+                }
+
+                .lightbox-zoom-controls {
+                    position: fixed;
+                    bottom: 28px;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    background: rgba(255, 255, 255, 0.95);
+                    backdrop-filter: blur(8px);
+                    border-radius: 40px;
+                    padding: 6px 14px;
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+                    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+                    z-index: 10002;
+                    border: 1px solid rgba(255, 255, 255, 0.5);
+                }
+                .zoom-ctrl-btn {
+                    background: #f3f4f6;
+                    border: none;
+                    width: 38px;
+                    height: 38px;
+                    border-radius: 50%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    color: #1f2937;
+                    cursor: pointer;
+                    transition: all 0.2s ease;
+                }
+                .zoom-ctrl-btn:hover:not(:disabled) {
+                    background: var(--pastel-pink);
+                    color: white;
+                    transform: scale(1.1);
+                }
+                .zoom-ctrl-btn:disabled {
+                    opacity: 0.35;
+                    cursor: not-allowed;
+                }
+                .zoom-level-text {
+                    font-size: 0.9rem;
+                    font-weight: 700;
+                    color: #1f2937;
+                    min-width: 48px;
+                    text-align: center;
+                    font-variant-numeric: tabular-nums;
+                    user-select: none;
+                    font-family: var(--font-quicksand), sans-serif;
+                }
+                .zoom-reset-btn {
+                    background: #f3f4f6;
+                    border: none;
+                    padding: 6px 14px;
+                    border-radius: 20px;
+                    font-size: 0.8rem;
+                    font-weight: 700;
+                    color: #4b5563;
+                    cursor: pointer;
+                    transition: all 0.2s ease;
+                    font-family: var(--font-quicksand), sans-serif;
+                }
+                .zoom-reset-btn:hover {
+                    background: var(--pastel-pink);
+                    color: white;
                 }
 
                 .lightbox-close {
