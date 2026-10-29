@@ -23,7 +23,6 @@ export default function ProductDetailPage({ params }) {
     const [selectedImage, setSelectedImage] = useState(0);
     const [zoomOrigin, setZoomOrigin] = useState('center center');
     const [isLightboxOpen, setIsLightboxOpen] = useState(false);
-    const [isDetailZoomed, setIsDetailZoomed] = useState(false);
     const [relatedProducts, setRelatedProducts] = useState([]);
     const [design1, setDesign1] = useState('Breakfast 1');
     const [design2, setDesign2] = useState('Breakfast 2');
@@ -37,6 +36,18 @@ export default function ProductDetailPage({ params }) {
             }
         } catch(e) {}
     }, []);
+
+    useEffect(() => {
+        const handleKeyDown = (e) => {
+            if (e.key === 'Escape') {
+                setIsLightboxOpen(false);
+            }
+        };
+        if (isLightboxOpen) {
+            window.addEventListener('keydown', handleKeyDown);
+        }
+        return () => window.removeEventListener('keydown', handleKeyDown);
+    }, [isLightboxOpen]);
 
     useEffect(() => {
         async function fetchProduct() {
@@ -266,11 +277,9 @@ export default function ProductDetailPage({ params }) {
                                             className="zoom-image-wrapper w-full h-full"
                                             onMouseMove={handleMouseMove}
                                             onMouseLeave={handleMouseLeave}
-                                            onClick={() => {
-                                                setIsLightboxOpen(true);
-                                                setIsDetailZoomed(false);
-                                            }}
+                                            onClick={() => setIsLightboxOpen(true)}
                                             style={{ cursor: 'zoom-in' }}
+                                            title={isColoring ? "Clic para ver más grande" : undefined}
                                         >
                                             <img
                                                 src={imagesToDisplay[selectedImage]}
@@ -290,23 +299,6 @@ export default function ProductDetailPage({ params }) {
                                                 }}
                                             />
                                         </div>
-                                        {isColoring && (
-                                            <div 
-                                                className="coloring-detail-zoom-badge"
-                                                onClick={() => {
-                                                    setIsLightboxOpen(true);
-                                                    setIsDetailZoomed(false);
-                                                }}
-                                            >
-                                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                                                    <circle cx="11" cy="11" r="8"></circle>
-                                                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                                                    <line x1="11" y1="8" x2="11" y2="14"></line>
-                                                    <line x1="8" y1="11" x2="14" y2="11"></line>
-                                                </svg>
-                                                <span>Clic para ver dibujo en tamaño grande</span>
-                                            </div>
-                                        )}
                                                 {/* Flechas de navegación */}
                                                 {imagesToDisplay.length > 1 && (
                                                     <>
@@ -339,6 +331,23 @@ export default function ProductDetailPage({ params }) {
                                             </div>
                                         )}
                                     </div>
+
+                                    {/* Botón Ver más grande exclusivo para Cuadernos para colorear */}
+                                    {isColoring && (
+                                        <button 
+                                            type="button"
+                                            className="coloring-expand-action-btn"
+                                            onClick={() => setIsLightboxOpen(true)}
+                                        >
+                                            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                                                <polyline points="15 3 21 3 21 9"></polyline>
+                                                <polyline points="9 21 3 21 3 15"></polyline>
+                                                <line x1="21" y1="3" x2="14" y2="10"></line>
+                                                <line x1="3" y1="21" x2="10" y2="14"></line>
+                                            </svg>
+                                            <span>🔍 Ver dibujo más grande</span>
+                                        </button>
+                                    )}
 
                                     {/* Miniaturas */}
                                     {imagesToDisplay.length > 1 && (
@@ -621,70 +630,54 @@ export default function ProductDetailPage({ params }) {
             {/* Fullscreen Lightbox Modal */}
             {isLightboxOpen && (
                 <div 
-                    className={`lightbox-overlay ${isColoring ? 'coloring-lightbox-active' : ''}`} 
-                    onClick={() => {
-                        setIsLightboxOpen(false);
-                        setIsDetailZoomed(false);
-                    }}
+                    className={`lightbox-overlay ${isColoring ? 'coloring-modal' : ''}`}
+                    onClick={() => setIsLightboxOpen(false)}
                 >
                     <button 
                         className="lightbox-close" 
-                        onClick={() => {
+                        onClick={(e) => {
+                            e.stopPropagation();
                             setIsLightboxOpen(false);
-                            setIsDetailZoomed(false);
                         }}
+                        aria-label="Cerrar imagen ampliada"
                     >
                         ×
                     </button>
 
-                    {isColoring && (
-                        <div 
-                            className="coloring-zoom-helper-pill"
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                setIsDetailZoomed(prev => !prev);
-                            }}
-                        >
-                            {isDetailZoomed ? "🔍 Alejar imagen" : "🔍 Clic en la imagen para ampliar dibujo al 100%"}
-                        </div>
-                    )}
-
-                    <div className={`lightbox-content ${isColoring ? 'coloring-lightbox-content' : ''}`} onClick={e => e.stopPropagation()}>
+                    <div className="lightbox-content" onClick={e => e.stopPropagation()}>
                         <img 
                             src={imagesToDisplay[selectedImage]} 
                             alt={product.name} 
-                            className={`lightbox-image ${isColoring ? 'coloring-lightbox-image' : ''} ${isDetailZoomed ? 'zoomed-extra' : ''}`}
-                            style={isColoring ? { cursor: isDetailZoomed ? 'zoom-out' : 'zoom-in' } : {}}
-                            onClick={isColoring ? () => setIsDetailZoomed(prev => !prev) : undefined}
-                            title={isColoring ? (isDetailZoomed ? "Click para alejar" : "Click para ampliar") : undefined}
+                            className="lightbox-image" 
                         />
-                        {imagesToDisplay.length > 1 && (
-                            <>
-                                <button
-                                    className="lightbox-arrow left-arrow"
-                                    onClick={(e) => {
-                                        e.preventDefault();
-                                        e.stopPropagation();
-                                        setIsDetailZoomed(false);
-                                        setSelectedImage(prev => prev === 0 ? imagesToDisplay.length - 1 : prev - 1);
-                                    }}
-                                >
-                                    ❮
-                                </button>
-                                <button
-                                    className="lightbox-arrow right-arrow"
-                                    onClick={(e) => {
-                                        e.preventDefault();
-                                        e.stopPropagation();
-                                        setIsDetailZoomed(false);
-                                        setSelectedImage(prev => prev === imagesToDisplay.length - 1 ? 0 : prev + 1);
-                                    }}
-                                >
-                                    ❯
-                                </button>
-                            </>
-                        )}
                     </div>
+
+                    {imagesToDisplay.length > 1 && (
+                        <>
+                            <button
+                                className="lightbox-arrow left-arrow"
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                    setSelectedImage(prev => prev === 0 ? imagesToDisplay.length - 1 : prev - 1);
+                                }}
+                                aria-label="Imagen anterior"
+                            >
+                                ❮
+                            </button>
+                            <button
+                                className="lightbox-arrow right-arrow"
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                    setSelectedImage(prev => prev === imagesToDisplay.length - 1 ? 0 : prev + 1);
+                                }}
+                                aria-label="Siguiente imagen"
+                            >
+                                ❯
+                            </button>
+                        </>
+                    )}
                 </div>
             )}
 
@@ -827,99 +820,69 @@ export default function ProductDetailPage({ params }) {
                     to { transform: scale(1); opacity: 1; }
                 }
 
-                /* Modificaciones exclusivas para Cuadernos para colorear */
-                .coloring-detail-zoom-badge {
-                    position: absolute;
-                    bottom: 15px;
-                    left: 50%;
-                    transform: translateX(-50%);
-                    background: rgba(255, 255, 255, 0.96);
-                    color: #2e3a47;
-                    font-size: 0.8rem;
-                    font-weight: 700;
-                    padding: 8px 18px;
-                    border-radius: 25px;
-                    display: flex;
+                /* Botón Ver más grande exclusivo para Cuadernos para colorear */
+                .coloring-expand-action-btn {
+                    display: inline-flex;
                     align-items: center;
-                    gap: 6px;
-                    box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+                    justify-content: center;
+                    gap: 8px;
+                    margin-top: 12px;
+                    width: 100%;
+                    padding: 11px 18px;
+                    background: #FFF5F7;
+                    color: var(--pastel-pink);
+                    border: 1.5px solid var(--pastel-pink);
+                    border-radius: 14px;
+                    font-family: var(--font-quicksand), sans-serif;
+                    font-size: 0.95rem;
+                    font-weight: 700;
                     cursor: pointer;
-                    z-index: 10;
-                    border: 1px solid rgba(212, 119, 146, 0.3);
-                    transition: all 0.2s ease;
-                    white-space: nowrap;
+                    transition: all 0.25s ease;
                 }
-                .coloring-detail-zoom-badge:hover {
+                .coloring-expand-action-btn:hover {
                     background: var(--pastel-pink);
                     color: white;
-                    transform: translateX(-50%) scale(1.05);
+                    transform: translateY(-2px);
+                    box-shadow: 0 4px 14px rgba(212, 119, 146, 0.3);
                 }
-                .coloring-lightbox-active {
+
+                /* Lightbox Modal exclusivo para Cuadernos para colorear */
+                .coloring-modal {
                     background: rgba(15, 23, 42, 0.94) !important;
                 }
-                .coloring-lightbox-active .lightbox-close {
-                    color: white !important;
+                .coloring-modal .lightbox-close {
+                    color: #fff !important;
                 }
-                .coloring-lightbox-active .lightbox-close:hover {
+                .coloring-modal .lightbox-close:hover {
                     color: var(--pastel-pink) !important;
                 }
-                .coloring-lightbox-content {
-                    width: 96vw !important;
-                    height: 94vh !important;
-                    max-width: 96vw !important;
-                    max-height: 94vh !important;
-                    display: flex !important;
-                    align-items: center !important;
-                    justify-content: center !important;
-                    overflow: hidden !important;
-                }
-                .coloring-lightbox-image {
+                .coloring-modal .lightbox-content {
+                    width: 95vw !important;
+                    height: 92vh !important;
                     max-width: 95vw !important;
+                    max-height: 92vh !important;
+                }
+                .coloring-modal .lightbox-image {
+                    max-width: 92vw !important;
                     max-height: 88vh !important;
                     object-fit: contain !important;
                     border-radius: 12px !important;
-                    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5) !important;
+                    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6) !important;
                     background: white !important;
-                    transition: transform 0.3s ease !important;
                 }
-                .coloring-lightbox-image.zoomed-extra {
-                    transform: scale(1.65) !important;
-                }
-                .coloring-zoom-helper-pill {
-                    position: absolute;
-                    top: 25px;
-                    left: 50%;
-                    transform: translateX(-50%);
-                    background: rgba(255, 255, 255, 0.96);
-                    color: #2e3a47;
-                    padding: 8px 20px;
-                    border-radius: 30px;
-                    font-size: 0.85rem;
-                    font-weight: 700;
-                    cursor: pointer;
-                    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-                    z-index: 10001;
-                    display: flex;
-                    align-items: center;
-                    gap: 6px;
-                    transition: all 0.2s ease;
-                }
-                .coloring-zoom-helper-pill:hover {
-                    background: var(--pastel-pink);
-                    color: white;
-                    transform: translateX(-50%) scale(1.05);
-                }
+
                 .lightbox-close {
                     position: absolute;
-                    top: 30px;
-                    right: 40px;
-                    font-size: 3rem;
+                    top: 25px;
+                    right: 35px;
+                    font-size: 2.8rem;
                     color: #555;
                     background: none;
                     border: none;
                     cursor: pointer;
-                    z-index: 10000;
+                    z-index: 10002;
                     transition: transform 0.2s, color 0.2s;
+                    line-height: 1;
                 }
                 .lightbox-close:hover {
                     color: var(--pastel-pink);
@@ -931,26 +894,30 @@ export default function ProductDetailPage({ params }) {
                     transform: translateY(-50%);
                     background: white;
                     border: none;
-                    width: 60px;
-                    height: 60px;
+                    width: 56px;
+                    height: 56px;
                     border-radius: 50%;
-                    font-size: 1.5rem;
+                    font-size: 1.4rem;
                     color: #333;
                     cursor: pointer;
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+                    box-shadow: 0 5px 20px rgba(0,0,0,0.2);
                     transition: all 0.3s;
-                    z-index: 10000;
+                    z-index: 10001;
                 }
                 .lightbox-arrow:hover {
                     background: var(--pastel-pink);
                     color: white;
                     transform: translateY(-50%) scale(1.1);
                 }
-                .left-arrow { left: 5%; }
-                .right-arrow { right: 5%; }
+                .lightbox-arrow.left-arrow { left: 30px; }
+                .lightbox-arrow.right-arrow { right: 30px; }
+                @media (max-width: 640px) {
+                    .lightbox-arrow.left-arrow { left: 12px; width: 44px; height: 44px; font-size: 1.1rem; }
+                    .lightbox-arrow.right-arrow { right: 12px; width: 44px; height: 44px; font-size: 1.1rem; }
+                }
                 .product-image {
                     width: 100%;
                     height: 100%;
