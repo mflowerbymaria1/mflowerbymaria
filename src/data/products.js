@@ -78,6 +78,19 @@ export const products = [
 
     // 3. CUADERNOS A5 SISTEMA DE DISCOS
     {
+        id: "726e57ad-6dfb-4a59-9000-f3f82cd5cf81",
+        name: "Cuaderno A5 OHANA",
+        category: "Cuadernos A5 Sistema de discos 📓",
+        shortDescription: "A5, 100 hojas, diseño exclusivo Ohana Stitch.",
+        description: "¡Ohana significa familia! Diseño exclusivo Ohana inspirado en Stitch para llenar tus notas de ternura, color y buena energía. El tamaño A5 es súper práctico y cómodo para llevar siempre en tu mochila o cartera. Con el sistema de discos inteligentes, podés agregar, quitar y reorganizar tus hojas a tu propio ritmo.\n\nContiene:\n- Interior de 100 hojas A5 (rayadas, lisas, cuadriculadas o punteadas a elección)\n- 2 separadores internos con diseño exclusivo\n- 1 señalador a juego\n- Calendario 2026\n- 6 temarios de examen y estudio\n- Sistema de anillado inteligente y discos de colores [WHOLESALE:17200]",
+        price: "26.900",
+        wholesalePrice: 17200,
+        isBestSeller: false,
+        stock: 15,
+        image: "https://dgjromtddlvifasmbqin.supabase.co/storage/v1/object/public/productos/products/099da457-c2b1-49da-93ca-834a3764a3c5.jpeg",
+        images: ["https://dgjromtddlvifasmbqin.supabase.co/storage/v1/object/public/productos/products/099da457-c2b1-49da-93ca-834a3764a3c5.jpeg"]
+    },
+    {
         id: "99f9677a-3686-42df-8fe2-14ca0acd78f7",
         name: "Cuaderno A5 Snoopy",
         category: "Cuadernos A5 Sistema de discos 📓",
@@ -177,11 +190,24 @@ export const products = [
 
     // 4. CUADERNOS A4 SISTEMA DE DISCOS
     {
+        id: "fab4fb31-c915-40ff-9a81-fd6485113c79",
+        name: "Cuaderno A4 MAGIC",
+        category: "Cuadernos A4 Sistema de discos 📓",
+        shortDescription: "A4, 100 hojas, diseño exclusivo Mickey Disney.",
+        description: "¡Toda la magia de Mickey y Disney en tu cuaderno! Un diseño soñado que copa y llena de energía cada apunte, materia y proyecto. Con el innovador sistema de discos inteligentes, podés sumar, sacar y reorganizar tus hojas con total libertad.\n\nContiene:\n- Interior de 100 hojas A4 (rayadas, lisas, cuadriculadas o punteadas a elección)\n- 2 separadores internos con diseño exclusivo\n- 1 señalador a juego\n- Calendario 2026\n- 6 temarios de examen y estudio\n- Sistema de anillado inteligente y discos de colores [WHOLESALE:21000]",
+        price: "31.900",
+        wholesalePrice: 21000,
+        isBestSeller: false,
+        stock: 15,
+        image: "https://dgjromtddlvifasmbqin.supabase.co/storage/v1/object/public/productos/products/7cf77b0b-1208-45a9-b99e-36453ca77295.jpeg",
+        images: ["https://dgjromtddlvifasmbqin.supabase.co/storage/v1/object/public/productos/products/7cf77b0b-1208-45a9-b99e-36453ca77295.jpeg"]
+    },
+    {
         id: "020c3add-7e0a-4fd8-9071-0639a363898c",
         name: "Cuaderno A4 FUTURA",
         category: "Cuadernos A4 Sistema de discos 📓",
-        shortDescription: "A4, 100 hojas, 4 separadores, diseño exclusivo Futura.",
-        description: "Diseño exclusivo Futura con sistema de discos inteligente.\n\nContiene:\n- Interior de 100 hojas A4 de excelente calidad y gramaje.\n- 4 separadores internos con diseño exclusivo.\n- Calendario 2026.\n- 6 temarios de examen y estudio.\n- Sistema de discos inteligente para agregar, sacar y reorganizar tus hojas como quieras. [WHOLESALE:21000]",
+        shortDescription: "A4, 100 hojas, diseño exclusivo Futura.",
+        description: "Inspirado en tu vocación, tus metas y tu carrera profesional. Diseñado para acompañarte en cada materia, cada final y cada paso hacia tu futuro con el exclusivo sistema de discos inteligentes para agregar, sacar y reorganizar tus hojas cuando quieras.\n\nContiene:\n- Interior de 100 hojas A4 (rayadas, lisas, cuadriculadas o punteadas a elección)\n- 2 separadores internos con diseño exclusivo\n- 1 señalador a juego\n- Calendario 2026\n- 6 temarios de examen y estudio\n- Sistema de anillado inteligente y discos de colores [WHOLESALE:21000]",
         price: "31.900",
         wholesalePrice: 21000,
         isBestSeller: true,
