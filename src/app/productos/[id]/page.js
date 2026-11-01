@@ -175,6 +175,7 @@ export default function ProductDetailPage({ params }) {
         if (nameLower.includes('magic')) return '¡Toda la magia de Mickey y Disney en tu cuaderno! Un diseño soñado que copa y llena de energía cada apunte, materia y proyecto.';
         if (nameLower.includes('ohana')) return '¡Ohana significa familia! El cuaderno de Stitch más tierno y tropical para acompañar tus días de estudio y notas.';
         if (nameLower.includes('futura')) return 'Inspirado en tu vocación y tus metas profesionales. El cuaderno que te acompaña en cada paso hacia tu futuro.';
+        if (nameLower.includes('cherry') && !cat.includes('set')) return 'El diseño más dulce y fresco para alegrar tus días. Con estética aesthetic y sistema de discos inteligente para estudiar y organizarte con estilo.';
 
         // Por categoría (usando includes para cubrir variantes con emojis, plurales, etc.)
         if (cat.includes('colorear') || nameLower.includes('colorear')) return '¡Descubrí la magia de Disney hoja por hoja! Un cuaderno para colorear único con misterio oculto que se revela dibujo a dibujo mientras pintás. El plan perfecto para desconectar, relajarte y llenar tus momentos libres de color y creatividad.';
