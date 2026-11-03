@@ -10,6 +10,12 @@ import "swiper/css/pagination";
 export default function Hero() {
   const slides = [
     {
+      image: "/images/banner_cyber_monday.jpg",
+      subtitle: "",
+      link: "/productos",
+      buttonText: "APROVECHAR 3x2",
+    },
+    {
       image: "/images/banner_hero_collage.png",
       subtitle: "",
       link: "/productos",
@@ -30,7 +36,7 @@ export default function Hero() {
         effect="fade"
         speed={1000}
         autoplay={{
-          delay: 4500,
+          delay: 5000,
           disableOnInteraction: false,
         }}
         pagination={{ clickable: true }}
@@ -39,18 +45,20 @@ export default function Hero() {
       >
         {slides.map((slide, index) => (
           <SwiperSlide key={index}>
-            <div 
-              className={`hero-slide-bg slide-${index}`} 
-              style={{ backgroundImage: `url(${slide.image})` }}
-            >
-              <div className="overlay"></div>
-              <div className={`hero-content content-slide-${index}`}>
-                {slide.subtitle && <p className="hero-subtitle">{slide.subtitle}</p>}
-                <Link href={slide.link} className="cta-button">
-                  {slide.buttonText}
-                </Link>
+            <Link href={slide.link} style={{ display: 'block', width: '100%', height: '100%', textDecoration: 'none' }}>
+              <div 
+                className={`hero-slide-bg slide-${index}`} 
+                style={{ backgroundImage: `url(${slide.image})` }}
+              >
+                <div className="overlay"></div>
+                <div className={`hero-content content-slide-${index}`}>
+                  {slide.subtitle && <p className="hero-subtitle">{slide.subtitle}</p>}
+                  <span className="cta-button">
+                    {slide.buttonText}
+                  </span>
+                </div>
               </div>
-            </div>
+            </Link>
           </SwiperSlide>
         ))}
       </Swiper>
@@ -77,18 +85,27 @@ export default function Hero() {
           text-align: center;
           position: relative;
           overflow: hidden;
+          cursor: pointer;
         }
 
-        /* Primer slide (Collage Papelería): se adapta sin cortarse */
+        /* Slide 0 (Cyber Monday): se adapta sin cortarse */
         .hero-slide-bg.slide-0 {
+          background-size: contain;
+          background-position: center center;
+          background-repeat: no-repeat;
+          background-color: #F8E8EE;
+        }
+
+        /* Slide 1 (Collage Papelería): se adapta sin cortarse */
+        .hero-slide-bg.slide-1 {
           background-size: contain;
           background-position: center center;
           background-repeat: no-repeat;
           background-color: #F8F3F1;
         }
 
-        /* Segundo slide (Cápsula Argentina): se adapta sin cortarse */
-        .hero-slide-bg.slide-1 {
+        /* Slide 2 (Cápsula Argentina): se adapta sin cortarse */
+        .hero-slide-bg.slide-2 {
           background-size: contain;
           background-position: center center;
           background-repeat: no-repeat;
@@ -116,13 +133,29 @@ export default function Hero() {
           padding: 0 20px;
         }
 
-        /* En el slide 0 (Collage) ubicamos el botón abajo */
+        /* Slide 0 (Cyber Monday): botón ubicado debajo del texto del banner */
         .content-slide-0 {
+          margin-top: 310px;
+        }
+
+        .content-slide-0 .cta-button {
+          background: linear-gradient(135deg, #ff007f 0%, #d81b60 100%);
+          box-shadow: 0 4px 15px rgba(255, 0, 127, 0.45);
+        }
+
+        .content-slide-0 .cta-button:hover {
+          background: linear-gradient(135deg, #d81b60 0%, #ad1457 100%);
+          transform: translateY(-2px);
+          box-shadow: 0 6px 20px rgba(255, 0, 127, 0.65);
+        }
+
+        /* Slide 1 (Collage): ubicamos el botón abajo */
+        .content-slide-1 {
           margin-top: 260px;
         }
 
-        /* En el slide 1 (Cápsula) levantamos el botón para que no tape los productos */
-        .content-slide-1 {
+        /* Slide 2 (Cápsula): levantamos el botón para que no tape los productos */
+        .content-slide-2 {
           margin-bottom: 130px;
         }
 
@@ -188,17 +221,35 @@ export default function Hero() {
             background-size: contain;
             background-position: center center;
             background-repeat: no-repeat;
-            background-color: #F8F3F1;
+            background-color: #F8E8EE;
           }
           .hero-slide-bg.slide-1 {
+            background-size: contain;
+            background-position: center center;
+            background-repeat: no-repeat;
+            background-color: #F8F3F1;
+          }
+          .hero-slide-bg.slide-2 {
             background-size: contain;
             background-position: center center;
             background-repeat: no-repeat;
             background-color: #E2D7CC;
           }
 
-          /* Slide 0 (Collage principal): botón bien nítido, chiquito y ubicado abajo */
+          /* Slide 0 (Cyber Monday): botón bien nítido y ubicado abajo */
           .content-slide-0 {
+            margin-top: 0 !important;
+            margin-bottom: 0 !important;
+            padding-bottom: 0 !important;
+            position: absolute;
+            top: 86%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%;
+          }
+
+          /* Slide 1 (Collage principal): botón bien nítido, chiquito y ubicado abajo */
+          .content-slide-1 {
             margin-top: 0 !important;
             margin-bottom: 0 !important;
             padding-bottom: 0 !important;
@@ -209,8 +260,8 @@ export default function Hero() {
             width: 100%;
           }
 
-          /* Slide 1 (Cápsula Argentina): botón bien nítido, chiquito y ubicado justo debajo de '20% Off transferencia' */
-          .content-slide-1 {
+          /* Slide 2 (Cápsula Argentina): botón bien nítido, chiquito y ubicado justo debajo de '20% Off transferencia' */
+          .content-slide-2 {
             margin-top: 0 !important;
             margin-bottom: 0 !important;
             padding-bottom: 0 !important;
@@ -228,7 +279,8 @@ export default function Hero() {
 
           /* Botones para celulares: bien chicos, súper nítidos y sin sombras borrosas */
           .content-slide-0 .cta-button,
-          .content-slide-1 .cta-button {
+          .content-slide-1 .cta-button,
+          .content-slide-2 .cta-button {
             padding: 4px 12px !important;
             font-size: 0.65rem !important;
             letter-spacing: 0.5px !important;
