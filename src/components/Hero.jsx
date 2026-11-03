@@ -66,9 +66,10 @@ export default function Hero() {
       <style jsx global>{`
         .hero-slider {
           position: relative;
-          width: 100vw;
-          height: 85vh;
-          min-height: 600px;
+          width: 100%;
+          height: 50vw;
+          aspect-ratio: 2 / 1;
+          overflow: hidden;
         }
 
         .hero-swiper {
@@ -79,37 +80,12 @@ export default function Hero() {
         .hero-slide-bg {
           width: 100%;
           height: 100%;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          text-align: center;
           position: relative;
           overflow: hidden;
           cursor: pointer;
-        }
-
-        /* Slide 0 (Cyber Monday): se adapta sin cortarse */
-        .hero-slide-bg.slide-0 {
-          background-size: contain;
+          background-size: 100% 100%;
           background-position: center center;
           background-repeat: no-repeat;
-          background-color: #F8E8EE;
-        }
-
-        /* Slide 1 (Collage Papelería): se adapta sin cortarse */
-        .hero-slide-bg.slide-1 {
-          background-size: contain;
-          background-position: center center;
-          background-repeat: no-repeat;
-          background-color: #F8F3F1;
-        }
-
-        /* Slide 2 (Cápsula Argentina): se adapta sin cortarse */
-        .hero-slide-bg.slide-2 {
-          background-size: contain;
-          background-position: center center;
-          background-repeat: no-repeat;
-          background-color: #E2D7CC;
         }
 
         .overlay {
@@ -123,19 +99,20 @@ export default function Hero() {
         }
 
         .hero-content {
-          position: relative;
+          position: absolute;
           z-index: 10;
-          max-width: 600px;
+          left: 50%;
+          transform: translate(-50%, -50%);
           display: flex;
           flex-direction: column;
           align-items: center;
-          gap: 20px;
+          width: auto;
           padding: 0 20px;
         }
 
-        /* Slide 0 (Cyber Monday): botón ubicado debajo del texto del banner */
+        /* Slide 0 (Cyber Monday): botón bien abajo de 'en toda la web' para no tapar las letras */
         .content-slide-0 {
-          margin-top: 310px;
+          top: 89%;
         }
 
         .content-slide-0 .cta-button {
@@ -149,14 +126,14 @@ export default function Hero() {
           box-shadow: 0 6px 20px rgba(255, 0, 127, 0.65);
         }
 
-        /* Slide 1 (Collage): ubicamos el botón abajo */
+        /* Slide 1 (Collage): botón ubicado abajo */
         .content-slide-1 {
-          margin-top: 260px;
+          top: 84%;
         }
 
-        /* Slide 2 (Cápsula): levantamos el botón para que no tape los productos */
+        /* Slide 2 (Cápsula Argentina): botón ubicado debajo de '20% Off transferencia' */
         .content-slide-2 {
-          margin-bottom: 130px;
+          top: 43%;
         }
 
         .hero-subtitle {
@@ -168,7 +145,6 @@ export default function Hero() {
         }
 
         .cta-button {
-          margin-top: 10px;
           background-color: var(--pastel-pink);
           color: #fff;
           border: none;
@@ -195,6 +171,10 @@ export default function Hero() {
           box-shadow: 0 6px 18px rgba(212, 119, 146, 0.45);
         }
 
+        .swiper-pagination {
+          bottom: 6px !important;
+        }
+
         .swiper-pagination-bullet {
           background: #fff;
           opacity: 0.7;
@@ -209,72 +189,21 @@ export default function Hero() {
 
         @media (max-width: 768px) {
           .hero-slider {
-            min-height: 220px;
-            height: 48vw; /* Proporción panorámica para que los banners encajen perfecto en celular */
-            max-height: 320px;
-          }
-          .hero-slide-bg {
-            background-size: cover;
-            background-position: center center;
-          }
-          .hero-slide-bg.slide-0 {
-            background-size: contain;
-            background-position: center center;
-            background-repeat: no-repeat;
-            background-color: #F8E8EE;
-          }
-          .hero-slide-bg.slide-1 {
-            background-size: contain;
-            background-position: center center;
-            background-repeat: no-repeat;
-            background-color: #F8F3F1;
-          }
-          .hero-slide-bg.slide-2 {
-            background-size: contain;
-            background-position: center center;
-            background-repeat: no-repeat;
-            background-color: #E2D7CC;
+            width: 100%;
+            height: 50vw;
+            aspect-ratio: 2 / 1;
           }
 
-          /* Slide 0 (Cyber Monday): botón bien nítido y ubicado abajo */
           .content-slide-0 {
-            margin-top: 0 !important;
-            margin-bottom: 0 !important;
-            padding-bottom: 0 !important;
-            position: absolute;
-            top: 86%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 100%;
+            top: 89%;
           }
 
-          /* Slide 1 (Collage principal): botón bien nítido, chiquito y ubicado abajo */
           .content-slide-1 {
-            margin-top: 0 !important;
-            margin-bottom: 0 !important;
-            padding-bottom: 0 !important;
-            position: absolute;
-            top: 82%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 100%;
+            top: 84%;
           }
 
-          /* Slide 2 (Cápsula Argentina): botón bien nítido, chiquito y ubicado justo debajo de '20% Off transferencia' */
           .content-slide-2 {
-            margin-top: 0 !important;
-            margin-bottom: 0 !important;
-            padding-bottom: 0 !important;
-            position: absolute;
-            top: 48%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 100%;
-          }
-
-          .hero-subtitle {
-            font-size: 1.1rem;
-            margin-bottom: 2px;
+            top: 43%;
           }
 
           /* Botones para celulares: bien chicos, súper nítidos y sin sombras borrosas */
@@ -282,7 +211,7 @@ export default function Hero() {
           .content-slide-1 .cta-button,
           .content-slide-2 .cta-button {
             padding: 4px 12px !important;
-            font-size: 0.65rem !important;
+            font-size: 0.62rem !important;
             letter-spacing: 0.5px !important;
             font-weight: 800 !important;
             border-radius: 16px !important;
@@ -290,10 +219,10 @@ export default function Hero() {
             margin: 0 !important;
           }
 
-          .hero-content {
-            padding: 0 10px;
-            gap: 6px;
+          .swiper-pagination {
+            bottom: 3px !important;
           }
+
           .swiper-pagination-bullet {
             width: 6px;
             height: 6px;
