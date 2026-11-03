@@ -1,13 +1,27 @@
 "use client";
 import Link from "next/link";
 import { useCart } from "../store/CartContext";
+import { calculate3x2Discount } from "../lib/promotions";
+import { useState, useEffect } from "react";
 
 export default function CartDropdown({ isOpen, onClose }) {
   const { cartItems, cartCount, removeFromCart } = useCart();
+  const [isWholesale, setIsWholesale] = useState(false);
+
+  useEffect(() => {
+    try {
+      if (localStorage.getItem('mflower_wholesale_session')) {
+        setIsWholesale(true);
+      }
+    } catch(e) {}
+  }, []);
 
   if (!isOpen) return null;
 
-  const total = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+  const rawTotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+  const promo3x2 = calculate3x2Discount(cartItems, isWholesale);
+  const finalTotal = Math.max(0, rawTotal - promo3x2.discount);
+  const transferPrice = finalTotal * 0.8;
 
   return (
     <>
@@ -64,23 +78,65 @@ export default function CartDropdown({ isOpen, onClose }) {
 
       {cartItems.length > 0 && (
         <div className="cart-footer">
+          {/* Cyber Monday 3x2 Banner / Alerta */}
+          {!isWholesale && (
+            <div className={`cyber-cart-promo-box ${promo3x2.freeItemsCount > 0 ? 'active' : 'hint'}`}>
+              <div className="cyber-cart-promo-title">
+                <span>🔥</span>
+                <strong>PROMO 3x2 CYBER MONDAY</strong>
+              </div>
+              {promo3x2.freeItemsCount > 0 ? (
+                <p className="cyber-cart-promo-text">
+                  ¡Genial! Tenés <strong>{promo3x2.freeItemsCount} {promo3x2.freeItemsCount === 1 ? 'producto GRATIS' : 'productos GRATIS'}</strong> ({promo3x2.neededForNext === 3 ? '¡Sumá 3 más para otro gratis!' : `¡Sumá ${promo3x2.neededForNext} más para otro gratis!`})
+                </p>
+              ) : (
+                <p className="cyber-cart-promo-text">
+                  {promo3x2.neededForNext === 1 
+                    ? '¡Agregá 1 producto más y el 3ro te queda GRATIS!' 
+                    : '¡Agregá 2 productos más y llevate 1 GRATIS!'}
+                </p>
+              )}
+            </div>
+          )}
+
           <div className="shipping-progress">
             <p className="shipping-text">
-              {total >= 60000
+              {finalTotal >= 60000
                 ? "✨ ¡Tenés envío gratis!"
-                : `🚚 Te faltan $${(60000 - total).toLocaleString('es-AR')} para envío gratis`}
+                : `🚚 Te faltan $${(60000 - finalTotal).toLocaleString('es-AR')} para envío gratis`}
             </p>
             <div className="progress-bar-bg">
               <div
                 className="progress-bar-fill"
-                style={{ width: `${Math.min(100, (total / 60000) * 100)}%` }}
+                style={{ width: `${Math.min(100, (finalTotal / 60000) * 100)}%` }}
               ></div>
             </div>
           </div>
-          <div className="cart-total">
-            <span>Subtotal:</span>
-            <span>${total.toLocaleString('es-AR')}</span>
+
+          <div className="cart-totals-breakdown">
+            {promo3x2.discount > 0 && (
+              <>
+                <div className="cart-subtotal-row">
+                  <span>Subtotal:</span>
+                  <span className="strikethrough">${rawTotal.toLocaleString('es-AR')}</span>
+                </div>
+                <div className="cart-discount-row">
+                  <span>🔥 Descuento 3x2:</span>
+                  <span className="discount-amount">-${promo3x2.discount.toLocaleString('es-AR')}</span>
+                </div>
+              </>
+            )}
+            <div className="cart-total">
+              <span>Total:</span>
+              <span className="final-total-amount">${finalTotal.toLocaleString('es-AR')}</span>
+            </div>
+            {!isWholesale && (
+              <p className="cart-transfer-hint">
+                💸 <strong>${transferPrice.toLocaleString('es-AR')}</strong> con transferencia (20% OFF)
+              </p>
+            )}
           </div>
+
           <div className="cart-actions">
             <button className="continue-btn" onClick={onClose}>Seguir comprando</button>
             <Link href="/checkout" className="checkout-btn" onClick={onClose}>Finalizar compra</Link>
@@ -268,15 +324,80 @@ export default function CartDropdown({ isOpen, onClose }) {
           border-top: 1px solid #eaeaea;
           background: #fff;
         }
+
+        .cyber-cart-promo-box {
+          padding: 10px 14px;
+          border-radius: 12px;
+          margin-bottom: 14px;
+          animation: pulseBox 2s infinite ease-in-out;
+        }
+        .cyber-cart-promo-box.active {
+          background: linear-gradient(135deg, #FFF0F3 0%, #FFE4E9 100%);
+          border: 1.5px solid #F5C6D0;
+        }
+        .cyber-cart-promo-box.hint {
+          background: #F8FAFC;
+          border: 1.5px dashed #CBD5E1;
+        }
+        .cyber-cart-promo-title {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          font-size: 0.82rem;
+          color: #be185d;
+          font-weight: 800;
+          letter-spacing: 0.02em;
+          margin-bottom: 4px;
+        }
+        .cyber-cart-promo-text {
+          margin: 0;
+          font-size: 0.8rem;
+          color: #475569;
+          line-height: 1.35;
+        }
+        .cyber-cart-promo-box.active .cyber-cart-promo-text strong {
+          color: #be185d;
+        }
+
+        .cart-totals-breakdown {
+          margin: 12px 0 16px 0;
+          display: flex;
+          flex-direction: column;
+          gap: 6px;
+        }
+        .cart-subtotal-row, .cart-discount-row {
+          display: flex;
+          justify-content: space-between;
+          font-size: 0.88rem;
+          color: #64748b;
+        }
+        .cart-discount-row {
+          color: #be185d;
+          font-weight: 700;
+        }
+        .strikethrough {
+          text-decoration: line-through;
+          color: #94a3b8;
+        }
         .cart-total {
           display: flex;
           justify-content: space-between;
           align-items: center;
-          margin-bottom: 15px;
-          margin-top: 15px;
-          font-size: 1.1rem;
-          font-weight: 600;
-          color: #333;
+          padding-top: 8px;
+          border-top: 1px dashed #e2e8f0;
+          font-size: 1.15rem;
+          font-weight: 800;
+          color: #1e293b;
+        }
+        .final-total-amount {
+          color: var(--pastel-pink);
+          font-size: 1.25rem;
+        }
+        .cart-transfer-hint {
+          margin: 4px 0 0 0;
+          font-size: 0.78rem;
+          color: #059669;
+          text-align: right;
         }
         .shipping-progress {
           margin-bottom: 15px;

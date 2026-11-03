@@ -3,6 +3,7 @@ import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 import ShippingCalculator from "../../components/ShippingCalculator";
 import { useCart } from "../../store/CartContext";
+import { calculate3x2Discount } from "../../lib/promotions";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { supabase } from "../../lib/supabase";
@@ -20,12 +21,21 @@ export default function CheckoutPage() {
     const [orderCompleted, setOrderCompleted] = useState(false);
     const [savedTotal, setSavedTotal] = useState(0);
     const [savedShippingType, setSavedShippingType] = useState('envio');
+    const [isWholesale, setIsWholesale] = useState(false);
 
     // Coupon states
     const [couponInput, setCouponInput] = useState('');
     const [appliedCoupon, setAppliedCoupon] = useState(null);
     const [couponError, setCouponError] = useState('');
     const [couponLoading, setCouponLoading] = useState(false);
+
+    useEffect(() => {
+        try {
+            if (localStorage.getItem('mflower_wholesale_session')) {
+                setIsWholesale(true);
+            }
+        } catch(e) {}
+    }, []);
 
     useEffect(() => {
         async function fetchUserData() {
@@ -75,22 +85,28 @@ export default function CheckoutPage() {
     }, []);
 
     const cartTotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    const promo3x2 = calculate3x2Discount(cartItems, isWholesale);
+    const cartTotalAfterPromo = Math.max(0, cartTotal - promo3x2.discount);
+
     let shippingCost = selectedShipping ? selectedShipping.price : 0;
     
     // Calculate discounts
-    let discount = paymentMethod === 'transferencia' ? cartTotal * 0.20 : 0; // Base 20% transfer discount
-    
+    let couponDiscount = 0;
     if (appliedCoupon) {
         if (appliedCoupon.short_description === 'percentage') {
-            discount += (cartTotal * (appliedCoupon.price / 100));
+            couponDiscount = (cartTotalAfterPromo * (appliedCoupon.price / 100));
         } else if (appliedCoupon.short_description === 'fixed') {
-            discount += appliedCoupon.price;
+            couponDiscount = appliedCoupon.price;
         } else if (appliedCoupon.short_description === 'free_shipping') {
             shippingCost = 0;
         }
     }
+
+    const subtotalAfterPromoAndCoupon = Math.max(0, cartTotalAfterPromo - couponDiscount);
+    const transferDiscount = paymentMethod === 'transferencia' ? subtotalAfterPromoAndCoupon * 0.20 : 0;
+    const totalDiscount = promo3x2.discount + couponDiscount + transferDiscount;
     
-    const finalTotal = Math.max(0, cartTotal - discount + shippingCost);
+    const finalTotal = Math.max(0, cartTotal - totalDiscount + shippingCost);
 
     const handleApplyCoupon = async () => {
         setCouponError('');
@@ -185,6 +201,7 @@ export default function CheckoutPage() {
                         shippingType: shippingType,
                         finalTotal: finalTotal,
                         couponCode: appliedCoupon?.name || null,
+                        promoDiscount: promo3x2.discount,
                         isWholesale: isWholesaleActive
                     })
                 });
@@ -215,6 +232,7 @@ export default function CheckoutPage() {
                     shippingType: shippingType,
                     finalTotal: finalTotal,
                     couponCode: appliedCoupon?.name || null,
+                    promoDiscount: promo3x2.discount,
                     isWholesale: isWholesaleActive
                 })
             });
@@ -437,11 +455,37 @@ export default function CheckoutPage() {
                                     )}
                                 </div>
 
+                                {/* Cyber Monday 3x2 Banner / Info */}
+                                {!isWholesale && promo3x2.freeItemsCount > 0 && (
+                                    <div style={{ background: 'linear-gradient(135deg, #FFF0F3 0%, #FFE4E9 100%)', border: '1.5px solid #F5C6D0', borderRadius: '12px', padding: '12px', marginBottom: '1.25rem', fontSize: '0.85rem' }}>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontWeight: 'bold', color: '#be185d', marginBottom: '4px' }}>
+                                            <span>🔥</span>
+                                            <span>PROMO 3x2 CYBER MONDAY APLICADA</span>
+                                        </div>
+                                        <p style={{ margin: 0, color: '#475569', fontSize: '0.82rem' }}>
+                                            ¡Tenés <strong>{promo3x2.freeItemsCount} {promo3x2.freeItemsCount === 1 ? 'producto gratis' : 'productos gratis'}</strong>! Se descontó el de menor valor de tu compra.
+                                        </p>
+                                    </div>
+                                )}
+                                {!isWholesale && promo3x2.neededForNext < 3 && promo3x2.freeItemsCount === 0 && (
+                                    <div style={{ background: '#F8FAFC', border: '1.5px dashed #CBD5E1', borderRadius: '12px', padding: '10px 12px', marginBottom: '1.25rem', fontSize: '0.83rem', color: '#475569' }}>
+                                        🔥 <strong>Promo 3x2 Cyber Monday:</strong> {promo3x2.neededForNext === 1 ? '¡Agregá 1 producto más y el 3ro te queda GRATIS!' : '¡Agregá 2 productos más y llevate 1 GRATIS!'}
+                                    </div>
+                                )}
+
                                 <div className="summary-calculations pt-4 border-t border-gray-100" style={{ paddingTop: '1rem', borderTop: '1px solid #f3f4f6' }}>
                                     <div className="flex justify-between mb-2">
                                         <span className="text-gray-600">Subtotal</span>
                                         <span className="font-medium">${cartTotal.toLocaleString('es-AR')}</span>
                                     </div>
+
+                                    {/* Mostrar descuento 3x2 Cyber Monday */}
+                                    {promo3x2.discount > 0 && (
+                                        <div className="flex justify-between mb-2" style={{ color: '#be185d' }}>
+                                            <span className="font-medium">🔥 Descuento 3x2 Cyber Monday ({promo3x2.freeItemsCount} {promo3x2.freeItemsCount === 1 ? 'gratis' : 'gratis'})</span>
+                                            <span className="font-bold">-${promo3x2.discount.toLocaleString('es-AR')}</span>
+                                        </div>
+                                    )}
                                     
                                     {/* Mostrar descuento del cupón */}
                                     {appliedCoupon && appliedCoupon.short_description !== 'free_shipping' && (
@@ -460,10 +504,10 @@ export default function CheckoutPage() {
                                     )}
 
                                     {/* Mostrar descuento de transferencia si aplica */}
-                                    {discount > 0 && paymentMethod === 'transferencia' && (
+                                    {transferDiscount > 0 && paymentMethod === 'transferencia' && (
                                         <div className="flex justify-between mb-2 text-pink">
                                             <span>Descuento Transferencia (20%)</span>
-                                            <span className="font-bold">-${(cartTotal * 0.20).toLocaleString('es-AR')}</span>
+                                            <span className="font-bold">-${transferDiscount.toLocaleString('es-AR')}</span>
                                         </div>
                                     )}
                                     

@@ -10,7 +10,7 @@ const client = new MercadoPagoConfig({
 export async function POST(request) {
     try {
         const body = await request.json();
-        const { items, payer, shippingCost, shippingType, finalTotal, couponCode, isWholesale } = body;
+        const { items, payer, shippingCost, shippingType, finalTotal, couponCode, isWholesale, promoDiscount } = body;
 
         let finalNotes = payer.notas || '';
         if (isWholesale) {
@@ -79,6 +79,18 @@ export async function POST(request) {
                 id: 'discount',
                 title: `Descuento Cupón (${appliedCoupon.name})`,
                 unit_price: -Number(discountAmount),
+                quantity: 1,
+                currency_id: 'ARS',
+            });
+        }
+
+        if (promoDiscount && Number(promoDiscount) > 0) {
+            const pDisc = Number(promoDiscount);
+            finalNotes = finalNotes ? `${finalNotes}\n\n[PROMO 3x2 CYBER MONDAY: -$${pDisc.toLocaleString('es-AR')}]` : `[PROMO 3x2 CYBER MONDAY: -$${pDisc.toLocaleString('es-AR')}]`;
+            currentItems.push({
+                id: 'promo_3x2',
+                title: '🔥 Promo 3x2 Cyber Monday (Producto gratis)',
+                unit_price: -pDisc,
                 quantity: 1,
                 currency_id: 'ARS',
             });

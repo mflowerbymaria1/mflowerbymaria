@@ -157,6 +157,9 @@ export default function ProductCard({ product }) {
         {product.isBestSeller && (
           <div className="bestseller-badge">🔥 Más Vendido</div>
         )}
+        {!isWholesale && (
+          <div className="cyber-3x2-badge">🔥 3x2 CYBER</div>
+        )}
       </div>
       
       {/* Miniaturas de vista previa */}
@@ -186,6 +189,7 @@ export default function ProductCard({ product }) {
           <span className="product-price">${priceStr}</span>
           {!isWholesale && (
             <>
+              <div className="cyber-card-pill">🔥 3x2 · Llevás 3, pagás 2</div>
               <span className="installments">💳 3 cuotas sin interés de <strong>${installmentPrice}</strong></span>
               <span className="discount-price">💸 <strong>${transferPrice}</strong> con transferencia <span className="badge-20">20% OFF</span></span>
             </>
@@ -345,6 +349,32 @@ export default function ProductCard({ product }) {
           text-transform: uppercase;
           box-shadow: 0 4px 10px rgba(0,0,0,0.15);
           z-index: 5;
+        }
+        .cyber-3x2-badge {
+          position: absolute;
+          top: 15px;
+          left: 15px;
+          background: linear-gradient(135deg, #ff007f 0%, #7928ca 100%);
+          color: white;
+          font-weight: 800;
+          font-size: 0.68rem;
+          letter-spacing: 0.5px;
+          padding: 5px 11px;
+          border-radius: 20px;
+          text-transform: uppercase;
+          box-shadow: 0 4px 12px rgba(255, 0, 127, 0.35);
+          z-index: 5;
+        }
+        .cyber-card-pill {
+          display: inline-block;
+          background: linear-gradient(135deg, #fff0f6 0%, #f3e8ff 100%);
+          border: 1px solid #ffadd2;
+          color: #c41d7f;
+          font-weight: 800;
+          font-size: 0.72rem;
+          padding: 3px 8px;
+          border-radius: 6px;
+          margin-bottom: 4px;
         }
         .product-info {
           padding: 1.2rem;

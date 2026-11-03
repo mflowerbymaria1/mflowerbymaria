@@ -366,13 +366,24 @@ export default function ProductDetailPage({ params }) {
                             <div className="price-box">
                                 <span className="main-price">${(numericPrice * quantity).toLocaleString('es-AR')}</span>
                                 {!isWholesale && (
-                                    <div className="payment-methods">
-                                        <p className="installments">💳 Hasta <strong>3 cuotas sin interés</strong> de ${installmentPrice}</p>
-                                        <p className="transfer-discount">💸 <strong>${transferPrice}</strong> con transferencia bancaria <span className="badge-20">20% OFF</span></p>
-                                        <button className="view-payment-btn" onClick={() => setShowPaymentModal(true)}>
-                                            Ver cuotas y medios de pago
-                                        </button>
-                                    </div>
+                                    <>
+                                        <div className="cyber-product-banner">
+                                            <div className="cyber-product-banner-header">
+                                                <span className="cyber-badge-tag">🔥 CYBER MONDAY</span>
+                                                <strong className="cyber-badge-headline">¡PROMO 3x2 EN TODA LA TIENDA!</strong>
+                                            </div>
+                                            <p className="cyber-product-banner-text">
+                                                Llevás 3 productos y <strong>el de menor valor es 100% GRATIS</strong>. Combiná cuadernos, agendas o lo que más te guste. Se descuenta automáticamente en el carrito.
+                                            </p>
+                                        </div>
+                                        <div className="payment-methods">
+                                            <p className="installments">💳 Hasta <strong>3 cuotas sin interés</strong> de ${installmentPrice}</p>
+                                            <p className="transfer-discount">💸 <strong>${transferPrice}</strong> con transferencia bancaria <span className="badge-20">20% OFF</span></p>
+                                            <button className="view-payment-btn" onClick={() => setShowPaymentModal(true)}>
+                                                Ver cuotas y medios de pago
+                                            </button>
+                                        </div>
+                                    </>
                                 )}
                             </div>
 
@@ -1092,6 +1103,41 @@ export default function ProductDetailPage({ params }) {
                     color: #111;
                     display: block;
                     margin-bottom: 1rem;
+                }
+                .cyber-product-banner {
+                    background: linear-gradient(135deg, #fff0f6 0%, #fdf4ff 50%, #f3e8ff 100%);
+                    border: 1.5px solid #ffadd2;
+                    border-radius: 14px;
+                    padding: 12px 14px;
+                    margin-bottom: 1rem;
+                    box-shadow: 0 4px 14px rgba(255, 0, 127, 0.08);
+                }
+                .cyber-product-banner-header {
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                    flex-wrap: wrap;
+                    margin-bottom: 6px;
+                }
+                .cyber-badge-tag {
+                    background: linear-gradient(135deg, #ff007f 0%, #7928ca 100%);
+                    color: white;
+                    font-size: 0.72rem;
+                    font-weight: 800;
+                    padding: 3px 8px;
+                    border-radius: 12px;
+                    letter-spacing: 0.5px;
+                }
+                .cyber-badge-headline {
+                    color: #9c155f;
+                    font-size: 0.88rem;
+                    font-weight: 800;
+                }
+                .cyber-product-banner-text {
+                    color: #4b5563;
+                    font-size: 0.82rem;
+                    line-height: 1.4;
+                    margin: 0;
                 }
                 .payment-methods {
                     display: flex;
