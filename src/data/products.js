@@ -1,6 +1,7 @@
 export const defaultCategories = [
     { id: 'cat-madre', name: 'Álbum de figuritas - Día de la Madre', slug: 'album-de-figuritas-dia-de-la-madre' },
     { id: 'cat-colorear', name: 'Cuadernos para colorear', slug: 'cuadernos-para-colorear' },
+    { id: 'cat-marcadores-acrilicos', name: 'Marcadores acrílicos', slug: 'marcadores-acrilicos' },
     { id: 'cat-cuadernos-a4', name: 'Cuadernos A4 Sistema de discos 📓', slug: 'cuadernos-a4' },
     { id: 'cat-cuadernos-a5', name: 'Cuadernos A5 Sistema de discos 📓', slug: 'cuadernos-a5' },
     { id: 'cat-capsula-arg', name: 'Cápsula Argentina', slug: 'capsula-argentina' },
