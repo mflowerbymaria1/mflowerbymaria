@@ -10,12 +10,6 @@ import "swiper/css/pagination";
 export default function Hero() {
   const slides = [
     {
-      image: "/images/banner_cyber_monday.jpg",
-      subtitle: "",
-      link: "/productos",
-      buttonText: "APROVECHAR 3x2",
-    },
-    {
       image: "/images/banner_hero_collage.png",
       subtitle: "",
       link: "/productos",
@@ -110,29 +104,13 @@ export default function Hero() {
           padding: 0 20px;
         }
 
-        /* Slide 0 (Cyber Monday): botón bien abajo de 'en toda la web' para no tapar las letras */
+        /* Slide 0 (Collage Papelería): botón ubicado abajo */
         .content-slide-0 {
-          top: 89%;
-        }
-
-        .content-slide-0 .cta-button {
-          background: linear-gradient(135deg, #ff007f 0%, #d81b60 100%);
-          box-shadow: 0 4px 15px rgba(255, 0, 127, 0.45);
-        }
-
-        .content-slide-0 .cta-button:hover {
-          background: linear-gradient(135deg, #d81b60 0%, #ad1457 100%);
-          transform: translateY(-2px);
-          box-shadow: 0 6px 20px rgba(255, 0, 127, 0.65);
-        }
-
-        /* Slide 1 (Collage): botón ubicado abajo */
-        .content-slide-1 {
           top: 84%;
         }
 
-        /* Slide 2 (Cápsula Argentina): botón ubicado debajo de '20% Off transferencia' */
-        .content-slide-2 {
+        /* Slide 1 (Cápsula Argentina): botón ubicado debajo de '20% Off transferencia' */
+        .content-slide-1 {
           top: 43%;
         }
 
@@ -195,21 +173,16 @@ export default function Hero() {
           }
 
           .content-slide-0 {
-            top: 89%;
-          }
-
-          .content-slide-1 {
             top: 84%;
           }
 
-          .content-slide-2 {
+          .content-slide-1 {
             top: 43%;
           }
 
           /* Botones para celulares: bien chicos, súper nítidos y sin sombras borrosas */
           .content-slide-0 .cta-button,
-          .content-slide-1 .cta-button,
-          .content-slide-2 .cta-button {
+          .content-slide-1 .cta-button {
             padding: 4px 12px !important;
             font-size: 0.62rem !important;
             letter-spacing: 0.5px !important;

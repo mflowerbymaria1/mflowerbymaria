@@ -5,15 +5,11 @@ import { sendOrderNotificationAdmin, sendOrderNotificationCustomer } from '@/lib
 export async function POST(request) {
     try {
         const body = await request.json();
-        const { items, payer, shippingCost, shippingType, finalTotal, couponCode, isWholesale, promoDiscount } = body;
+        const { items, payer, shippingCost, shippingType, finalTotal, couponCode, isWholesale } = body;
 
         let finalNotes = payer.notas || '';
         if (isWholesale) {
             finalNotes = finalNotes ? `${finalNotes}\n\n[PEDIDO MAYORISTA]` : '[PEDIDO MAYORISTA]';
-        }
-        if (promoDiscount && Number(promoDiscount) > 0) {
-            const pDisc = Number(promoDiscount);
-            finalNotes = finalNotes ? `${finalNotes}\n\n[PROMO 3x2 CYBER MONDAY: -$${pDisc.toLocaleString('es-AR')}]` : `[PROMO 3x2 CYBER MONDAY: -$${pDisc.toLocaleString('es-AR')}]`;
         }
 
         // Validate and apply coupon in backend to ensure security

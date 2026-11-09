@@ -142,10 +142,10 @@ export default function Header() {
       ) : (
         <div className="announcement-bar bg-green">
           <div className="announcement-text-wrapper">
-            <span>🔥 CYBER MONDAY: ¡3x2 EN TODA LA TIENDA! Llevás 3 y pagás 2 (el de menor valor es GRATIS) · 💸 20% OFF Transferencia · 💳 3 Cuotas sin interés</span>
-            <span aria-hidden="true">🔥 CYBER MONDAY: ¡3x2 EN TODA LA TIENDA! Llevás 3 y pagás 2 (el de menor valor es GRATIS) · 💸 20% OFF Transferencia · 💳 3 Cuotas sin interés</span>
-            <span aria-hidden="true">🔥 CYBER MONDAY: ¡3x2 EN TODA LA TIENDA! Llevás 3 y pagás 2 (el de menor valor es GRATIS) · 💸 20% OFF Transferencia · 💳 3 Cuotas sin interés</span>
-            <span aria-hidden="true">🔥 CYBER MONDAY: ¡3x2 EN TODA LA TIENDA! Llevás 3 y pagás 2 (el de menor valor es GRATIS) · 💸 20% OFF Transferencia · 💳 3 Cuotas sin interés</span>
+            <span>💸 20% OFF Transferencia | 💳 3 CUOTAS SIN INTERÉS</span>
+            <span aria-hidden="true">💸 20% OFF Transferencia | 💳 3 CUOTAS SIN INTERÉS</span>
+            <span aria-hidden="true">💸 20% OFF Transferencia | 💳 3 CUOTAS SIN INTERÉS</span>
+            <span aria-hidden="true">💸 20% OFF Transferencia | 💳 3 CUOTAS SIN INTERÉS</span>
           </div>
         </div>
       )}

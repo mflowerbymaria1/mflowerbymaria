@@ -117,10 +117,25 @@ export function middleware(request) {
 
     // 2. Maintenance Mode Logic
     // If maintenance mode is active, block everything EXCEPT /admin, /mantenimiento, and static assets for non-admins
-    const isMaintenanceMode = false;
+    const isMaintenanceMode = true;
     if (isMaintenanceMode) {
         const authCookie = request.cookies.get('mflower_admin_auth');
-        const isAdmin = authCookie && authCookie.value === 'authenticated';
+        let isAdmin = authCookie && authCookie.value === 'authenticated';
+
+        // Allow Flor to activate preview by adding ?pw=mflower2026 to any URL
+        const previewPw = url.searchParams.get('pw');
+        if (previewPw === (process.env.ADMIN_PASSWORD || 'mflower2026')) {
+            url.searchParams.delete('pw');
+            const res = NextResponse.redirect(url);
+            res.cookies.set('mflower_admin_auth', 'authenticated', {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === 'production',
+                sameSite: 'lax',
+                maxAge: 60 * 60 * 24 * 7,
+                path: '/'
+            });
+            return res;
+        }
 
         if (!isAdmin && !pathname.startsWith('/admin') && !pathname.startsWith('/mantenimiento') && !pathname.startsWith('/_next') && !pathname.startsWith('/images') && !pathname.startsWith('/fonts')) {
             url.pathname = '/mantenimiento';

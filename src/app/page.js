@@ -1,6 +1,5 @@
 import Header from "../components/Header";
 import Hero from "../components/Hero";
-import CyberPromoBanner from "../components/CyberPromoBanner";
 import ProductCarousel from "../components/ProductCarousel";
 import StoreFeatures from "../components/StoreFeatures";
 import StationeryPromoBanner from "../components/StationeryPromoBanner";
@@ -13,7 +12,6 @@ export default function Home() {
       <Header />
       <main>
         <Hero />
-        <CyberPromoBanner />
         <ProductCarousel />
         <StoreFeatures />
         <StationeryPromoBanner />
